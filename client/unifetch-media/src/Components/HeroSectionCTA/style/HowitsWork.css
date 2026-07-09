@@ -1,0 +1,260 @@
+/* ===========================================
+   How It Work
+=========================================== */
+
+.howItsWork {
+  width: 100%;
+  padding: 110px 20px;
+  background: var(--background);
+}
+
+.howItsWork__container {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* ===========================================
+   Header
+=========================================== */
+
+.howItsWork__header {
+  max-width: 700px;
+  margin: 0 auto 70px;
+  text-align: center;
+}
+
+.howItsWork__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.howItsWork__label span {
+  width: 22px;
+  height: 2px;
+  border-radius: 50px;
+  background: var(--accent);
+}
+
+.howItsWork__label p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 4px;
+}
+
+.howItsWork__title {
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.15;
+}
+
+/* ===========================================
+   Steps
+=========================================== */
+
+.howItsWork__steps {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: nowrap;
+}
+
+/* ===========================================
+   Card
+=========================================== */
+
+.howItsWork__card {
+  position: relative;
+
+  width: 360px;
+  min-height: 250px;
+
+  padding: 32px;
+
+  border-radius: 20px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  transition: 0.35s;
+}
+
+.howItsWork__card:hover {
+  transform: translateY(-8px);
+
+  border-color: var(--accent);
+
+  background: var(--surface-hover);
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* Number */
+
+.howItsWork__number {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 26px;
+
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #7c7cff, #4f8cff);
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 700;
+}
+
+/* Icon */
+
+.howItsWork__icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: var(--accent);
+
+  margin-bottom: 20px;
+}
+
+/* Title */
+
+.howItsWork__card h3 {
+  font-size: 1.7rem;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+/* Description */
+
+.howItsWork__card p {
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 1.02rem;
+}
+
+/* ===========================================
+   Arrow
+=========================================== */
+
+.howItsWork__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-muted);
+
+  opacity: 0.7;
+
+  animation: arrowMove 2s infinite;
+}
+
+@keyframes arrowMove {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(8px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ===========================================
+   Responsive
+=========================================== */
+
+@media (max-width: 1200px) {
+  .howItsWork__card {
+    width: 320px;
+  }
+}
+
+@media (max-width: 992px) {
+  .howItsWork__steps {
+    flex-direction: column;
+  }
+
+  .howItsWork__arrow {
+    transform: rotate(90deg);
+    animation: none;
+  }
+
+  .howItsWork__card {
+    width: 100%;
+    max-width: 500px;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .howItsWork {
+    padding: 90px 16px;
+  }
+
+  .howItsWork__header {
+    margin-bottom: 50px;
+  }
+
+  .howItsWork__card {
+    padding: 26px;
+  }
+
+  .howItsWork__card h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .howItsWork {
+    padding: 70px 16px;
+  }
+
+  .howItsWork__card {
+    padding: 22px;
+    border-radius: 18px;
+  }
+
+  .howItsWork__number {
+    width: 46px;
+    height: 46px;
+    font-size: 14px;
+  }
+
+  .howItsWork__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .howItsWork__card h3 {
+    font-size: 1.35rem;
+  }
+
+  .howItsWork__card p {
+    font-size: 0.95rem;
+  }
+}

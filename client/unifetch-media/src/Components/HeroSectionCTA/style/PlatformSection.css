@@ -1,0 +1,219 @@
+/* ===========================================
+   Platform Section
+=========================================== */
+
+.platformSection {
+  width: 100%;
+  padding: 110px 20px;
+  background: #07080b;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.platformSection__container {
+  max-width: 1250px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===========================================
+   Header
+=========================================== */
+
+.platformSection__header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.platformSection__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.platformSection__line {
+  width: 60px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.platformSection__label p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+}
+
+.platformSection__title {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+/* ===========================================
+   Platform Grid
+=========================================== */
+
+.platformSection__grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.platformSection__card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 15px 26px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.platformSection__card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  background: var(--surface-hover);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.platformSection__icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.platformSection__name {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ===========================================
+   More Button
+=========================================== */
+
+.platformSection__moreBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 15px 28px;
+
+  background: var(--surface);
+
+  color: var(--text);
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.platformSection__moreBtn:hover {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.platformSection__moreBtn svg {
+  color: var(--accent);
+}
+
+/* ===========================================
+   Responsive
+=========================================== */
+
+@media (max-width: 992px) {
+  .platformSection {
+    padding: 90px 20px;
+  }
+
+  .platformSection__grid {
+    gap: 16px;
+  }
+
+  .platformSection__card {
+    padding: 14px 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .platformSection {
+    padding: 80px 16px;
+  }
+
+  .platformSection__header {
+    margin-bottom: 45px;
+  }
+
+  .platformSection__label p {
+    font-size: 12px;
+    letter-spacing: 3px;
+  }
+
+  .platformSection__grid {
+    gap: 14px;
+  }
+
+  .platformSection__card {
+    padding: 13px 20px;
+  }
+
+  .platformSection__icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .platformSection__name {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .platformSection {
+    padding: 70px 16px;
+  }
+
+  .platformSection__grid {
+    gap: 12px;
+  }
+
+  .platformSection__card {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .platformSection__moreBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

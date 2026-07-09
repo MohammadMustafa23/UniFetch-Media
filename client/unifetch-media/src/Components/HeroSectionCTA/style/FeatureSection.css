@@ -1,0 +1,276 @@
+/* ===========================================
+   Feature Section
+=========================================== */
+
+.featureSection {
+  width: 100%;
+  padding: 120px 20px;
+  background: var(--background);
+}
+
+.featureSection__container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ===========================================
+   Header
+=========================================== */
+
+.featureSection__header {
+  max-width: 700px;
+  margin-bottom: 70px;
+}
+
+.featureSection__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.featureSection__label span {
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.featureSection__label p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 4px;
+}
+
+.featureSection__header h2 {
+  font-size: clamp(2.6rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.featureSection__subtitle {
+  max-width: 640px;
+  color: var(--text-muted);
+  font-size: 1.35rem;
+  line-height: 1.7;
+}
+
+/* ===========================================
+   Grid
+=========================================== */
+
+.featureSection__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+/* ===========================================
+   Card
+=========================================== */
+
+.featureCard {
+  position: relative;
+
+  min-height: 230px;
+
+  padding: 28px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  transition: all 0.35s ease;
+
+  overflow: hidden;
+}
+
+.featureCard::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at top right,
+    rgba(79, 140, 255, 0.08),
+    transparent 55%
+  );
+
+  opacity: 0;
+
+  transition: 0.35s;
+}
+
+.featureCard:hover {
+  transform: translateY(-8px);
+
+  border-color: var(--accent);
+
+  background: var(--surface-hover);
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+.featureCard:hover::before {
+  opacity: 1;
+}
+
+/* ===========================================
+   Featured Card
+=========================================== */
+
+.featureCard--featured {
+  border-color: rgba(88, 130, 255, 0.7);
+
+  background: linear-gradient(
+    180deg,
+    rgba(33, 40, 64, 0.45),
+    rgba(17, 20, 29, 0.8)
+  );
+}
+
+.featureCard--featured:hover {
+  border-color: var(--accent);
+}
+
+/* ===========================================
+   Icon
+=========================================== */
+
+.featureCard__icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 28px;
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  color: var(--text);
+}
+
+/* ===========================================
+   Title
+=========================================== */
+
+.featureCard__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-bottom: 14px;
+
+  color: var(--text);
+
+  font-size: 1.65rem;
+
+  font-weight: 700;
+}
+
+/* ===========================================
+   Badge
+=========================================== */
+
+.featureCard__badge {
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 0.72rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+
+  background: rgba(75, 110, 255, 0.18);
+
+  color: var(--accent);
+}
+
+/* ===========================================
+   Description
+=========================================== */
+
+.featureCard p {
+  color: var(--text-muted);
+
+  line-height: 1.8;
+
+  font-size: 1.05rem;
+}
+
+/* ===========================================
+   Responsive
+=========================================== */
+
+@media (max-width: 1100px) {
+  .featureSection__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .featureSection {
+    padding: 90px 18px;
+  }
+
+  .featureSection__header {
+    margin-bottom: 50px;
+  }
+
+  .featureSection__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featureCard {
+    min-height: auto;
+    padding: 24px;
+  }
+
+  .featureSection__subtitle {
+    font-size: 1.1rem;
+  }
+
+  .featureCard__title {
+    font-size: 1.45rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .featureSection {
+    padding: 70px 16px;
+  }
+
+  .featureCard {
+    padding: 22px;
+    border-radius: 16px;
+  }
+
+  .featureCard__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .featureCard__title {
+    font-size: 1.3rem;
+  }
+
+  .featureCard p {
+    font-size: 0.96rem;
+  }
+}

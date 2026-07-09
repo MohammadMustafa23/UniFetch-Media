@@ -1,0 +1,223 @@
+/* ==========================
+   BRAND
+========================== */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+
+  color: #fff;
+
+  box-shadow: 0 15px 35px rgba(124, 92, 255, 0.35);
+}
+
+.brand h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ==========================
+   HERO
+========================== */
+
+.hero-content {
+  margin-top: 40px;
+  max-width: 560px;
+}
+
+.hero-content h1 {
+  font-size: 45px;
+  line-height: 1.05;
+  font-weight: 800;
+
+  color: #fff;
+}
+
+.hero-content h1 span {
+  background: linear-gradient(90deg, #ffffff, #8db8ff);
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-content p {
+  margin-top: 28px;
+
+  max-width: 500px;
+
+  font-size: 14px;
+  line-height: 1.8;
+
+  color: #b4b4c2;
+}
+
+/* ==========================
+   FEATURES
+========================== */
+
+.features {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #ececec;
+  font-size: 13px;
+}
+
+.feature svg {
+  color: #5be7a8;
+}
+
+/* ==========================
+   DOWNLOAD CARD
+========================== */
+
+.queue-card {
+  margin-top: 10px;
+  width: 340px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 12px;
+  backdrop-filter: blur(20px);
+}
+
+.queue-item {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.queue-item + .queue-item {
+  margin-top: 20px;
+}
+
+.queue-left {
+  display: flex;
+  gap: 14px;
+}
+
+.queue-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124, 92, 255, 0.15);
+  color: #7c5cff;
+}
+
+.queue-item h4 {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.progress {
+  width: 230px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #7c5cff, #4f8cff);
+}
+
+.queue-item span {
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* ==========================
+   REVIEW
+========================== */
+
+.review {
+  margin-top: 60px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+
+  color: white;
+
+  font-weight: bold;
+}
+
+.review h4 {
+  color: white;
+
+  font-size: 16px;
+}
+
+.review p {
+  margin-top: 6px;
+
+  color: #b3b3bf;
+
+  line-height: 1.6;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media (max-width: 1200px) {
+  .hero-content h1 {
+    font-size: 54px;
+  }
+
+  .queue-card {
+    width: 100%;
+  }
+
+  .progress {
+    width: 180px;
+  }
+}
+
+@media (max-width: 992px) {
+  .auth-left {
+    display: none;
+  }
+}

@@ -1,0 +1,318 @@
+/* ===========================================
+   Hero Footer
+=========================================== */
+
+.heroFooter {
+  position: relative;
+  overflow: hidden;
+  padding: 90px 20px 35px;
+  background: var(--background);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.heroFooter__container {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ===========================================
+   Top
+=========================================== */
+
+.heroFooter__top {
+  display: grid;
+  grid-template-columns: 1.4fr 2fr 1fr;
+  gap: 70px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ===========================================
+   Brand
+=========================================== */
+
+.heroFooter__logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.heroFooter__logo svg {
+  width: 42px;
+  height: 42px;
+  padding: 10px;
+  border-radius: 12px;
+
+  color: white;
+
+  background: linear-gradient(135deg, #6685ff, #8574ff);
+}
+
+.heroFooter__logo h2 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.heroFooter__brand p {
+  max-width: 280px;
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+/* ===========================================
+   Social
+=========================================== */
+
+.heroFooter__social {
+  display: flex;
+  gap: 12px;
+}
+
+.heroFooter__social a {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  text-decoration: none;
+
+  color: var(--text-muted);
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  transition: 0.3s;
+}
+
+.heroFooter__social a:hover {
+  transform: translateY(-4px);
+
+  color: white;
+
+  border-color: rgba(102, 133, 255, 0.45);
+
+  background: linear-gradient(135deg, #6685ff, #8574ff);
+}
+
+/* ===========================================
+   Links
+=========================================== */
+
+.heroFooter__links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 50px;
+}
+
+.heroFooter__links h3 {
+  margin-bottom: 24px;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.heroFooter__links a {
+  display: block;
+  margin-bottom: 16px;
+
+  color: var(--text-muted);
+
+  text-decoration: none;
+
+  transition: 0.3s;
+}
+
+.heroFooter__links a:hover {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* ===========================================
+   Newsletter
+=========================================== */
+
+.heroFooter__newsletter h3 {
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.heroFooter__newsletter input {
+  width: 100%;
+
+  padding: 15px 18px;
+
+  border-radius: 12px;
+
+  border: 1px solid var(--border);
+
+  background: var(--surface);
+
+  color: var(--text);
+
+  outline: none;
+
+  margin-bottom: 14px;
+
+  transition: 0.3s;
+}
+
+.heroFooter__newsletter input:focus {
+  border-color: rgba(102, 133, 255, 0.5);
+}
+
+.heroFooter__newsletter button {
+  width: 100%;
+
+  padding: 15px;
+
+  border: none;
+
+  cursor: pointer;
+
+  border-radius: 12px;
+
+  font-size: 1rem;
+
+  font-weight: 700;
+
+  background: white;
+
+  color: #111;
+
+  transition: 0.3s;
+}
+
+.heroFooter__newsletter button:hover {
+  transform: translateY(-3px);
+}
+
+/* ===========================================
+   Watermark
+=========================================== */
+
+.heroFooter__watermark {
+  text-align: center;
+
+  margin-top: 80px;
+  margin-bottom: 45px;
+
+  font-size: clamp(5rem, 18vw, 11rem);
+
+  font-weight: 900;
+
+  letter-spacing: -8px;
+
+  color: transparent;
+
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.08);
+
+  user-select: none;
+
+  pointer-events: none;
+
+  line-height: 0.9;
+}
+
+/* ===========================================
+   Bottom
+=========================================== */
+
+.heroFooter__bottom {
+  padding-top: 30px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+}
+
+.heroFooter__bottom p {
+  color: var(--text-muted);
+}
+
+.heroFooter__bottom div {
+  display: flex;
+  gap: 25px;
+}
+
+.heroFooter__bottom a {
+  color: var(--text-muted);
+
+  text-decoration: none;
+
+  transition: 0.3s;
+}
+
+.heroFooter__bottom a:hover {
+  color: var(--accent);
+}
+
+/* ===========================================
+   Responsive
+=========================================== */
+
+@media (max-width: 1100px) {
+  .heroFooter__top {
+    grid-template-columns: 1fr;
+    gap: 55px;
+  }
+
+  .heroFooter__links {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .heroFooter {
+    padding: 70px 18px 30px;
+  }
+
+  .heroFooter__links {
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+  }
+
+  .heroFooter__watermark {
+    margin: 60px 0 35px;
+    letter-spacing: -3px;
+  }
+
+  .heroFooter__bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroFooter {
+    padding: 60px 16px 25px;
+  }
+
+  .heroFooter__links {
+    grid-template-columns: 1fr;
+  }
+
+  .heroFooter__social {
+    justify-content: flex-start;
+  }
+
+  .heroFooter__watermark {
+    font-size: 4.5rem;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .heroFooter__bottom div {
+    gap: 18px;
+  }
+}

@@ -1,0 +1,85 @@
+.verify-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+
+  border: none;
+  background: none;
+
+  color: #9ca3af;
+
+  cursor: pointer;
+}
+
+.verify-icon {
+  width: 70px;
+  height: 70px;
+
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+
+  color: white;
+}
+
+.verify-form h2 {
+  font-size: 32px;
+}
+
+.verify-form p {
+  color: #9ca3af;
+}
+
+.otp-container {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.otp-container input {
+  width: 60px;
+  height: 60px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: #16181d;
+
+  text-align: center;
+
+  font-size: 22px;
+
+  color: white;
+}
+
+.verify-btn {
+  height: 56px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}

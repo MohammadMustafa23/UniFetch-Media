@@ -1,0 +1,285 @@
+/* ===========================================
+   Review Section
+=========================================== */
+
+.reviewSection {
+  width: 100%;
+  padding: 120px 0;
+  background: var(--background);
+  overflow: hidden;
+}
+
+.reviewSection__container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ===========================================
+   Header
+=========================================== */
+
+.reviewSection__header {
+  max-width: 760px;
+  margin: 0 auto 70px;
+  text-align: center;
+}
+
+.reviewSection__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.reviewSection__label span {
+  width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.reviewSection__label p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 4px;
+}
+
+.reviewSection__title {
+  font-size: clamp(2.5rem, 5vw, 4.3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+/* ===========================================
+   Slider
+=========================================== */
+
+.reviewSlider {
+  width: 100%;
+  overflow: hidden;
+
+  /* Beautiful fade edges */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+.reviewTrack {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+
+  animation: reviewScroll 35s linear infinite;
+}
+
+.reviewSlider:hover .reviewTrack {
+  animation-play-state: paused;
+}
+
+@keyframes reviewScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 12px));
+  }
+}
+
+/* ===========================================
+   Card
+=========================================== */
+
+.reviewCard {
+  flex-shrink: 0;
+
+  width: 380px;
+
+  min-height: 270px;
+
+  padding: 30px;
+
+  border-radius: 22px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  transition: all 0.35s ease;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.reviewCard::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at top,
+    rgba(95, 130, 255, 0.08),
+    transparent 70%
+  );
+
+  opacity: 0;
+
+  transition: 0.35s;
+}
+
+.reviewCard:hover {
+  transform: translateY(-8px);
+
+  border-color: rgba(95, 130, 255, 0.45);
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+.reviewCard:hover::before {
+  opacity: 1;
+}
+
+/* ===========================================
+   Stars
+=========================================== */
+
+.reviewStars {
+  display: flex;
+
+  gap: 4px;
+
+  margin-bottom: 22px;
+}
+
+/* ===========================================
+   Text
+=========================================== */
+
+.reviewText {
+  color: var(--text);
+
+  font-size: 1.08rem;
+
+  line-height: 1.8;
+
+  margin-bottom: 35px;
+}
+
+/* ===========================================
+   User
+=========================================== */
+
+.reviewUser {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+}
+
+.reviewAvatar {
+  width: 54px;
+  height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-weight: 700;
+
+  color: white;
+
+  background: linear-gradient(135deg, #6f83ff, #8d74ff);
+}
+
+.reviewUser h4 {
+  color: var(--text);
+
+  margin-bottom: 6px;
+
+  font-size: 1.05rem;
+}
+
+.reviewUser span {
+  color: var(--text-muted);
+
+  font-size: 0.92rem;
+}
+
+/* ===========================================
+   Responsive
+=========================================== */
+
+@media (max-width: 992px) {
+  .reviewSection {
+    padding: 90px 0;
+  }
+
+  .reviewCard {
+    width: 330px;
+
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reviewSection__header {
+    margin-bottom: 50px;
+  }
+
+  .reviewCard {
+    width: 300px;
+
+    min-height: 250px;
+  }
+
+  .reviewText {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviewSection {
+    padding: 70px 0;
+  }
+
+  .reviewCard {
+    width: 270px;
+
+    padding: 20px;
+
+    border-radius: 18px;
+  }
+
+  .reviewAvatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .reviewUser h4 {
+    font-size: 1rem;
+  }
+
+  .reviewUser span {
+    font-size: 0.85rem;
+  }
+}
