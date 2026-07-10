@@ -1,0 +1,295 @@
+/* ==========================================================
+   UFM TOPBAR
+========================================================== */
+
+.ufm-topbar {
+  width: 100%;
+  height: 78px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  margin-bottom: 34px;
+}
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.ufm-topbar-left {
+  flex: 1;
+}
+
+/* ==========================================================
+   SEARCH
+========================================================== */
+
+.ufm-topbar-search {
+  width: 100%;
+  max-width: 520px;
+  height: 56px;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  border-radius: 16px;
+
+  background: #111827;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  transition: 0.3s;
+}
+
+.ufm-topbar-search:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.ufm-topbar-search:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.ufm-topbar-search-icon {
+  position: absolute;
+  left: 18px;
+
+  color: #7f8aa3;
+}
+
+.ufm-topbar-search-input {
+  width: 100%;
+  height: 100%;
+
+  border: none;
+  outline: none;
+
+  padding-left: 54px;
+  padding-right: 18px;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-size: 15px;
+}
+
+.ufm-topbar-search-input::placeholder {
+  color: #7f8aa3;
+}
+
+/* ==========================================================
+   RIGHT SECTION
+========================================================== */
+
+.ufm-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ==========================================================
+   ICON BUTTONS
+========================================================== */
+
+.ufm-topbar-icon-btn {
+  width: 52px;
+  height: 52px;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+
+  background: #111827;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.ufm-topbar-icon-btn:hover {
+  transform: translateY(-3px);
+
+  background: #161f31;
+
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.ufm-topbar-icon-btn:active {
+  transform: scale(0.96);
+}
+
+.ufm-topbar-dot {
+  position: absolute;
+
+  top: 14px;
+
+  right: 14px;
+
+  width: 9px;
+
+  height: 9px;
+
+  border-radius: 50%;
+
+  background: #ef4444;
+
+  border: 2px solid #111827;
+}
+
+/* ==========================================================
+   PROFILE
+========================================================== */
+
+.ufm-topbar-profile {
+  border: none;
+
+  outline: none;
+
+  cursor: pointer;
+
+  padding: 8px 10px;
+
+  border-radius: 18px;
+
+  background: #111827;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: #fff;
+
+  transition: 0.3s;
+}
+
+.ufm-topbar-profile:hover {
+  transform: translateY(-3px);
+
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.ufm-topbar-avatar {
+  width: 44px;
+
+  height: 44px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: #fff;
+
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.ufm-topbar-user {
+  text-align: left;
+}
+
+.ufm-topbar-user h4 {
+  margin: 0;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  color: #fff;
+}
+
+.ufm-topbar-user span {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 12px;
+
+  color: #9ca3af;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 992px) {
+  .ufm-topbar {
+    gap: 16px;
+  }
+
+  .ufm-topbar-user {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .ufm-topbar {
+    margin-top: 72px;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    height: auto;
+  }
+
+  .ufm-topbar-left {
+    width: 100%;
+  }
+
+  .ufm-topbar-search {
+    max-width: 100%;
+  }
+
+  .ufm-topbar-right {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .ufm-topbar-right {
+    gap: 10px;
+  }
+
+  .ufm-topbar-icon-btn {
+    width: 46px;
+
+    height: 46px;
+
+    border-radius: 14px;
+  }
+
+  .ufm-topbar-profile {
+    padding: 6px;
+  }
+
+  .ufm-topbar-avatar {
+    width: 40px;
+
+    height: 40px;
+  }
+}

@@ -1,6 +1,8 @@
 import "../Components/Dashboard/style/Dashboard.css";
 
 import Sidebar from "../Components/Dashboard/Sidebar/Sidebar";
+import Topbar from "../Components/Dashboard/Topbar/Topbar";
+import HeroDownload from "../Components/Dashboard/HeroDownload/HeroDownload";
 
 export default function Dashboard() {
   return (
@@ -8,9 +10,9 @@ export default function Dashboard() {
       <Sidebar />
 
       <main className="ufm-dashboard-main">
-        {/* Topbar */}
+       <Topbar/>
 
-        {/* Hero Download */}
+        <HeroDownload/>
 
         {/* Stats */}
 

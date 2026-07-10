@@ -1,0 +1,212 @@
+/*==========================================
+  HERO
+==========================================*/
+
+.ufm-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.ufm-hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ufm-hero-badge {
+  width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  margin-bottom: 22px;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #818cf8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ufm-hero-title {
+  margin: 0;
+  font-size: 58px;
+  font-weight: 800;
+  line-height: 1.08;
+  color: #fff;
+}
+
+.ufm-hero-title span {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ufm-hero-description {
+  max-width: 560px;
+  margin-top: 24px;
+  color: #94a3b8;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+/*==========================================
+  CARD
+==========================================*/
+
+.ufm-hero-card {
+  padding: 28px;
+  border-radius: 24px;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ufm-hero-card h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 24px;
+}
+
+.ufm-hero-card p {
+  margin: 10px 0 28px;
+  color: #94a3b8;
+}
+
+/*==========================================
+  INPUT
+==========================================*/
+
+.ufm-hero-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.ufm-hero-input-icon {
+  position: absolute;
+  left: 18px;
+  color: #7c879d;
+}
+
+.ufm-hero-input {
+  width: 100%;
+  height: 58px;
+  padding: 0 18px 0 52px;
+  border: none;
+  outline: none;
+  border-radius: 16px;
+  background: #0b1220;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.ufm-hero-input::placeholder {
+  color: #6b7280;
+}
+
+.ufm-hero-input:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+.ufm-hero-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+/*==========================================
+  DOWNLOAD BUTTON
+==========================================*/
+
+.ufm-hero-download-btn {
+  width: 100%;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  transition: 0.3s;
+}
+
+.ufm-hero-download-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(99, 102, 241, 0.28);
+}
+
+.ufm-hero-download-btn:active {
+  transform: scale(0.98);
+}
+
+/*==========================================
+  PLATFORM LIST
+==========================================*/
+
+.ufm-hero-platforms {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.ufm-hero-platform {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: #0b1220;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  transition: 0.3s;
+}
+
+.ufm-hero-platform:hover {
+  transform: translateY(-3px);
+  border-color: rgba(99, 102, 241, 0.25);
+  color: #fff;
+}
+
+/*==========================================
+  RESPONSIVE
+==========================================*/
+
+@media (max-width: 1100px) {
+  .ufm-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ufm-hero-title {
+    font-size: 42px;
+  }
+
+  .ufm-hero-card {
+    padding: 22px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ufm-hero-title {
+    font-size: 34px;
+  }
+
+  .ufm-hero-platforms {
+    flex-direction: column;
+  }
+
+  .ufm-hero-platform {
+    justify-content: center;
+  }
+}
