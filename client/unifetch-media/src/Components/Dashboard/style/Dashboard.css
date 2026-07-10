@@ -1,0 +1,83 @@
+/* ==========================================================
+   UFM DASHBOARD LAYOUT
+========================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.ufm-dashboard {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  background: #070b14;
+  overflow: hidden;
+}
+
+/* ==========================================================
+   MAIN CONTENT
+========================================================== */
+
+.ufm-dashboard-main {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 32px;
+}
+
+/* Custom Scrollbar */
+
+.ufm-dashboard-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ufm-dashboard-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ufm-dashboard-main::-webkit-scrollbar-thumb {
+  background: #2a3140;
+  border-radius: 100px;
+}
+
+.ufm-dashboard-main::-webkit-scrollbar-thumb:hover {
+  background: #3d475c;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1200px) {
+  .ufm-dashboard-main {
+    padding: 28px;
+  }
+}
+
+@media (max-width: 992px) {
+  .ufm-dashboard-main {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ufm-dashboard {
+    display: block;
+  }
+
+  .ufm-dashboard-main {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    padding: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ufm-dashboard-main {
+    padding: 14px;
+  }
+}

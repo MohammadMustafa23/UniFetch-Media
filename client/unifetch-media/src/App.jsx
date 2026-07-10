@@ -3,12 +3,14 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import HeroPageCTA from "./Pages/HeroPageCTA";
 import AuthPage from "./Pages/AuthPage";
+import Dashboard from "./Pages/Dashboard";
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<HeroPageCTA />} />
-        <Route path="/authantication-page" element={<AuthPage />} />
+        <Route path="/"  element={<Dashboard/>}/>
+        {/* <Route path="/" element={<HeroPageCTA />} />
+        <Route path="/authantication-page" element={<AuthPage />} /> */}
       </Routes>
     </>
   );
