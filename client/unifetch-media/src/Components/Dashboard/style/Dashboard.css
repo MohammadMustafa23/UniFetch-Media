@@ -1,34 +1,80 @@
-/* ==========================================================
-   UFM DASHBOARD LAYOUT
-========================================================== */
+/*==========================================
+  GLOBAL
+==========================================*/
 
-*,
-*::before,
-*::after {
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: #070b14;
+  font-family: "Inter", sans-serif;
+  color: #fff;
+}
+
+/*==========================================
+  DASHBOARD
+==========================================*/
+
 .ufm-dashboard {
+  display: flex;
   width: 100%;
   min-height: 100vh;
-  display: flex;
   background: #070b14;
   overflow: hidden;
 }
 
-/* ==========================================================
-   MAIN CONTENT
-========================================================== */
+/*==========================================
+  MAIN
+==========================================*/
 
 .ufm-dashboard-main {
   flex: 1;
+  min-width: 0;
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 32px;
+  padding: 28px;
 }
 
-/* Custom Scrollbar */
+/*==========================================
+  GRID
+==========================================*/
+
+.ufm-dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 32px;
+}
+
+.ufm-dashboard-left {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ufm-dashboard-right {
+  min-width: 0;
+  position: sticky;
+  top: 28px;
+}
+
+/*==========================================
+  SCROLLBAR
+==========================================*/
 
 .ufm-dashboard-main::-webkit-scrollbar {
   width: 8px;
@@ -39,47 +85,54 @@
 }
 
 .ufm-dashboard-main::-webkit-scrollbar-thumb {
-  background: #2a3140;
-  border-radius: 100px;
+  background: #2b3448;
+  border-radius: 20px;
 }
 
 .ufm-dashboard-main::-webkit-scrollbar-thumb:hover {
-  background: #3d475c;
+  background: #3b465d;
 }
 
-/* ==========================================================
-   RESPONSIVE
-========================================================== */
+/*==========================================
+  LAPTOP
+==========================================*/
 
-@media (max-width: 1200px) {
-  .ufm-dashboard-main {
-    padding: 28px;
+@media (max-width: 1400px) {
+  .ufm-dashboard-grid {
+    grid-template-columns: minmax(0, 1fr) 320px;
   }
 }
 
-@media (max-width: 992px) {
-  .ufm-dashboard-main {
-    padding: 24px;
+/*==========================================
+  TABLET
+==========================================*/
+
+@media (max-width: 1100px) {
+  .ufm-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ufm-dashboard-right {
+    position: static;
   }
 }
+
+/*==========================================
+  MOBILE
+==========================================*/
 
 @media (max-width: 768px) {
-  .ufm-dashboard {
-    display: block;
-  }
-
   .ufm-dashboard-main {
-    width: 100%;
-    height: auto;
-    min-height: 100vh;
     padding: 18px;
   }
 }
+
+/*==========================================
+  SMALL MOBILE
+==========================================*/
 
 @media (max-width: 480px) {
   .ufm-dashboard-main {
     padding: 14px;
   }
 }
-
-
