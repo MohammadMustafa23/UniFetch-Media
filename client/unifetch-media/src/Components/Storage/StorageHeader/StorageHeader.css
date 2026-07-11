@@ -1,0 +1,45 @@
+/*==========================================
+STORAGE HEADER
+==========================================*/
+
+.ufm-storage-header {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.ufm-storage-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ufm-storage-heading h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+}
+
+.ufm-storage-heading p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #98a2b3;
+  max-width: 620px;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 768px) {
+  .ufm-storage-heading h1 {
+    font-size: 1.7rem;
+  }
+
+  .ufm-storage-heading p {
+    font-size: 0.95rem;
+  }
+}

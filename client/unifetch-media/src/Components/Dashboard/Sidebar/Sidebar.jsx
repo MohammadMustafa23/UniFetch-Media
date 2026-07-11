@@ -54,11 +54,6 @@ const menuItems = [
     path: "/storage",
   },
   {
-    icon: <Bot size={20} />,
-    title: "Automation",
-    path: "/automation",
-  },
-  {
     icon: <Settings size={20} />,
     title: "Profile & Settings",
     path: "/settings",

@@ -1,0 +1,94 @@
+/*==========================================
+CLEANUP SHORTCUTS
+==========================================*/
+
+.ufm-cleanup-card {
+  background: #11151f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ufm-cleanup-card h2 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+/*==========================================
+BUTTON
+==========================================*/
+
+.ufm-cleanup-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 14px;
+  background: #171c27;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #fff;
+  transition: 0.25s;
+}
+
+.ufm-cleanup-btn:hover {
+  background: #1f2636;
+  border-color: rgba(109, 93, 252, 0.35);
+  transform: translateY(-2px);
+}
+
+.ufm-cleanup-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ufm-cleanup-left h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/*==========================================
+ICON
+==========================================*/
+
+.ufm-cleanup-btn svg {
+  color: #a7b0c4;
+  transition: 0.25s;
+}
+
+.ufm-cleanup-btn:hover svg {
+  color: #fff;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 768px) {
+  .ufm-cleanup-card {
+    padding: 18px;
+  }
+
+  .ufm-cleanup-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .ufm-cleanup-btn {
+    padding: 16px;
+  }
+
+  .ufm-cleanup-left h4 {
+    font-size: 15px;
+  }
+}

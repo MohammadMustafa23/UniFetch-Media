@@ -1,0 +1,90 @@
+/*==========================================
+PLATFORM USAGE
+==========================================*/
+
+.ufm-platform-usage {
+  background: #11151f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.ufm-platform-usage h2 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/*==========================================
+LIST
+==========================================*/
+
+.ufm-platform-list {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.ufm-platform-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ufm-platform-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.ufm-platform-head span {
+  font-size: 17px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.ufm-platform-head strong {
+  font-size: 17px;
+  font-weight: 700;
+  color: #d8deea;
+}
+
+/*==========================================
+PROGRESS
+==========================================*/
+
+.ufm-platform-progress {
+  height: 8px;
+  background: #1b2130;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ufm-platform-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: 0.4s;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 768px) {
+  .ufm-platform-usage {
+    padding: 18px;
+  }
+
+  .ufm-platform-usage h2 {
+    font-size: 1.3rem;
+  }
+
+  .ufm-platform-head span,
+  .ufm-platform-head strong {
+    font-size: 15px;
+  }
+}

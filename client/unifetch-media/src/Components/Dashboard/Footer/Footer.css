@@ -7,10 +7,12 @@
   align-items: center;
   justify-content: space-between;
 
-  margin-top: 40px;
+  margin-top: auto;
   padding: 22px 0;
 
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  flex-shrink: 0;
 }
 
 .ufm-footer p {

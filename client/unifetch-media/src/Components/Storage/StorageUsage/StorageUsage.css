@@ -1,0 +1,128 @@
+/*==========================================
+STORAGE USAGE
+==========================================*/
+
+.ufm-storage-card {
+  background: #11151f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.ufm-storage-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.ufm-storage-card-head h2 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ufm-storage-card-head span {
+  font-size: 18px;
+  font-weight: 500;
+  color: #a8b1c5;
+}
+
+/*==========================================
+TOTAL BAR
+==========================================*/
+
+.ufm-storage-total {
+  height: 12px;
+  background: #1b2130;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ufm-storage-total-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #5b8cff, #a78bfa);
+}
+
+/*==========================================
+LIST
+==========================================*/
+
+.ufm-storage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ufm-storage-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ufm-storage-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.ufm-storage-item-head span {
+  font-size: 17px;
+  color: #fff;
+}
+
+.ufm-storage-item-head strong {
+  font-size: 17px;
+  font-weight: 600;
+  color: #d8deea;
+}
+
+/*==========================================
+PROGRESS
+==========================================*/
+
+.ufm-storage-progress {
+  height: 8px;
+  background: #1b2130;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ufm-storage-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: 0.35s;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 768px) {
+  .ufm-storage-card {
+    padding: 18px;
+  }
+
+  .ufm-storage-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ufm-storage-card-head h2 {
+    font-size: 1.3rem;
+  }
+
+  .ufm-storage-card-head span {
+    font-size: 15px;
+  }
+
+  .ufm-storage-item-head span,
+  .ufm-storage-item-head strong {
+    font-size: 15px;
+  }
+}

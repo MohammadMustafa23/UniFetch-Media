@@ -1,0 +1,80 @@
+/*==========================================
+DOWNLOAD CHART
+==========================================*/
+
+.ufm-download-chart {
+  background: #11151f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 350px;
+}
+
+.ufm-download-chart-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ufm-download-chart-head h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/*==========================================
+CHART PLACEHOLDER
+==========================================*/
+
+.ufm-chart-placeholder {
+  flex: 1;
+  min-height: 220px;
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(109, 93, 252, 0.08),
+    rgba(109, 93, 252, 0)
+  );
+  border: 1px dashed rgba(109, 93, 252, 0.2);
+}
+
+/*==========================================
+DAYS
+==========================================*/
+
+.ufm-chart-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ufm-chart-days span {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #5f6677;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 768px) {
+  .ufm-download-chart {
+    padding: 18px;
+    min-height: 300px;
+  }
+
+  .ufm-download-chart-head h2 {
+    font-size: 1.3rem;
+  }
+
+  .ufm-chart-placeholder {
+    min-height: 180px;
+  }
+}

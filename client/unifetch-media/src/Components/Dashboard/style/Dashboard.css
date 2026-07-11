@@ -38,12 +38,21 @@ body {
   MAIN
 ==========================================*/
 
+/*==========================================
+  MAIN
+==========================================*/
+
 .ufm-dashboard-main {
   flex: 1;
   min-width: 0;
   height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
   overflow-y: auto;
   overflow-x: hidden;
+
   padding: 28px;
 }
 

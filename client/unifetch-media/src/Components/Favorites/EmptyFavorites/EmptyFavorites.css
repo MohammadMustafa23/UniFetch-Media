@@ -1,0 +1,84 @@
+/*==========================================
+EMPTY FAVORITES
+==========================================*/
+
+.ufm-empty-favorites {
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+  background: #11151f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}
+
+.ufm-empty-icon {
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(109, 93, 252, 0.12);
+  color: #6d5dfc;
+  margin-bottom: 28px;
+}
+
+.ufm-empty-favorites h2 {
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.ufm-empty-favorites p {
+  max-width: 420px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #98a2b3;
+  margin-bottom: 32px;
+}
+
+.ufm-empty-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border: none;
+  border-radius: 12px;
+  background: #6d5dfc;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.ufm-empty-btn:hover {
+  transform: translateY(-2px);
+  background: #7d70ff;
+}
+
+@media (max-width: 768px) {
+  .ufm-empty-favorites {
+    min-height: 340px;
+    padding: 40px 18px;
+  }
+
+  .ufm-empty-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .ufm-empty-favorites h2 {
+    font-size: 24px;
+  }
+
+  .ufm-empty-favorites p {
+    font-size: 15px;
+  }
+}

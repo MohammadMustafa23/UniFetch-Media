@@ -8,10 +8,9 @@ import Dashboard from "./Pages/Dashboard";
 import Downloads from "./Components/Downloads/Downloads";
 import Queue from "./Components/Queue/Queue";
 import History from "./Components/History/History";
-// import Favorites from "./Pages/Favorites/Favorites";
-// import Analytics from "./Pages/Analytics/Analytics";
-// import Storage from "./Pages/Storage/Storage";
-// import Automation from "./Pages/Automation/Automation";
+import Favorites from "./Components/Favorites/Favorites";
+import Analytics from "./Components/Analytics/Analytics";
+import Storage from "./Components/Storage/Storage";
 import Settings from "./Components/Setting/ProfileSettings";
 
 function App() {
@@ -24,10 +23,9 @@ function App() {
         <Route path="/downloads" element={<Downloads />} />
         <Route path="/queue" element={<Queue />} />
         <Route path="/history" element={<History />}/>
-        {/* {/* <Route path="/favorites" element={<Favorites />} />
+        <Route path="/favorites" element={<Favorites />} /> 
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/storage" element={<Storage />} />
-        <Route path="/automation" element={<Automation />} /> */}
         <Route path="/settings" element={<Settings />} /> 
       </Routes>
     </>

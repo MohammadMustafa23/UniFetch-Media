@@ -1,0 +1,89 @@
+/*==========================================
+FILE DISTRIBUTION
+==========================================*/
+
+.ufm-file-distribution {
+  background: #11151f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ufm-file-distribution h2 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/*==========================================
+LIST
+==========================================*/
+
+.ufm-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.ufm-file-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ufm-file-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ufm-file-head span {
+  font-size: 16px;
+  color: #fff;
+}
+
+.ufm-file-head strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: #d8deea;
+}
+
+/*==========================================
+PROGRESS
+==========================================*/
+
+.ufm-file-progress {
+  height: 8px;
+  background: #1b2130;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ufm-file-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: 0.4s;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 768px) {
+  .ufm-file-distribution {
+    padding: 18px;
+  }
+
+  .ufm-file-distribution h2 {
+    font-size: 1.3rem;
+  }
+
+  .ufm-file-head span,
+  .ufm-file-head strong {
+    font-size: 15px;
+  }
+}

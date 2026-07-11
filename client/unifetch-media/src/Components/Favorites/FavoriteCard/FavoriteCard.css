@@ -1,0 +1,157 @@
+/*==========================================
+FAVORITE CARD
+==========================================*/
+
+.ufm-favorite-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: 0.25s;
+}
+
+.ufm-favorite-card:last-child {
+  border-bottom: none;
+}
+
+.ufm-favorite-card:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/*==========================================
+LEFT
+==========================================*/
+
+.ufm-favorite-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ufm-favorite-preview {
+  width: 48px;
+  height: 48px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 12px;
+  background: #171c27;
+  color: #9aa4b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.25s;
+}
+
+.ufm-favorite-preview:hover {
+  background: #6d5dfc;
+  color: #fff;
+}
+
+.ufm-favorite-info {
+  min-width: 0;
+}
+
+.ufm-favorite-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 8px;
+}
+
+.ufm-favorite-info p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: #8c97aa;
+}
+
+/*==========================================
+RIGHT
+==========================================*/
+
+.ufm-favorite-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.ufm-favorite-date {
+  font-size: 14px;
+  color: #8c97aa;
+  min-width: 110px;
+}
+
+.ufm-favorite-status {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.ufm-favorite-action {
+  width: 40px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  background: #171c27;
+  color: #a8b1c5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.25s;
+}
+
+.ufm-favorite-action:hover {
+  background: #232a38;
+  color: #fff;
+}
+
+.ufm-delete:hover {
+  background: rgba(239, 68, 68, 0.18);
+  color: #ef4444;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 992px) {
+  .ufm-favorite-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ufm-favorite-right {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .ufm-favorite-preview {
+    width: 42px;
+    height: 42px;
+  }
+
+  .ufm-favorite-info h3 {
+    font-size: 16px;
+  }
+
+  .ufm-favorite-info p {
+    font-size: 14px;
+  }
+}
