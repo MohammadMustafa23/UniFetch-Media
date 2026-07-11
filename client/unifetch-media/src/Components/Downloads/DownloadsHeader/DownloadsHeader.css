@@ -1,0 +1,73 @@
+/*==========================================
+DOWNLOADS HEADER
+==========================================*/
+
+.downloads-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/*==========================================
+CONTENT
+==========================================*/
+
+.downloads-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.downloads-header-content h1 {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: #fff;
+}
+
+.downloads-header-content p {
+  max-width: 680px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #8f98aa;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 992px) {
+  .downloads-header-content h1 {
+    font-size: 38px;
+  }
+
+  .downloads-header-content p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .downloads-header {
+    gap: 18px;
+  }
+
+  .downloads-header-content h1 {
+    font-size: 32px;
+  }
+
+  .downloads-header-content p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .downloads-header-content h1 {
+    font-size: 28px;
+  }
+
+  .downloads-header-content p {
+    font-size: 14px;
+  }
+}

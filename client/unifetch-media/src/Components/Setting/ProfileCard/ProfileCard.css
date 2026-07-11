@@ -1,0 +1,124 @@
+/*==========================================
+PROFILE CARD
+==========================================*/
+
+.profile-card {
+  background: #11151f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/*==========================================
+TITLE
+==========================================*/
+
+.profile-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/*==========================================
+FIELD
+==========================================*/
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-field label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #b8c0d4;
+}
+
+/*==========================================
+INPUT
+==========================================*/
+
+.profile-input {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+  background: #181d29;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  transition: 0.25s;
+}
+
+.profile-input:hover {
+  border-color: #6f63ff55;
+}
+
+.profile-input:focus-within {
+  border-color: #7c68ff;
+  box-shadow: 0 0 0 4px rgba(124, 104, 255, 0.12);
+}
+
+.profile-input svg {
+  color: #8d97ad;
+  flex-shrink: 0;
+}
+
+.profile-input input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.profile-input input::placeholder {
+  color: #7b8499;
+}
+
+/*==========================================
+BUTTON
+==========================================*/
+
+.profile-save-btn {
+  width: max-content;
+  height: 52px;
+  padding: 0 28px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6f63ff, #8d63ff);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.profile-save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(111, 99, 255, 0.28);
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 24px;
+  }
+
+  .profile-input {
+    height: 56px;
+  }
+
+  .profile-save-btn {
+    width: 100%;
+  }
+}

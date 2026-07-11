@@ -1,0 +1,26 @@
+/*==========================================
+DOWNLOADS GRID
+==========================================*/
+
+.downloads-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 26px;
+  align-items: start;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 1200px) {
+  .downloads-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .downloads-grid {
+    grid-template-columns: 1fr;
+  }
+}

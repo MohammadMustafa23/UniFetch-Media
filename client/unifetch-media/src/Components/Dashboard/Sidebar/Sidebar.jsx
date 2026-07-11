@@ -60,7 +60,7 @@ const menuItems = [
   },
   {
     icon: <Settings size={20} />,
-    title: "Settings",
+    title: "Profile & Settings",
     path: "/settings",
   },
 ];

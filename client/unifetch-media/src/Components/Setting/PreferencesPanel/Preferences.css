@@ -1,0 +1,183 @@
+/*==========================================
+PREFERENCES CARD
+==========================================*/
+
+.preferences-card {
+  background: #11151f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: max-content;
+}
+
+/*==========================================
+TITLE
+==========================================*/
+
+.preferences-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+/*==========================================
+ITEM
+==========================================*/
+
+.pref-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  background: #181d29;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  transition: 0.25s;
+}
+
+.pref-item:hover {
+  border-color: #6f63ff44;
+}
+
+/*==========================================
+LEFT
+==========================================*/
+
+.pref-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pref-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #20263a;
+  color: #9d8cff;
+}
+
+.pref-left h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.pref-left p {
+  font-size: 14px;
+  color: #9098ab;
+}
+
+/*==========================================
+SWITCH
+==========================================*/
+
+.switch {
+  position: relative;
+  width: 56px;
+  height: 30px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #2b3142;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: 4px;
+  top: 4px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.switch input:checked + .slider {
+  background: #7a63ff;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(26px);
+}
+
+/*==========================================
+SELECT
+==========================================*/
+
+.quality-select {
+  position: relative;
+  width: 150px;
+}
+
+.quality-select select {
+  width: 100%;
+  height: 48px;
+  padding: 0 42px 0 16px;
+  background: #20263a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.quality-select svg {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #b8bfd0;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 900px) {
+  .pref-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quality-select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .preferences-card {
+    padding: 22px;
+  }
+
+  .pref-left {
+    align-items: flex-start;
+  }
+
+  .pref-icon {
+    width: 46px;
+    height: 46px;
+  }
+}

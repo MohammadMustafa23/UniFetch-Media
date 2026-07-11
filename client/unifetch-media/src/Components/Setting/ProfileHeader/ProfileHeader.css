@@ -1,0 +1,54 @@
+/*==========================================
+PROFILE HEADER
+==========================================*/
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/*==========================================
+TEXT
+==========================================*/
+
+.profile-header h1 {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 10px;
+  letter-spacing: -1px;
+}
+
+.profile-header p {
+  font-size: 18px;
+  color: #9aa4b7;
+  line-height: 1.6;
+  max-width: 650px;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 768px) {
+  .profile-header h1 {
+    font-size: 34px;
+  }
+
+  .profile-header p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header h1 {
+    font-size: 30px;
+  }
+
+  .profile-header p {
+    font-size: 15px;
+  }
+}
