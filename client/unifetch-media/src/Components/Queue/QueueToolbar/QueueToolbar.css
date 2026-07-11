@@ -1,0 +1,173 @@
+/* ===========================================
+            QUEUE TOOLBAR
+=========================================== */
+
+.queue-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 20px 24px;
+
+  background: var(--card-bg, #131722);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+}
+
+/* ========================= */
+
+.queue-toolbar-left {
+  flex: 1;
+}
+
+/* ========================= */
+
+.queue-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  height: 48px;
+
+  padding: 0 18px;
+
+  background: #1a2030;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  transition: 0.3s;
+}
+
+.queue-search:focus-within {
+  border-color: #6366f1;
+
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.queue-search svg {
+  color: #8b94a7;
+}
+
+.queue-search input {
+  flex: 1;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-size: 0.95rem;
+}
+
+.queue-search input::placeholder {
+  color: #7b8394;
+}
+
+/* ========================= */
+
+.queue-toolbar-right {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+/* ========================= */
+
+.toolbar-btn {
+  height: 46px;
+
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  border: none;
+
+  outline: none;
+
+  cursor: pointer;
+
+  border-radius: 14px;
+
+  background: #1a2030;
+
+  color: #d2d8e7;
+
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.toolbar-btn:hover {
+  background: #242c40;
+
+  transform: translateY(-2px);
+}
+
+.toolbar-btn.primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+
+  color: #fff;
+}
+
+.toolbar-btn.primary:hover {
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
+}
+
+.toolbar-btn.danger:hover {
+  background: #ef4444;
+
+  color: #fff;
+}
+
+/* ========================= */
+
+@media (max-width: 1100px) {
+  .queue-toolbar {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .queue-toolbar-right {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .queue-toolbar {
+    padding: 18px;
+  }
+
+  .queue-toolbar-right {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+  }
+
+  .toolbar-btn {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .queue-toolbar-right {
+    grid-template-columns: 1fr;
+  }
+}

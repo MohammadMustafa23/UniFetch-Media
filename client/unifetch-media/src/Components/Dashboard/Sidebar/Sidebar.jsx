@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
+
 import {
   LayoutDashboard,
   Download,
@@ -16,15 +18,51 @@ import {
 } from "lucide-react";
 
 const menuItems = [
-  { icon: <LayoutDashboard size={20} />, title: "Dashboard", active: true },
-  { icon: <Download size={20} />, title: "Downloads" },
-  { icon: <ListTodo size={20} />, title: "Queue" },
-  { icon: <History size={20} />, title: "History" },
-  { icon: <Heart size={20} />, title: "Favorites" },
-  { icon: <BarChart3 size={20} />, title: "Analytics" },
-  { icon: <HardDrive size={20} />, title: "Storage" },
-  { icon: <Bot size={20} />, title: "Automation" },
-  { icon: <Settings size={20} />, title: "Settings" },
+  {
+    icon: <LayoutDashboard size={20} />,
+    title: "Dashboard",
+    path: "/dashboard",
+  },
+  {
+    icon: <Download size={20} />,
+    title: "Downloads",
+    path: "/downloads",
+  },
+  {
+    icon: <ListTodo size={20} />,
+    title: "Queue",
+    path: "/queue",
+  },
+  {
+    icon: <History size={20} />,
+    title: "History",
+    path: "/history",
+  },
+  {
+    icon: <Heart size={20} />,
+    title: "Favorites",
+    path: "/favorites",
+  },
+  {
+    icon: <BarChart3 size={20} />,
+    title: "Analytics",
+    path: "/analytics",
+  },
+  {
+    icon: <HardDrive size={20} />,
+    title: "Storage",
+    path: "/storage",
+  },
+  {
+    icon: <Bot size={20} />,
+    title: "Automation",
+    path: "/automation",
+  },
+  {
+    icon: <Settings size={20} />,
+    title: "Settings",
+    path: "/settings",
+  },
 ];
 
 export default function Sidebar() {
@@ -32,7 +70,6 @@ export default function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogoClick = () => {
-    // Don't collapse on mobile
     if (window.innerWidth <= 768) return;
 
     setIsCollapsed((prev) => !prev);
@@ -59,8 +96,9 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside
         className={`ufm-sidebar
-        ${isCollapsed ? "ufm-sidebar-collapse" : ""}
-        ${mobileOpen ? "ufm-sidebar-open" : ""}`}
+          ${isCollapsed ? "ufm-sidebar-collapse" : ""}
+          ${mobileOpen ? "ufm-sidebar-open" : ""}
+        `}
       >
         {/* Mobile Close */}
         <button
@@ -74,50 +112,61 @@ export default function Sidebar() {
         <div className="ufm-sidebar-logo" onClick={handleLogoClick}>
           <div className="ufm-sidebar-logo-icon">U</div>
 
-          <div className="ufm-sidebar-logo-content">
-            <h2>UniFetch</h2>
-            <span>MEDIA</span>
-          </div>
+          {!isCollapsed && (
+            <div className="ufm-sidebar-logo-content">
+              <h2>UniFetch</h2>
+              <span>MEDIA</span>
+            </div>
+          )}
         </div>
 
         {/* Navigation */}
         <nav className="ufm-sidebar-nav">
           {menuItems.map((item, index) => (
-            <button
+            <NavLink
               key={index}
-              className={`ufm-sidebar-item ${
-                item.active ? "ufm-sidebar-item-active" : ""
-              }`}
+              to={item.path}
+              end
+              onClick={() => setMobileOpen(false)}
+              className={({ isActive }) =>
+                `ufm-sidebar-item ${isActive ? "ufm-sidebar-item-active" : ""}`
+              }
             >
               <span className="ufm-sidebar-icon">{item.icon}</span>
 
-              <span className="ufm-sidebar-title">{item.title}</span>
-            </button>
+              {!isCollapsed && (
+                <span className="ufm-sidebar-title">{item.title}</span>
+              )}
+            </NavLink>
           ))}
         </nav>
 
         {/* Storage */}
-        <div className="ufm-sidebar-storage">
-          <div className="ufm-sidebar-storage-head">
-            <h4>Storage</h4>
-            <span>68%</span>
-          </div>
+        {!isCollapsed && (
+          <div className="ufm-sidebar-storage">
+            <div className="ufm-sidebar-storage-head">
+              <h4>Storage</h4>
+              <span>68%</span>
+            </div>
 
-          <div className="ufm-sidebar-progress">
-            <div className="ufm-sidebar-progress-fill"></div>
-          </div>
+            <div className="ufm-sidebar-progress">
+              <div className="ufm-sidebar-progress-fill"></div>
+            </div>
 
-          <p>42 GB of 64 GB Used</p>
-        </div>
+            <p>42 GB of 64 GB Used</p>
+          </div>
+        )}
 
         {/* User */}
         <div className="ufm-sidebar-user">
           <div className="ufm-sidebar-avatar">M</div>
 
-          <div className="ufm-sidebar-user-info">
-            <h4>Mohammad</h4>
-            <span>Premium Plan</span>
-          </div>
+          {!isCollapsed && (
+            <div className="ufm-sidebar-user-info">
+              <h4>Mohammad</h4>
+              <span>Premium Plan</span>
+            </div>
+          )}
 
           <button className="ufm-sidebar-logout">
             <LogOut size={18} />

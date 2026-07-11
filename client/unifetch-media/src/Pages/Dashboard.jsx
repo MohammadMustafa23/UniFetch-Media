@@ -7,6 +7,7 @@ import Stats from "../Components/Dashboard/Stats/Stats";
 import Queue from "../Components/Dashboard/Queue/Queue";
 import RecentDownloads from "../Components/Dashboard/RecentDownloads/RecentDownloads";
 import DashboardAside from "../Components/Dashboard/Tips/DashboardAside";
+import Footer from "../Components/Dashboard/Footer/Footer"; // <-- Add
 
 export default function Dashboard() {
   return (
@@ -31,6 +32,8 @@ export default function Dashboard() {
         <Queue />
 
         <RecentDownloads />
+
+        <Footer />
       </main>
     </div>
   );

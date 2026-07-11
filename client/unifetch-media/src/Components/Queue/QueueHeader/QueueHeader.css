@@ -1,0 +1,73 @@
+.queue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  width: 100%;
+}
+
+.queue-header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.queue-header-left h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+
+  margin-bottom: 8px;
+}
+
+.queue-header-left p {
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.queue-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 22px;
+
+  border: none;
+  outline: none;
+
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #6c63ff, #8b5cf6);
+
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  transition: 0.3s ease;
+}
+
+.queue-add-btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 12px 30px rgba(108, 99, 255, 0.35);
+}
+
+.queue-add-btn:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 900px) {
+  .queue-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .queue-add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

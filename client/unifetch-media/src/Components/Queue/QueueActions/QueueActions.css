@@ -1,0 +1,69 @@
+/* ===========================================
+            QUEUE ACTIONS
+=========================================== */
+
+.queue-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.queue-actions button {
+  width: 38px;
+
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: none;
+
+  outline: none;
+
+  cursor: pointer;
+
+  border-radius: 12px;
+
+  background: #1b2130;
+
+  color: #bfc8d8;
+
+  transition: all 0.28s ease;
+}
+
+.queue-actions button:hover {
+  background: #6366f1;
+
+  color: #fff;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.35);
+}
+
+.queue-actions button:active {
+  transform: scale(0.95);
+}
+
+.queue-actions .danger:hover {
+  background: #ef4444;
+
+  box-shadow: 0 10px 24px rgba(239, 68, 68, 0.35);
+}
+
+@media (max-width: 768px) {
+  .queue-actions {
+    flex-wrap: wrap;
+  }
+
+  .queue-actions button {
+    width: 34px;
+
+    height: 34px;
+  }
+}

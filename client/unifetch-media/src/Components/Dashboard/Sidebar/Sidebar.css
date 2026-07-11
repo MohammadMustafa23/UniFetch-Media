@@ -134,27 +134,28 @@
 .ufm-sidebar-item {
   width: 100%;
 
-  border: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 
+  padding: 14px 16px;
+
+  border: none;
   outline: none;
 
-  cursor: pointer;
+  border-radius: 14px;
 
   background: transparent;
 
   color: #8b94a7;
 
-  border-radius: 14px;
+  text-decoration: none;
 
-  display: flex;
+  cursor: pointer;
 
-  align-items: center;
+  transition: all 0.3s ease;
 
-  gap: 14px;
-
-  padding: 14px 16px;
-
-  transition: 0.3s;
+  box-sizing: border-box;
 }
 
 .ufm-sidebar-item:hover {
@@ -175,6 +176,25 @@
     rgba(99, 102, 241, 0.3),
     rgba(99, 102, 241, 0.08)
   );
+}
+
+.ufm-sidebar-item-active:hover {
+  transform: translateX(6px);
+}
+
+.ufm-sidebar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.ufm-sidebar-title {
+  font-size: 15px;
+  font-weight: 500;
+
+  white-space: nowrap;
 }
 
 .ufm-sidebar-icon {
