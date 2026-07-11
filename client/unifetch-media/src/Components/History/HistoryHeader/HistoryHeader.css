@@ -1,0 +1,70 @@
+/*==========================================
+HISTORY HEADER
+==========================================*/
+
+.history-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.history-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-header-content h1 {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -1px;
+}
+
+.history-header-content p {
+  font-size: 18px;
+  color: #8c93a8;
+  line-height: 1.6;
+  max-width: 700px;
+}
+
+/*==========================================
+RESPONSIVE
+==========================================*/
+
+@media (max-width: 992px) {
+  .history-header-content h1 {
+    font-size: 38px;
+  }
+
+  .history-header-content p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .history-header {
+    gap: 18px;
+  }
+
+  .history-header-content h1 {
+    font-size: 32px;
+  }
+
+  .history-header-content p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .history-header-content h1 {
+    font-size: 28px;
+  }
+
+  .history-header-content p {
+    font-size: 14px;
+  }
+}
