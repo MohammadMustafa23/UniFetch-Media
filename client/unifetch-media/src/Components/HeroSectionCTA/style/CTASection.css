@@ -5,7 +5,7 @@
 .ctaSection {
   position: relative;
   overflow: hidden;
-  padding: 120px 20px;
+  padding: 60px 20px;
   background: var(--background);
 }
 
@@ -33,7 +33,7 @@
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 
-  padding: 110px 30px;
+  padding: 80px 30px;
 }
 
 /* ===========================================
@@ -102,7 +102,7 @@
 }
 
 .ctaSection__title {
-  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-size: clamp(2.8rem, 5vw, 3rem);
 
   font-weight: 800;
 
@@ -118,7 +118,7 @@
 
   margin: auto;
 
-  font-size: 1.25rem;
+  font-size: 1rem;
 
   line-height: 1.8;
 

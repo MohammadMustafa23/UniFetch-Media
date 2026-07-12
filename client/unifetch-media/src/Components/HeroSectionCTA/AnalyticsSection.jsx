@@ -17,11 +17,10 @@ export default function AnalyticsSection() {
         {/* Header */}
 
         <div className="analyticsSection__header">
-          <div className="analyticsSection__label">
-            <span></span>
+          <div className="platformSection__label">
+            <span className="uf-section-line"></span>
             <p>ANALYTICS</p>
           </div>
-
           <h2 className="analyticsSection__title">
             Know what you've downloaded, and when
           </h2>

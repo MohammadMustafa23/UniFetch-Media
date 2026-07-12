@@ -6,6 +6,8 @@
   width: 100%;
   padding: 120px 20px;
   background: var(--background);
+  border-bottom: 1px solid #23242A;
+  border-top: 1px solid #23242A;
 }
 
 .featureSection__container {
@@ -45,7 +47,7 @@
 }
 
 .featureSection__header h2 {
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
+  font-size: clamp(2.6rem, 6vw, 3rem);
   font-weight: 800;
   line-height: 1.05;
   color: var(--text);
@@ -75,9 +77,7 @@
 
 .featureCard {
   position: relative;
-
   min-height: 230px;
-
   padding: 28px;
 
   background: var(--surface);
@@ -145,8 +145,8 @@
 =========================================== */
 
 .featureCard__icon {
-  width: 42px;
-  height: 42px;
+  width: 35px;
+  height: 35px;
 
   display: flex;
   align-items: center;
@@ -154,7 +154,7 @@
 
   margin-bottom: 28px;
 
-  border-radius: 10px;
+  border-radius: 7px;
 
   background: rgba(255, 255, 255, 0.04);
 

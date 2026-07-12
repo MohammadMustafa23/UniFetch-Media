@@ -144,6 +144,24 @@ body {
   gap: 18px;
 }
 
+.uf-logo,
+.uf-nav-link,
+.uf-mobile-link {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+}
+
+.uf-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .uf-signin-btn {
   display: flex;
   align-items: center;

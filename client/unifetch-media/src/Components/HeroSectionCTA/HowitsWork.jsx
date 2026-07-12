@@ -30,8 +30,8 @@ export default function HowitsWork() {
     <section className="howItsWork">
       <div className="howItsWork__container">
         <div className="howItsWork__header">
-          <div className="howItsWork__label">
-            <span></span>
+           <div className="platformSection__label">
+            <span className="uf-section-line"></span>
             <p>HOW IT WORKS</p>
           </div>
 
@@ -44,9 +44,10 @@ export default function HowitsWork() {
           {steps.map((step, index) => (
             <>
               <div className="howItsWork__card" key={step.number}>
-                <div className="howItsWork__number">{step.number}</div>
-
-                <div className="howItsWork__icon">{step.icon}</div>
+                <div className="howItsWork-combine" >
+                   <div className="howItsWork__number">{step.number}</div>
+                   <div className="howItsWork__icon">{step.icon}</div>
+                </div>
 
                 <h3>{step.title}</h3>
 

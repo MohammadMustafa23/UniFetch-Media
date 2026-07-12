@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 import NavBar from "../Components/HeroSectionCTA/NavBar";
 import HeroSection from "../Components/HeroSectionCTA/HeroSection";
 import PlatformSection from "../Components/HeroSectionCTA/PlatformSection";
@@ -13,31 +15,85 @@ import Footer from "../Components/HeroSectionCTA/Herofooter";
 import "../Components/HeroSectionCTA/style/HeroSection.css";
 
 export default function HeroPageCTA() {
+
+  const pageRef = useRef(null);
+
+  const heroRef = useRef(null);
+  const featuresRef = useRef(null);
+  const howItWorksRef = useRef(null);
+  const dashboardRef = useRef(null);
+  const analyticsRef = useRef(null);
+  const securityRef = useRef(null);
+
   return (
-    <>
-      <NavBar />
+    <div ref={pageRef} className="hero-page">
 
-       <main className="homepage">
-        <HeroSection />
+      <NavBar
+        heroRef={heroRef}
+        featuresRef={featuresRef}
+        howItWorksRef={howItWorksRef}
+        dashboardRef={dashboardRef}
+        analyticsRef={analyticsRef}
+        securityRef={securityRef}
+      />
 
-        <PlatformSection />
+      <main className="homepage">
 
-        <FeatureSection />
+        <section ref={heroRef}>
+          <HeroSection />
+        </section>
 
-        <HowItsWork />
+        <section className="platform-section">
+          <PlatformSection />
+        </section>
 
-        <DashboardShowcase />
+        <section
+          ref={featuresRef}
+          className="feature-section"
+        >
+          <FeatureSection />
+        </section>
 
-        <TrustSection />
+        <section
+          ref={howItWorksRef}
+          className="how-section"
+        >
+          <HowItsWork />
+        </section>
 
-        <AnalyticsSection />
+        <section
+          ref={dashboardRef}
+          className="dashboard-section"
+        >
+          <DashboardShowcase />
+        </section>
 
-        <Review />  
+        <section
+          ref={securityRef}
+          className="trust-section"
+        >
+          <TrustSection />
+        </section>
 
-        <CTASection /> 
+        <section
+          ref={analyticsRef}
+          className="analytics-section"
+        >
+          <AnalyticsSection />
+        </section>
+
+        <section className="review-section">
+          <Review />
+        </section>
+
+        <section className="cta-section">
+          <CTASection />
+        </section>
+
       </main>
 
-      <Footer /> 
-    </>
+      <Footer />
+
+    </div>
   );
 }

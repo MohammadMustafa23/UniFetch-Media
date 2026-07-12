@@ -53,10 +53,11 @@ export default function Review() {
         {/* Header */}
 
         <div className="reviewSection__header">
-          <div className="reviewSection__label">
-            <span></span>
+          <div className="platformSection__label">
+            <span className="uf-section-line"></span>
             <p>WHAT PEOPLE SAY</p>
           </div>
+        
 
           <h2 className="reviewSection__title">
             Built for people who fetch media often

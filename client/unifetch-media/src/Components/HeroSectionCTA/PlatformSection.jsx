@@ -18,7 +18,7 @@ export default function PlatformSection() {
       <div className="platformSection__container">
         <div className="platformSection__header">
           <div className="platformSection__label">
-            <span className="platformSection__line"></span>
+            <span className="uf-section-line"></span>
             <p>SUPPORTED SOURCES</p>
           </div>
 

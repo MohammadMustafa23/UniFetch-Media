@@ -37,10 +37,12 @@ export default function TrustSection() {
         {/* Header */}
 
         <div className="trustSection__header">
-          <div className="trustSection__label">
-            <span></span>
+          <div className="platformSection__label">
+            <span className="uf-section-line"></span>
             <p>TRUST & PERFORMANCE</p>
           </div>
+
+          
 
           <h2 className="trustSection__title">
             Fast, secure, and built to last

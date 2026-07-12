@@ -56,8 +56,8 @@ export default function FeatureSection() {
     <section className="featureSection">
       <div className="featureSection__container">
         <div className="featureSection__header">
-          <div className="featureSection__label">
-            <span></span>
+          <div className="platformSection__label">
+            <span className="uf-section-line"></span>
             <p>FEATURES</p>
           </div>
 

@@ -1,316 +1,282 @@
-/* ===========================================
-   GOOGLE FONT
-=========================================== */
-
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-
-/* ===========================================
-   VARIABLES
-=========================================== */
+/* ==========================================================
+   HERO SECTION
+   Part 1 - Layout + Left Content
+========================================================== */
 
 :root {
-  --bg: #06070b;
+  --bg: #050609;
+  --surface: #0b0d13;
+  --surface-2: #10131a;
+  --border: #23242a;
 
-  --card: #111318;
+  --text: #f5f7fa;
+  --text-muted: #9096a8;
 
-  --card-2: #171a21;
-
-  --border: rgba(255, 255, 255, 0.08);
-
-  --text: #ffffff;
-
-  --text-light: #b7bcc8;
-
-  --primary: #7c6cff;
-
-  --primary-dark: #5d52ff;
-
-  --green: #19d27c;
+  --primary: #6e7cff;
+  --secondary: #7f6bff;
 }
 
-/* ===========================================
-   RESET
-=========================================== */
-
-* {
-  margin: 0;
-
-  padding: 0;
-
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Inter", sans-serif;
-
-  background: var(--bg);
-
-  color: white;
-}
-
-/* ===========================================
+/* ==========================================================
    HERO
-=========================================== */
+========================================================== */
 
 .hero {
   position: relative;
-
   overflow: hidden;
 
   min-height: 100vh;
 
-  padding: 90px 0;
-
-  background: #05070b;
-}
-
-/* ===========================================
-   CONTAINER
-=========================================== */
-
-.container {
-  width: min(1000px, 92%);
-  margin: auto;
-}
-
-/* ===========================================
-   HERO LAYOUT
-=========================================== */
-
-.hero-wrapper {
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
+  display: flex;
   align-items: center;
 
-  gap: 70px;
-
-  position: relative;
-
-  z-index: 5;
+  background: var(--bg);
 }
 
-/* ===========================================
-   GRID BACKGROUND
-=========================================== */
+/* ==========================================================
+   BACKGROUND
+========================================================== */
 
 .hero-grid {
   position: absolute;
-
   inset: 0;
 
+  pointer-events: none;
+
+  opacity: 0.22;
+
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
 
-  background-size: 60px 60px;
-
-  opacity: 0.45;
-
-  mask-image: radial-gradient(circle, black 55%, transparent 100%);
+  background-size: 72px 72px;
 }
-
-/* ===========================================
-   GRADIENT BLOBS
-=========================================== */
 
 .hero-gradient-left {
   position: absolute;
 
-  width: 450px;
+  width: 900px;
+  height: 900px;
 
-  height: 450px;
+  left: -320px;
+  top: -260px;
 
   border-radius: 50%;
 
-  background: #365dff;
+  background: radial-gradient(
+    circle,
+    rgba(68, 110, 255, 0.34),
+    transparent 72%
+  );
 
-  left: -120px;
-
-  top: -120px;
-
-  filter: blur(170px);
-
-  opacity: 0.35;
+  filter: blur(45px);
 }
 
 .hero-gradient-right {
   position: absolute;
 
-  width: 420px;
+  width: 850px;
+  height: 850px;
 
-  height: 420px;
+  right: -260px;
+  top: -180px;
 
   border-radius: 50%;
 
-  background: #8d63ff;
+  background: radial-gradient(
+    circle,
+    rgba(132, 103, 255, 0.3),
+    transparent 72%
+  );
 
-  right: -130px;
-
-  top: -60px;
-
-  filter: blur(170px);
-
-  opacity: 0.32;
+  filter: blur(50px);
 }
 
 .hero-gradient-bottom {
   position: absolute;
 
-  width: 520px;
+  width: 900px;
+  height: 450px;
 
-  height: 520px;
+  left: 50%;
+  bottom: -220px;
+
+  transform: translateX(-50%);
 
   border-radius: 50%;
 
-  background: #0fb86d;
+  background: radial-gradient(circle, rgba(18, 133, 78, 0.24), transparent 72%);
 
-  left: 40%;
-
-  bottom: -280px;
-
-  filter: blur(180px);
-
-  opacity: 0.18;
+  filter: blur(60px);
 }
 
-/* ===========================================
-   HERO LEFT
-=========================================== */
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.hero .container {
+  width: min(1500px, 92%);
+
+  margin: auto;
+}
+
+.hero-wrapper {
+  position: relative;
+  z-index: 5;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1.08fr;
+
+  align-items: center;
+
+  gap: 70px;
+
+  padding: 120px 0 80px;
+}
+
+/* ==========================================================
+   LEFT
+========================================================== */
 
 .hero-left {
-  position: relative;
-
-  z-index: 2;
+  max-width: 680px;
 }
 
-/* ===========================================
+/* ==========================================================
    BADGE
-=========================================== */
+========================================================== */
 
 .hero-badge {
   display: inline-flex;
 
   align-items: center;
 
-  gap: 10px;
+  gap: 12px;
 
-  background: #13161d;
+  height: 48px;
 
-  border: 1px solid var(--border);
+  padding: 0 20px;
 
   border-radius: 999px;
 
-  padding: 10px 18px;
-
-  color: #d4d8e2;
+  color: #dce1f5;
 
   font-size: 0.92rem;
 
-  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.03);
+
+  backdrop-filter: blur(14px);
+
+  margin-bottom: 34px;
 }
 
-.dot {
-  width: 10px;
-
-  height: 10px;
+.hero-badge .dot {
+  width: 8px;
+  height: 8px;
 
   border-radius: 50%;
 
-  background: var(--green);
+  background: #69f28f;
 
-  box-shadow: 0 0 15px var(--green);
+  box-shadow: 0 0 12px #69f28f;
 }
 
-/* ===========================================
+/* ==========================================================
    TITLE
-=========================================== */
+========================================================== */
 
 .hero-left h1 {
-  font-size: 5rem;
+  font-size: clamp(4.5rem, 7vw, 3rem);
 
-  line-height: 0.95;
+  line-height: 0.92;
+
+  font-weight: 600;
 
   letter-spacing: -3px;
 
-  font-weight: 900;
+  color: var(--text);
 
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
 .hero-left h1 span {
-  background: linear-gradient(90deg, #6e7cff, #9b72ff);
+  background: linear-gradient(90deg, #7a86ff, #63d7f4);
 
   -webkit-background-clip: text;
 
-  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
-/* ===========================================
-   PARAGRAPH
-=========================================== */
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
 
 .hero-left p {
-  max-width: 620px;
+  max-width: 610px;
 
-  color: var(--text-light);
-
-  font-size: 1.18rem;
+  font-size: 1rem;
 
   line-height: 1.8;
+
+  color: var(--text-muted);
+
+  margin-bottom: 42px;
 }
 
-/* ===========================================
+/* ==========================================================
    BUTTONS
-=========================================== */
+========================================================== */
 
 .hero-buttons {
   display: flex;
 
+  align-items: center;
+
   gap: 18px;
 
-  margin-top: 45px;
+  margin-bottom: 42px;
 }
 
 .primary-btn {
-  height: 56px;
+  height: 60px;
 
-  padding: 0 28px;
+  padding: 0 34px;
 
   border: none;
 
-  border-radius: 14px;
+  border-radius: 18px;
 
-  color: white;
+  cursor: pointer;
 
   font-size: 1rem;
 
   font-weight: 700;
 
-  cursor: pointer;
+  color: #fff;
 
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: linear-gradient(135deg, #6d7cff, #8b63ff);
 
   transition: 0.35s;
-
-  box-shadow: 0 18px 40px rgba(124, 108, 255, 0.35);
 }
 
 .primary-btn:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+
+  box-shadow: 0 18px 40px rgba(109, 124, 255, 0.35);
 }
 
 .secondary-btn {
-  height: 56px;
+  height: 60px;
 
-  padding: 0 26px;
+  padding: 0 30px;
 
-  border-radius: 14px;
+  border-radius: 18px;
 
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
-  background: #12151b;
+  background: rgba(255, 255, 255, 0.03);
 
   color: white;
 
@@ -326,25 +292,21 @@ body {
 }
 
 .secondary-btn:hover {
-  background: #1a1f29;
+  background: rgba(255, 255, 255, 0.06);
 
-  transform: translateY(-5px);
+  transform: translateY(-4px);
 }
 
-/* ===========================================
-   FEATURES
-=========================================== */
+/* ==========================================================
+   FEATURE CHIPS
+========================================================== */
 
 .hero-features {
   display: flex;
 
-  align-items: center;
-
   flex-wrap: wrap;
 
   gap: 16px;
-
-  margin-top: 42px;
 }
 
 .feature-chip {
@@ -354,204 +316,307 @@ body {
 
   gap: 10px;
 
-  padding: 13px 20px;
+  height: 50px;
+
+  padding: 0 18px;
 
   border-radius: 999px;
 
-  background: rgba(18, 21, 27, 0.85);
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
-
-  color: #d8dce5;
+  color: #d4dae7;
 
   font-size: 0.92rem;
 
-  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
-  backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.03);
 
   transition: 0.35s;
 }
 
 .feature-chip svg {
-  color: #26d07c;
+  color: #7a86ff;
 }
 
 .feature-chip:hover {
   transform: translateY(-4px);
 
-  border-color: #6f74ff;
+  border-color: #586dff;
 
-  background: #171b24;
-
-  box-shadow: 0 12px 30px rgba(111, 116, 255, 0.15);
+  background: rgba(88, 109, 255, 0.08);
 }
 
-/* ===========================================
-   HERO RIGHT
-=========================================== */
+/* ==========================================================
+   RIGHT
+========================================================== */
 
 .hero-right {
-  position: relative;
-
   display: flex;
 
   justify-content: center;
 
   align-items: center;
+
+  position: relative;
 }
 
-/* ===========================================
-   FLOATING BADGE
-=========================================== */
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1200px) {
+  .hero-wrapper {
+    grid-template-columns: 1fr;
+
+    gap: 80px;
+  }
+
+  .hero-left {
+    max-width: 100%;
+
+    text-align: center;
+
+    margin: auto;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .hero-features {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+  }
+
+  .hero-wrapper {
+    padding: 100px 0 70px;
+  }
+
+  .hero-left h1 {
+    font-size: 3.4rem;
+
+    letter-spacing: -2px;
+  }
+
+  .hero-left p {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .hero-grid {
+    background-size: 50px 50px;
+  }
+
+  .hero-gradient-left {
+    width: 620px;
+    height: 620px;
+
+    left: -280px;
+  }
+
+  .hero-gradient-right {
+    width: 620px;
+    height: 620px;
+
+    right: -280px;
+  }
+}
+
+/* ==========================================================
+   RIGHT SIDE
+========================================================== */
+
+.hero-right {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Floating Badge */
 
 .top-floating {
   position: absolute;
 
-  right: 40px;
-
-  top: -18px;
+  top: -25px;
+  right: 30px;
 
   display: flex;
-
   align-items: center;
-
   gap: 10px;
 
-  padding: 13px 22px;
+  padding: 14px 20px;
 
-  border-radius: 999px;
+  border-radius: 16px;
 
-  background: #151922;
+  color: #fff;
+
+  background: rgba(18, 22, 30, 0.95);
 
   border: 1px solid rgba(255, 255, 255, 0.08);
 
-  color: #38d987;
+  backdrop-filter: blur(20px);
 
-  font-weight: 700;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 
-  z-index: 5;
-
-  backdrop-filter: blur(22px);
-
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+  z-index: 20;
 }
 
 .top-floating svg {
-  color: #39d98a;
+  color: #67f48b;
 }
 
-/* ===========================================
+/* ==========================================================
    DASHBOARD
-=========================================== */
+========================================================== */
 
 .dashboard {
-  width: 700px;
-  height: 440px;
+  width: 760px;
+  height: 470px;
+
   display: flex;
-  background: #14171f;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 28px;
+
   overflow: hidden;
-  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.45);
+
+  border-radius: 28px;
+
+  background: #0b0d13;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  box-shadow:
+    0 40px 120px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+
   position: relative;
 }
 
-/* ===========================================
+/* ==========================================================
    SIDEBAR
-=========================================== */
+========================================================== */
 
 .sidebar {
   width: 72px;
-  flex-shrink: 0;
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
-  padding: 24px 0;
+
   gap: 28px;
-  background: #101319;
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+
+  padding: 26px 0;
+
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+
+  background: #090b10;
 }
 
 .side-logo {
-  width: 34px;
+  width: 42px;
+  height: 42px;
 
-  height: 34px;
+  border-radius: 14px;
 
-  border-radius: 10px;
+  background: linear-gradient(135deg, #6c7bff, #8566ff);
 
-  background: linear-gradient(135deg, #6d78ff, #8b6fff);
-
-  margin-bottom: 12px;
-
-  box-shadow: 0 0 25px rgba(125, 111, 255, 0.45);
+  margin-bottom: 20px;
 }
 
 .sidebar svg {
-  color: #8d93a3;
-
-  cursor: pointer;
+  color: #7e879d;
 
   transition: 0.35s;
+
+  cursor: pointer;
 }
 
 .sidebar svg:hover {
   color: white;
 
-  transform: scale(1.12);
+  transform: scale(1.15);
 }
 
-/* ===========================================
-   DASHBOARD CONTENT
-=========================================== */
+/* ==========================================================
+   CONTENT
+========================================================== */
 
 .dashboard-content {
   flex: 1;
+
   display: flex;
+
   flex-direction: column;
-  padding: 24px;
 }
 
-/* ===========================================
+/* ==========================================================
    HEADER
-=========================================== */
+========================================================== */
 
 .dashboard-header {
+  height: 74px;
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
-  margin-bottom: 22px;
+
+  padding: 0 26px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .dashboard-header h3 {
-  font-size: 2rem;
+  color: white;
+
+  font-size: 1.15rem;
+
   font-weight: 700;
 }
 
-/* ===========================================
+/* ==========================================================
    SEARCH
-=========================================== */
+========================================================== */
 
 .search-box {
-  width: 350px;
-  height: 40px;
-  display: flex;
+  width: 320px;
+  height: 44px;
 
+  display: flex;
   align-items: center;
 
   gap: 10px;
 
-  background: #191c25;
-
-  border-radius: 10px;
-
   padding: 0 14px;
+
+  border-radius: 12px;
+
+  background: #11141c;
 
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .search-box svg {
-  color: #737b90;
+  color: #77809a;
+
+  flex-shrink: 0;
 }
 
 .search-box input {
@@ -563,99 +628,101 @@ body {
 
   background: transparent;
 
-  color: #d9dde7;
+  color: white;
 
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
 .search-box input::placeholder {
-  color: #8a90a3;
+  color: #667089;
 }
 
-/* ===========================================
-   DASHBOARD BODY
-=========================================== */
+/* ==========================================================
+   BODY
+========================================================== */
 
 .dashboard-body {
-  display: grid;
-  grid-template-columns: 56% 44%;
-  gap: 20px;
   flex: 1;
+
+  display: grid;
+
+  grid-template-columns: 1.2fr 0.8fr;
+
+  gap: 22px;
+
+  padding: 24px;
 }
 
-/* ===========================================
+/* ==========================================================
    PREVIEW CARD
-=========================================== */
+========================================================== */
 
 .preview-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  background: #1a1d25;
-  border-radius: 18px;
-  padding: 18px;
+  background: #10131a;
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  border-radius: 22px;
+
+  padding: 20px;
+
+  transition: 0.35s;
 }
 
-/* ===========================================
-   PREVIEW IMAGE
-=========================================== */
+.preview-card:hover {
+  transform: translateY(-6px);
+
+  border-color: rgba(108, 123, 255, 0.35);
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* ==========================================================
+   THUMBNAIL
+========================================================== */
 
 .preview-image {
-  width: 100%;
-
   position: relative;
 
-  aspect-ratio: 16/9;
+  height: 190px;
 
-  border-radius: 14px;
-
-  margin-bottom: 18px;
+  border-radius: 18px;
 
   overflow: hidden;
 
-  background: linear-gradient(135deg, #2d3550, #23283c);
+  background: linear-gradient(135deg, #1c2335, #11151d);
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-}
 
-/* fake thumbnail */
+  margin-bottom: 20px;
+}
 
 .preview-image::before {
   content: "";
 
   position: absolute;
-
   inset: 0;
 
   background: radial-gradient(
-    circle at top,
-    rgba(255, 255, 255, 0.08),
+    circle at center,
+    rgba(120, 140, 255, 0.22),
     transparent 70%
   );
 }
 
-/* ===========================================
-   PLAY BUTTON
-=========================================== */
-
 .play-btn {
-  width: 56px;
-
-  height: 56px;
+  width: 64px;
+  height: 64px;
 
   border-radius: 50%;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  background: #101216;
+  background: linear-gradient(135deg, #6f7cff, #8a67ff);
 
   color: white;
 
@@ -664,56 +731,42 @@ body {
   z-index: 2;
 
   transition: 0.35s;
-
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
 }
 
 .play-btn:hover {
   transform: scale(1.08);
-
-  background: #6f74ff;
 }
 
-.play-btn svg {
-  margin-left: 2px;
-}
-
-/* ===========================================
-   PREVIEW TEXT
-=========================================== */
+/* ==========================================================
+   TEXT
+========================================================== */
 
 .preview-card h4 {
-  margin-top: 18px;
+  color: white;
 
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 
   font-weight: 700;
 
-  color: white;
+  margin-bottom: 6px;
 }
 
-.preview-card > span {
-  display: block;
+.preview-card span {
+  color: #8c93a7;
 
-  margin-top: 6px;
-
-  color: #8d95a7;
-
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
-/* ===========================================
+/* ==========================================================
    TAGS
-=========================================== */
+========================================================== */
 
 .tags {
   display: flex;
 
   gap: 10px;
 
-  margin-top: 18px;
-
-  flex-wrap: wrap;
+  margin: 20px 0;
 }
 
 .tags span {
@@ -721,26 +774,18 @@ body {
 
   border-radius: 999px;
 
-  background: #6f74ff;
+  font-size: 0.8rem;
 
-  color: white;
+  color: #cfd5e5;
 
-  font-size: 0.82rem;
+  background: #171c26;
 
-  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.tags span:nth-child(2) {
-  background: #252a37;
-}
-
-.tags span:nth-child(3) {
-  background: #252a37;
-}
-
-/* ===========================================
+/* ==========================================================
    DOWNLOAD BUTTON
-=========================================== */
+========================================================== */
 
 .download-btn {
   width: 100%;
@@ -749,57 +794,56 @@ body {
 
   border: none;
 
-  border-radius: 12px;
+  cursor: pointer;
 
-  margin-top: 22px;
+  border-radius: 14px;
 
-  background: white;
-
-  color: #111;
-
-  font-size: 1rem;
+  color: white;
 
   font-weight: 700;
 
-  cursor: pointer;
+  background: linear-gradient(135deg, #6e7bff, #8868ff);
 
   transition: 0.35s;
 }
 
 .download-btn:hover {
-  background: #6f74ff;
+  transform: translateY(-3px);
 
-  color: white;
+  box-shadow: 0 15px 35px rgba(110, 123, 255, 0.35);
 }
 
-/* ===========================================
+/* ==========================================================
    DOWNLOAD PANEL
-=========================================== */
+========================================================== */
 
 .download-panel {
+  background: #10131a;
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  border-radius: 22px;
+
+  padding: 22px;
+
   display: flex;
+
   flex-direction: column;
-  justify-content: flex-start;
-  background: #1a1d25;
-  border-radius: 18px;
-  padding: 18px;
+
+  gap: 18px;
 }
 
 .download-panel h5 {
-  color: #9ba2b3;
+  color: #8f96aa;
 
-  font-size: 0.88rem;
+  font-size: 0.75rem;
 
-  font-weight: 600;
-
-  margin-bottom: 22px;
-
-  letter-spacing: 0.4px;
+  letter-spacing: 0.18em;
 }
 
-/* ===========================================
+/* ==========================================================
    DOWNLOAD ITEM
-=========================================== */
+========================================================== */
 
 .download-item {
   display: flex;
@@ -807,8 +851,6 @@ body {
   justify-content: space-between;
 
   align-items: center;
-
-  margin-bottom: 10px;
 }
 
 .download-item div {
@@ -820,35 +862,25 @@ body {
 
   color: white;
 
-  font-size: 0.92rem;
-
-  font-weight: 600;
-}
-
-.download-item svg {
-  color: #848ba0;
+  font-size: 0.9rem;
 }
 
 .download-item small {
-  color: #8e95a8;
+  color: #8a92a7;
 }
 
-/* ===========================================
-   PROGRESS BAR
-=========================================== */
+/* ==========================================================
+   PROGRESS
+========================================================== */
 
 .progress {
-  width: 100%;
-
-  height: 5px;
-
-  background: #2b3040;
+  height: 8px;
 
   border-radius: 999px;
 
   overflow: hidden;
 
-  margin-bottom: 18px;
+  background: #191e29;
 }
 
 .progress span {
@@ -858,56 +890,444 @@ body {
 
   border-radius: 999px;
 
-  background: linear-gradient(90deg, #7b70ff, #5f6fff);
+  background: linear-gradient(90deg, #6e7cff, #60d4f5);
 }
 
-/* ===========================================
+/* ==========================================================
    STATS
-=========================================== */
+========================================================== */
 
 .stats {
-  margin-top: auto;
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+
+  gap: 14px;
+
+  margin-top: auto;
 }
 
 .stats div {
-  background: #1f232d;
+  background: #171b24;
 
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
 
-  border-radius: 12px;
-
-  padding: 16px 10px;
+  padding: 16px;
 
   text-align: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
 
   transition: 0.35s;
 }
 
 .stats div:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 
-  border-color: #6f74ff;
-}
-.success-rate {
-  position: absolute;
-  left: -35px;
-  bottom: 40px;
-  z-index: 20;
+  border-color: rgba(110, 124, 255, 0.3);
 }
 
 .stats h3 {
   color: white;
 
-  font-size: 2rem;
+  font-size: 1.4rem;
 
   margin-bottom: 6px;
 }
 
 .stats span {
-  color: #9198ab;
+  color: #8991a5;
 
-  font-size: 0.82rem;
+  font-size: 0.8rem;
+}
+
+/* ==========================================================
+   SUCCESS BADGE
+========================================================== */
+
+.success-rate {
+  position: absolute;
+
+  left: -25px;
+
+  bottom: 28px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 14px 20px;
+
+  border-radius: 16px;
+
+  background: #11151d;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  color: white;
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+
+.success-rate svg {
+  color: #62ea8b;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1200px) {
+  .dashboard {
+    width: 100%;
+
+    max-width: 760px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    height: auto;
+
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: 72px;
+
+    flex-direction: row;
+
+    justify-content: center;
+
+    border-right: none;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .dashboard-body {
+    grid-template-columns: 1fr;
+  }
+
+  .search-box {
+    width: 220px;
+  }
+
+  .top-floating,
+  .success-rate {
+    display: none;
+  }
+}
+
+/* ==========================================================
+   PART 3 - PREMIUM EFFECTS
+========================================================== */
+
+/* ==========================================
+   Dashboard Floating Animation
+========================================== */
+
+.dashboard {
+  animation: dashboardFloat 8s ease-in-out infinite;
+}
+
+@keyframes dashboardFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ==========================================
+   Floating Badges
+========================================== */
+
+.top-floating {
+  animation: floatSmall 5s ease-in-out infinite;
+}
+
+.success-rate {
+  animation: floatSmall 5s ease-in-out infinite 0.6s;
+}
+
+@keyframes floatSmall {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ==========================================
+   Spotlight Hover
+========================================== */
+
+.preview-card,
+.download-panel,
+.stats div {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.preview-card::before,
+.download-panel::before,
+.stats div::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background: radial-gradient(
+    260px circle at var(--x, 50%) var(--y, 50%),
+    rgba(108, 124, 255, 0.18),
+    transparent 70%
+  );
+
+  opacity: 0;
+
+  transition: 0.3s;
+
+  pointer-events: none;
+}
+
+.preview-card:hover::before,
+.download-panel:hover::before,
+.stats div:hover::before {
+  opacity: 1;
+}
+
+/* ==========================================
+   Glass Border Glow
+========================================== */
+
+.dashboard::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  padding: 1px;
+
+  border-radius: 28px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15),
+    transparent 35%,
+    transparent 65%,
+    rgba(108, 124, 255, 0.18)
+  );
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+
+  mask-composite: exclude;
+
+  pointer-events: none;
+}
+
+/* ==========================================
+   Button Shine
+========================================== */
+
+.primary-btn,
+.download-btn {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.primary-btn::before,
+.download-btn::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: -120%;
+
+  width: 60%;
+
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+
+  transition: 0.8s;
+}
+
+.primary-btn:hover::before,
+.download-btn:hover::before {
+  left: 150%;
+}
+
+/* ==========================================
+   Card Hover
+========================================== */
+
+.preview-card,
+.download-panel {
+  transition:
+    transform 0.35s,
+    border-color 0.35s,
+    box-shadow 0.35s;
+}
+
+.preview-card:hover,
+.download-panel:hover {
+  transform: translateY(-8px);
+
+  border-color: rgba(108, 124, 255, 0.35);
+
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(108, 124, 255, 0.08);
+}
+
+/* ==========================================
+   Sidebar Icons
+========================================== */
+
+.sidebar svg {
+  position: relative;
+
+  transition: 0.3s;
+}
+
+.sidebar svg:hover {
+  color: white;
+
+  transform: scale(1.15);
+
+  filter: drop-shadow(0 0 12px rgba(108, 124, 255, 0.5));
+}
+
+/* ==========================================
+   Search
+========================================== */
+
+.search-box {
+  transition: 0.3s;
+}
+
+.search-box:focus-within {
+  border-color: #6f7cff;
+
+  box-shadow: 0 0 0 4px rgba(108, 124, 255, 0.08);
+}
+
+/* ==========================================
+   Progress Animation
+========================================== */
+
+.progress span {
+  animation: progressGlow 2s linear infinite;
+}
+
+@keyframes progressGlow {
+  0% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.25);
+  }
+
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* ==========================================
+   Hero Fade
+========================================== */
+
+.hero-left > * {
+  animation: fadeUp 0.8s ease forwards;
+
+  opacity: 0;
+}
+
+.hero-left > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.hero-left > *:nth-child(2) {
+  animation-delay: 0.25s;
+}
+
+.hero-left > *:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.hero-left > *:nth-child(4) {
+  animation-delay: 0.55s;
+}
+
+.hero-left > *:nth-child(5) {
+  animation-delay: 0.7s;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 992px) {
+  .dashboard {
+    animation: none;
+  }
+
+  .top-floating,
+  .success-rate {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .preview-card:hover,
+  .download-panel:hover,
+  .stats div:hover {
+    transform: none;
+  }
+
+  .primary-btn:hover,
+  .download-btn:hover {
+    transform: none;
+  }
 }

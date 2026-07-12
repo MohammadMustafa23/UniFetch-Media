@@ -4,15 +4,16 @@
 
 .platformSection {
   width: 100%;
-  padding: 110px 20px;
+  padding: 0 70px;
   background: #07080b;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid #23242A;
+  border-top: 1px solid #23242A;
 }
 
 .platformSection__container {
-  max-width: 1250px;
+  max-width: 1240px;
   margin: 0 auto;
+  padding: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,38 +24,47 @@
 =========================================== */
 
 .platformSection__header {
-  text-align: center;
-  margin-bottom: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 30px;
 }
 
 .platformSection__label {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 10px;
+  color: #8b90a3;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  user-select: none;
+  margin-bottom: 15px;
 }
 
-.platformSection__line {
-  width: 60px;
-  height: 1px;
-  background: var(--accent);
+.uf-section-line {
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    #6d7cff 0%,
+    #8b5cf6 100%
+  );
 }
 
-.platformSection__label p {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 4px;
-  color: var(--text-muted);
-}
+
 
 .platformSection__title {
   max-width: 700px;
   margin: 0 auto;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2rem, 4vw, 2rem);
   font-weight: 700;
   line-height: 1.2;
+  text-align: center;
   color: var(--text);
 }
 

@@ -14,7 +14,6 @@ import {
   BarChart3,
   PlusSquare,
 } from "lucide-react";
-
 export default function HeroSection() {
   return (
     <section className="hero">
@@ -91,11 +90,7 @@ export default function HeroSection() {
 
         <div className="hero-right">
 
-          <div className="top-floating">
-            <Check size={18} />
-            128 files this week
-          </div>
-
+        
           <div className="dashboard">
 
             {/* Sidebar */}
@@ -239,15 +234,6 @@ export default function HeroSection() {
             </div>
 
           </div>
-
-          <div className="success-rate">
-
-            <Check size={16} />
-
-            99.8% success rate
-
-          </div>
-
         </div>
 
       </div>

@@ -45,7 +45,7 @@
 }
 
 .analyticsSection__title {
-  font-size: clamp(2.6rem, 5vw, 4.3rem);
+  font-size: clamp(2.6rem, 5vw, 3rem);
   line-height: 1.1;
   font-weight: 800;
   color: var(--text);
@@ -103,7 +103,7 @@
 }
 
 .analyticsStat h4 {
-  font-size: 3rem;
+  font-size: 2rem;
   color: var(--text);
   margin-bottom: 8px;
 }
@@ -118,8 +118,7 @@
 =========================================== */
 
 .analyticsChart {
-  height: 240px;
-
+  height: 200px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;

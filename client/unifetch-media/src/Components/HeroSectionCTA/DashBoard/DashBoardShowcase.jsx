@@ -61,8 +61,8 @@ export default function DashboardShowcase() {
         {/* Header */}
 
         <div className="dashboardShowcase__header">
-          <div className="dashboardShowcase__label">
-            <span></span>
+          <div className="platformSection__label">
+            <span className="uf-section-line"></span>
             <p>PRODUCT</p>
           </div>
 

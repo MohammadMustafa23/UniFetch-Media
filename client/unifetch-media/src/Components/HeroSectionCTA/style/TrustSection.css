@@ -48,9 +48,10 @@
 }
 
 .trustSection__title {
-  font-size: clamp(2.5rem, 5vw, 4.3rem);
-  line-height: 1.12;
+  font-size: clamp(2.5rem, 5vw, 3rem);
+  line-height: 1;
   font-weight: 800;
+  width: 900px;
   color: var(--text);
 }
 
@@ -76,7 +77,7 @@
 .trustCard {
   position: relative;
 
-  padding: 42px 26px;
+  padding: 32px 16px;
 
   text-align: center;
 

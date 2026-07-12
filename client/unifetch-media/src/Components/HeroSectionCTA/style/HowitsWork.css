@@ -6,6 +6,8 @@
   width: 100%;
   padding: 110px 20px;
   background: var(--background);
+  border-bottom: 1px solid #23242A;
+  border-top: 1px solid #23242A;
 }
 
 .howItsWork__container {
@@ -47,7 +49,7 @@
 }
 
 .howItsWork__title {
-  font-size: clamp(2.3rem, 5vw, 4rem);
+  font-size: clamp(2.3rem, 5vw, 3rem);
   font-weight: 800;
   color: var(--text);
   line-height: 1.15;
@@ -168,6 +170,11 @@
   opacity: 0.7;
 
   animation: arrowMove 2s infinite;
+}
+
+.howItsWork-combine {
+  display: flex;
+  justify-content: space-between;
 }
 
 @keyframes arrowMove {
