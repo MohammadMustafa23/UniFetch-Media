@@ -1,5 +1,4 @@
 import { Download, Check, Play, Music2 } from "lucide-react";
-
 export default function AuthLeftPanel() {
   return (
     <section className="auth-left">

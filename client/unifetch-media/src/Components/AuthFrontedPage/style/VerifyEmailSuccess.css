@@ -1,61 +1,426 @@
-.success-form {
+/* ==========================================
+   RESET SUCCESS
+========================================== */
+
+.uf-reset-success {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+
   text-align: center;
 }
 
-.success-icon {
-  width: 110px;
-  height: 110px;
+/* ==========================================
+   SUCCESS ICON
+========================================== */
+
+.uf-reset-success-icon {
+  width: clamp(90px, 10vw, 120px);
+  height: clamp(90px, 10vw, 120px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   border-radius: 50%;
 
-  display: flex;
+  color: #4ade80;
+
+  background: radial-gradient(
+    circle,
+    rgba(74, 222, 128, 0.22),
+    rgba(74, 222, 128, 0.08) 55%,
+    transparent 75%
+  );
+
+  box-shadow:
+    0 0 40px rgba(74, 222, 128, 0.18),
+    inset 0 0 25px rgba(74, 222, 128, 0.08);
+
+  margin-bottom: 20px;
+
+  animation: ufResetSuccessPop 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.uf-reset-success-icon svg {
+  width: clamp(42px, 5vw, 56px);
+  height: clamp(42px, 5vw, 56px);
+}
+
+/* ==========================================
+   BADGE
+========================================== */
+
+.uf-reset-success-badge {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(74, 222, 128, 0.12);
 
   color: #4ade80;
 
-  background: radial-gradient(rgba(74, 222, 128, 0.25), transparent 70%);
+  font-size: 14px;
+  font-weight: 600;
 
-  margin-bottom: 10px;
-
-  animation: pop 0.6s ease;
+  margin-bottom: 18px;
 }
 
-.success-form h2 {
-  font-size: 34px;
+/* ==========================================
+   TITLE
+========================================== */
 
-  margin-top: 10px;
+.uf-reset-success-title {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 700;
+  line-height: 1.15;
+
+  color: #fff;
+
+  margin-bottom: 14px;
 }
 
-.success-form p {
-  max-width: 380px;
+/* ==========================================
+   DESCRIPTION
+========================================== */
 
-  line-height: 1.7;
+.uf-reset-success-description {
+  max-width: 420px;
 
-  margin: 15px 0 30px;
+  font-size: 15px;
+  line-height: 1.8;
+
+  color: #a1a1aa;
+
+  margin-bottom: 36px;
 }
 
-.success-form .verify-btn {
+/* ==========================================
+   BUTTON
+========================================== */
+
+.uf-reset-success-btn {
+  width: 100%;
+  max-width: 340px;
+  height: 56px;
+
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 10px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+
+  color: #fff;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: .3s ease;
 }
 
-@keyframes pop {
-  0% {
-    transform: scale(0.4);
+.uf-reset-success-btn:hover {
+  transform: translateY(-2px);
 
+  box-shadow: 0 18px 35px rgba(124, 92, 255, 0.28);
+}
+
+.uf-reset-success-btn:active {
+  transform: scale(.98);
+}
+
+/* ==========================================
+   ANIMATION
+========================================== */
+
+@keyframes ufResetSuccessPop {
+
+  0% {
+    transform: scale(.5);
     opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.08);
   }
 
   100% {
     transform: scale(1);
-
     opacity: 1;
+  }
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:768px){
+
+  .uf-reset-success{
+    padding:10px 0;
+  }
+
+  .uf-reset-success-icon{
+    margin-bottom:18px;
+  }
+
+  .uf-reset-success-title{
+    margin-bottom:12px;
+  }
+
+  .uf-reset-success-description{
+    max-width:320px;
+
+    font-size:14px;
+    line-height:1.7;
+
+    margin-bottom:28px;
+  }
+
+  .uf-reset-success-btn{
+    max-width:100%;
+  }
+
+}
+
+@media (max-width:480px){
+
+  .uf-reset-success-icon{
+    width:88px;
+    height:88px;
+  }
+
+  .uf-reset-success-title{
+    font-size:26px;
+  }
+
+  .uf-reset-success-description{
+    max-width:100%;
+    font-size:13px;
+  }
+
+  .uf-reset-success-badge{
+    font-size:13px;
+    padding:7px 14px;
+  }
+
+  .uf-reset-success-btn{
+    height:52px;
+    font-size:15px;
+  }
+
+}
+
+/* ==========================================
+   SUCCESS
+========================================== */
+
+.uf-success {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+/* ==========================================
+   ICON
+========================================== */
+
+.uf-success-icon {
+  width: 110px;
+  height: 110px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #4ade80;
+
+  background: radial-gradient(
+    circle,
+    rgba(74, 222, 128, 0.18),
+    transparent 70%
+  );
+
+  box-shadow: 0 0 45px rgba(74, 222, 128, 0.15);
+
+  animation: successPop 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+
+  margin-bottom: 26px;
+}
+
+.uf-success-icon svg {
+  width: 58px;
+  height: 58px;
+}
+
+/* ==========================================
+   BADGE
+========================================== */
+
+.uf-success-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(74, 222, 128, 0.12);
+
+  color: #4ade80;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  margin-bottom: 18px;
+}
+
+/* ==========================================
+   TITLE
+========================================== */
+
+.uf-success-title {
+  font-size: clamp(30px, 4vw, 42px);
+
+  font-weight: 700;
+
+  color: #fff;
+
+  line-height: 1.2;
+
+  margin-bottom: 18px;
+}
+
+/* ==========================================
+   DESCRIPTION
+========================================== */
+
+.uf-success-description {
+  max-width: 420px;
+
+  color: #9ca3af;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+
+  margin-bottom: 34px;
+}
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.uf-success-btn {
+  width: 100%;
+  max-width: 340px;
+
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border: none;
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+
+  color: #fff;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.uf-success-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 18px 35px rgba(124, 92, 255, 0.28);
+}
+
+/* ==========================================
+   ANIMATION
+========================================== */
+
+@keyframes successPop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+  .uf-success-icon {
+    width: 95px;
+    height: 95px;
+  }
+
+  .uf-success-icon svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .uf-success-description {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .uf-success-icon {
+    width: 84px;
+    height: 84px;
+  }
+
+  .uf-success-title {
+    font-size: 28px;
+  }
+
+  .uf-success-description {
+    font-size: 13px;
+
+    margin-bottom: 28px;
+  }
+
+  .uf-success-btn {
+    height: 54px;
+
+    font-size: 15px;
   }
 }

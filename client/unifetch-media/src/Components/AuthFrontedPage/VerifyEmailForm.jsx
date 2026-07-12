@@ -13,7 +13,6 @@ export default function VerifyEmailForm({ setScreen, verifyType }) {
 
   const handleVerify = () => {
     console.log("verifyType =", verifyType);
-
     if (verifyType === "forgot-password") {
       setScreen("reset-password");
     } else {
@@ -22,41 +21,34 @@ export default function VerifyEmailForm({ setScreen, verifyType }) {
   };
 
   return (
-    <div className="verify-form">
-      {/* Back */}
-
+    <div className="uf-verify-form">
       <button
         type="button"
-        className="back-btn"
+        className="uf-verify-back-btn"
         onClick={() =>
-          setScreen(
-            verifyType === "forgot-password" ? "forgot-password" : "signup",
-          )
+          setScreen(verifyType === "forgot-password" ? "forgot-password" : "signup")
         }
       >
         <ArrowLeft size={18} />
         Back
       </button>
 
-      {/* Icon */}
-
-      <div className="verify-icon">
+      <div className="uf-verify-icon">
         <Mail size={34} />
       </div>
 
-      {/* Heading */}
+      <h2 className="uf-verify-title">Verify your email</h2>
 
-      <h2>Verify your email</h2>
+      <p className="uf-verify-description">
+        We've sent a 6-digit verification code to your email.
+      </p>
 
-      <p>We've sent a 6-digit verification code to your email.</p>
-
-      {/* OTP */}
-
-      <div className="otp-container">
+      <div className="uf-verify-otp-container">
         {[...Array(6)].map((_, index) => (
           <input
             key={index}
             ref={(el) => (inputs.current[index] = el)}
+            className="uf-verify-otp-input"
             type="text"
             maxLength={1}
             onChange={(e) => handleChange(e, index)}
@@ -64,17 +56,13 @@ export default function VerifyEmailForm({ setScreen, verifyType }) {
         ))}
       </div>
 
-      {/* Verify */}
-
-      <button type="button" className="verify-btn" onClick={handleVerify}>
+      <button type="button" className="uf-verify-btn" onClick={handleVerify}>
         Verify Email
       </button>
 
-      {/* Footer */}
-
-      <p className="bottom-text">
+      <p className="uf-verify-footer">
         Didn't receive the code?
-        <button type="button" className="switch-btn">
+        <button type="button" className="uf-verify-resend-btn">
           Resend
         </button>
       </p>

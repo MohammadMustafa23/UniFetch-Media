@@ -9,7 +9,6 @@ export default function AuthLayout({ mode, setMode }) {
   return (
     <main className="auth-layout">
       <AuthLeftPanel />
-
       <AuthRightPanel/>
     </main>
   );

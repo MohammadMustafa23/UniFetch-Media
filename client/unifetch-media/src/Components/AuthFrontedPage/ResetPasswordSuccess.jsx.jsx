@@ -3,21 +3,33 @@ import "./style/VerifyEmailSuccess.css";
 
 export default function ResetPasswordSuccess({ setScreen }) {
   return (
-    <div className="verify-form success-form">
-      <div className="success-icon">
-        <CheckCircle2 size={65} />
+    <div className="uf-reset-success">
+      {/* Success Icon */}
+
+      <div className="uf-reset-success-icon">
+        <CheckCircle2 size={60} />
       </div>
 
-      <h2>Password Updated!</h2>
+      {/* Badge */}
 
-      <p>
+      <span className="uf-reset-success-badge">Password Updated</span>
+
+      {/* Title */}
+
+      <h2 className="uf-reset-success-title">Password Updated Successfully!</h2>
+
+      {/* Description */}
+
+      <p className="uf-reset-success-description">
         Your password has been changed successfully. You can now sign in using
         your new password.
       </p>
 
+      {/* Button */}
+
       <button
         type="button"
-        className="verify-btn"
+        className="uf-reset-success-btn"
         onClick={() => setScreen("signin")}
       >
         Go to Sign In

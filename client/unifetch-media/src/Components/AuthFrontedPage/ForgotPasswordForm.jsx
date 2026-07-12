@@ -13,46 +13,65 @@ export default function ForgotPasswordForm({ setScreen, setVerifyType }) {
   };
 
   return (
-    <form className="forgot-form" onSubmit={handleSubmit}>
+    <form className="uf-forgot-form" onSubmit={handleSubmit}>
+      {/* Back */}
+
       <button
         type="button"
-        className="back-btn"
+        className="uf-forgot-back-btn"
         onClick={() => setScreen("signin")}
       >
         <ArrowLeft size={18} />
         Back
       </button>
 
-      <div className="verify-icon">
+      {/* Icon */}
+
+      <div className="uf-forgot-icon">
         <Lock size={34} />
       </div>
 
-      <h2>Forgot Password</h2>
+      {/* Heading */}
 
-      <p>
+      <h2 className="uf-forgot-title">Forgot Password</h2>
+
+      <p className="uf-forgot-description">
         No worries! Enter your email address and we'll send you a verification
         code to reset your password.
       </p>
 
-      <div className="form-group">
-        <label>Email Address</label>
+      {/* Email */}
 
-        <input type="email" placeholder="Enter your email" required />
+      <div className="uf-forgot-group">
+        <label className="uf-forgot-label">Email Address</label>
+
+        <input
+          type="email"
+          placeholder="Enter your email"
+          className="uf-forgot-input"
+          required
+        />
       </div>
 
-      <button type="submit" className="verify-btn">
+      {/* Submit */}
+
+      <button type="submit" className="uf-forgot-submit-btn">
         Send Verification Code
       </button>
 
-      <div className="divider">
+      {/* Divider */}
+
+      <div className="uf-forgot-divider">
         <span>OR</span>
       </div>
 
-      <p className="bottom-text">
+      {/* Footer */}
+
+      <p className="uf-forgot-footer">
         Remember your password?
         <button
           type="button"
-          className="switch-btn"
+          className="uf-forgot-signin-btn"
           onClick={() => setScreen("signin")}
         >
           Sign In

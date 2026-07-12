@@ -19,14 +19,13 @@
   border-radius: 14px;
 
   background: linear-gradient(135deg, #7c5cff, #4f8cff);
-
   color: #fff;
 
   box-shadow: 0 15px 35px rgba(124, 92, 255, 0.35);
 }
 
 .brand h2 {
-  font-size: 28px;
+  font-size: clamp(24px, 2vw, 28px);
   font-weight: 700;
   color: #fff;
 }
@@ -36,32 +35,32 @@
 ========================== */
 
 .hero-content {
-  margin-top: 40px;
+  margin-top: 10px;
   max-width: 560px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .hero-content h1 {
-  font-size: 45px;
-  line-height: 1.05;
+  font-size: clamp(34px, 5vw, 48px);
+  line-height: 1.08;
   font-weight: 800;
-
   color: #fff;
 }
 
 .hero-content h1 span {
-  background: linear-gradient(90deg, #ffffff, #8db8ff);
-
+  background: linear-gradient(90deg, #fff, #8db8ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .hero-content p {
-  margin-top: 28px;
-
   max-width: 500px;
 
-  font-size: 14px;
-  line-height: 1.8;
+  font-size: clamp(13px, 1vw, 15px);
+  line-height: 1.75;
 
   color: #b4b4c2;
 }
@@ -71,22 +70,24 @@
 ========================== */
 
 .features {
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 20px;
 }
 
 .feature {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+
   color: #ececec;
   font-size: 13px;
 }
 
 .feature svg {
   color: #5be7a8;
+  flex-shrink: 0;
 }
 
 /* ==========================
@@ -94,66 +95,81 @@
 ========================== */
 
 .queue-card {
-  margin-top: 10px;
-  width: 340px;
+  width: min(340px, 100%);
+  padding: 16px;
+
+  margin-top: 24px;
+  border-radius: 22px;
+
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  padding: 12px;
+
   backdrop-filter: blur(20px);
 }
 
 .queue-item {
   display: flex;
-  gap: 9px;
+  justify-content: space-between;
   align-items: center;
+  gap: 14px;
 }
 
 .queue-item + .queue-item {
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
 .queue-left {
   display: flex;
-  gap: 14px;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
 }
 
 .queue-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 14px;
+  width: 38px;
+  height: 38px;
+
+  border-radius: 12px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   background: rgba(124, 92, 255, 0.15);
   color: #7c5cff;
+
+  flex-shrink: 0;
 }
 
 .queue-item h4 {
-  color: white;
+  color: #fff;
   font-size: 13px;
   font-weight: 600;
-  margin-bottom: 7px;
+  margin-bottom: 6px;
 }
 
 .progress {
-  width: 230px;
+  width: 100%;
+  max-width: 220px;
   height: 6px;
-  background: rgba(255, 255, 255, 0.08);
+
   border-radius: 50px;
   overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .progress-fill {
   height: 100%;
   border-radius: 50px;
+
   background: linear-gradient(90deg, #7c5cff, #4f8cff);
 }
 
 .queue-item span {
-  color: white;
-  font-weight: 700;
+  color: #fff;
   font-size: 13px;
+  font-weight: 700;
 }
 
 /* ==========================
@@ -161,15 +177,15 @@
 ========================== */
 
 .review {
-  margin-top: 60px;
+  margin-top: 24px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .avatar {
-  width: 58px;
-  height: 58px;
+  width: 56px;
+  height: 56px;
 
   border-radius: 50%;
 
@@ -179,23 +195,22 @@
 
   background: linear-gradient(135deg, #7c5cff, #4f8cff);
 
-  color: white;
+  color: #fff;
+  font-weight: 700;
 
-  font-weight: bold;
+  flex-shrink: 0;
 }
 
 .review h4 {
-  color: white;
-
+  color: #fff;
   font-size: 16px;
+  margin-bottom: 4px;
 }
 
 .review p {
-  margin-top: 6px;
-
   color: #b3b3bf;
-
   line-height: 1.6;
+  font-size: 14px;
 }
 
 /* ==========================
@@ -203,8 +218,8 @@
 ========================== */
 
 @media (max-width: 1200px) {
-  .hero-content h1 {
-    font-size: 54px;
+  .hero-content {
+    gap: 16px;
   }
 
   .queue-card {
@@ -212,12 +227,72 @@
   }
 
   .progress {
-    width: 180px;
+    max-width: 170px;
   }
 }
 
 @media (max-width: 992px) {
   .auth-left {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    margin-top: 12px;
+    gap: 14px;
+  }
+
+  .features {
+    gap: 8px;
+  }
+
+  .queue-card {
+    margin-top: 6px;
+    padding: 14px;
+  }
+
+  .review {
+    margin-top: 24px;
+    gap: 12px;
+  }
+
+  .progress {
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    gap: 10px;
+  }
+
+  .brand-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .feature {
+    font-size: 12px;
+  }
+
+  .queue-item {
+    gap: 10px;
+  }
+
+  .queue-item h4 {
+    font-size: 12px;
+  }
+
+  .progress {
+    max-width: 120px;
+  }
+
+  .review {
+    align-items: flex-start;
+  }
+
+  .review p {
+    font-size: 13px;
   }
 }

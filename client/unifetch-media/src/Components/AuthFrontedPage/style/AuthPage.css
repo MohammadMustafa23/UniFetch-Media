@@ -66,10 +66,10 @@ a {
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;   /* Changed */
+  gap: 50px;                 /* Added */
 
-  padding: 60px 70px;
-
+ padding: 30px 80px;
   background:
     radial-gradient(
       circle at top left,
@@ -83,7 +83,6 @@ a {
     ),
     #09090b;
 }
-
 /* Grid */
 
 .auth-left::before {

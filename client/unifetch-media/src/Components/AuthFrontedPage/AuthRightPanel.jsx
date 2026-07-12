@@ -6,6 +6,7 @@ import VerifyEmailForm from "./VerifyEmailForm";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 import ResetPasswordSuccess from "./ResetPasswordSuccess.jsx";
 import ResetPasswordForm from "./ResetPasswordForm";
+import VerifyEmailSuccess from "./VerifyEmailSuccess.jsx";
 export default function AuthRightPanel() {
   const [screen, setScreen] = useState("signin");
   const [verifyType, setVerifyType] = useState("");
@@ -80,7 +81,6 @@ export default function AuthRightPanel() {
         )}
 
         {/* Screens */}
-
         {screen === "signin" && <SignInForm setScreen={setScreen} />}
 
         {screen === "signup" && (
