@@ -317,3 +317,17 @@
     height: 50px;
   }
 }
+
+.error-text {
+  display: block;
+  margin-top: 6px;
+
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.signin-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

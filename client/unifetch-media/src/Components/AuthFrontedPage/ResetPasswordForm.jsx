@@ -6,16 +6,95 @@ export default function ResetPasswordForm({ setScreen }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [errors, setErrors] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  /* ===============================
+      Handle Change
+  =============================== */
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  /* ===============================
+      Validation
+  =============================== */
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.password) {
+      newErrors.password = "New password is required.";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters.";
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password.";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match.";
+    }
+
+    setErrors({
+      password: newErrors.password || "",
+      confirmPassword: newErrors.confirmPassword || "",
+    });
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  /* ===============================
+      Submit
+  =============================== */
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // TODO: Reset Password API
+    if (loading) return;
 
-    setScreen("reset-success");
+    if (!validateForm()) return;
+
+    try {
+      setLoading(true);
+
+      // Temporary API Delay
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      console.log(formData);
+
+      // Later:
+      // await resetPassword(formData);
+
+      setScreen("reset-success");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form className="uf-reset-form" onSubmit={handleSubmit}>
+    <form className="uf-reset-form" onSubmit={handleSubmit} noValidate>
       {/* Back */}
 
       <button
@@ -41,54 +120,86 @@ export default function ResetPasswordForm({ setScreen }) {
         Your new password must be different from your previous password.
       </p>
 
-      {/* Password */}
+      {/* New Password */}
 
       <div className="uf-reset-group">
-        <label className="uf-reset-label">New Password</label>
+        <label htmlFor="password" className="uf-reset-label">
+          New Password
+        </label>
 
         <div className="uf-reset-password-box">
           <input
+            id="password"
             className="uf-reset-input"
             type={showPassword ? "text" : "password"}
+            name="password"
             placeholder="Enter new password"
+            autoComplete="new-password"
+            value={formData.password}
+            onChange={handleChange}
+            required
           />
 
           <button
             type="button"
             className="uf-reset-toggle-btn"
-            onClick={() => setShowPassword(!showPassword)}
+            onClick={() => setShowPassword((prev) => !prev)}
+            disabled={loading}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
+
+        {errors.password && (
+          <span className="error-text">{errors.password}</span>
+        )}
       </div>
 
       {/* Confirm Password */}
 
       <div className="uf-reset-group">
-        <label className="uf-reset-label">Confirm Password</label>
+        <label htmlFor="confirmPassword" className="uf-reset-label">
+          Confirm Password
+        </label>
 
         <div className="uf-reset-password-box">
           <input
+            id="confirmPassword"
             className="uf-reset-input"
             type={showConfirmPassword ? "text" : "password"}
+            name="confirmPassword"
             placeholder="Confirm new password"
+            autoComplete="new-password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
           />
 
           <button
             type="button"
             className="uf-reset-toggle-btn"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            onClick={() => setShowConfirmPassword((prev) => !prev)}
+            disabled={loading}
+            aria-label={
+              showConfirmPassword
+                ? "Hide confirm password"
+                : "Show confirm password"
+            }
           >
             {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
+
+        {errors.confirmPassword && (
+          <span className="error-text">{errors.confirmPassword}</span>
+        )}
       </div>
 
       {/* Submit */}
 
-      <button type="submit" className="uf-reset-submit-btn">
-        Update Password
+      <button type="submit" className="uf-reset-submit-btn" disabled={loading}>
+        {loading ? "Updating..." : "Update Password"}
       </button>
 
       {/* Footer */}

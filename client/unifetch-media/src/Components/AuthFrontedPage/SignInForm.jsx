@@ -6,33 +6,106 @@ import "./style/SignForm.css";
 export default function SignInForm({ setScreen }) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = ({ target }) => {
+    const { name, value, type, checked } = target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+
+    // Clear error while typing
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    const email = formData.email.trim();
+
+    if (!email) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required.";
+    }
+
+    setErrors({
+      email: newErrors.email || "",
+      password: newErrors.password || "",
+    });
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // TODO: Login API
+    if (loading) return;
 
-    // Temporary
-    alert("Login Successful!");
+    if (!validateForm()) return;
 
-    // Later
-    // navigate("/dashboard");
+    try {
+      setLoading(true);
+
+      // Temporary API Simulation
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      console.log(formData);
+
+      // Later:
+      // await loginUser(formData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form className="signin-form" onSubmit={handleSubmit}>
+    <form className="signin-form" onSubmit={handleSubmit} noValidate>
       {/* Email */}
 
       <div className="form-group">
-        <label>Email Address</label>
+        <label htmlFor="email">Email Address</label>
 
-        <input type="email" placeholder="Enter your email" required />
+        <input
+          id="email"
+          type="email"
+          name="email"
+          placeholder="Enter your email"
+          autoComplete="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        {errors.email && <span className="error-text">{errors.email}</span>}
       </div>
 
       {/* Password */}
 
       <div className="form-group">
         <div className="label-row">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
 
           <button
             type="button"
@@ -45,30 +118,35 @@ export default function SignInForm({ setScreen }) {
 
         <div className="password-box">
           <input
+            id="password"
             type={showPassword ? "text" : "password"}
+            name="password"
             placeholder="Enter your password"
+            autoComplete="current-password"
+            value={formData.password}
+            onChange={handleChange}
             required
           />
 
-          <button type="button" onClick={() => setShowPassword(!showPassword)}>
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            disabled={loading}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
-      </div>
 
-      {/* Remember */}
-
-      <div className="remember-row">
-        <label>
-          <input type="checkbox" />
-          Remember me
-        </label>
+        {errors.password && (
+          <span className="error-text">{errors.password}</span>
+        )}
       </div>
 
       {/* Button */}
 
-      <button type="submit" className="signin-btn">
-        Sign In
+      <button type="submit" className="signin-btn" disabled={loading}>
+        {loading ? "Signing In..." : "Sign In"}
       </button>
 
       {/* Divider */}

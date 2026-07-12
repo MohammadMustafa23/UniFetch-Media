@@ -1,19 +1,88 @@
 import { ArrowLeft, Lock } from "lucide-react";
+import { useState } from "react";
 import "./style/ForgotPasswordForm.css";
 
 export default function ForgotPasswordForm({ setScreen, setVerifyType }) {
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    email: "",
+  });
+
+  const [errors, setErrors] = useState({
+    email: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  /* ===============================
+      Handle Change
+  =============================== */
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  /* ===============================
+      Validation
+  =============================== */
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    const email = formData.email.trim();
+
+    if (!email) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    setErrors({
+      email: newErrors.email || "",
+    });
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  /* ===============================
+      Submit
+  =============================== */
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // TODO: Send Reset OTP API
+    if (loading) return;
 
-    setVerifyType("forgot-password");
+    if (!validateForm()) return;
 
-    setScreen("verify-email");
+    try {
+      setLoading(true);
+
+      // Temporary API Delay
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      console.log(formData);
+
+      setVerifyType("forgot-password");
+      setScreen("verify-email");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form className="uf-forgot-form" onSubmit={handleSubmit}>
+    <form className="uf-forgot-form" onSubmit={handleSubmit} noValidate>
       {/* Back */}
 
       <button
@@ -43,20 +112,29 @@ export default function ForgotPasswordForm({ setScreen, setVerifyType }) {
       {/* Email */}
 
       <div className="uf-forgot-group">
-        <label className="uf-forgot-label">Email Address</label>
+        <label htmlFor="email" className="uf-forgot-label">
+          Email Address
+        </label>
 
         <input
+          id="email"
           type="email"
-          placeholder="Enter your email"
+          name="email"
           className="uf-forgot-input"
+          placeholder="Enter your email"
+          autoComplete="email"
+          value={formData.email}
+          onChange={handleChange}
           required
         />
+
+        {errors.email && <span className="error-text">{errors.email}</span>}
       </div>
 
       {/* Submit */}
 
-      <button type="submit" className="uf-forgot-submit-btn">
-        Send Verification Code
+      <button type="submit" className="uf-forgot-submit-btn" disabled={loading}>
+        {loading ? "Sending..." : "Send Verification Code"}
       </button>
 
       {/* Divider */}
