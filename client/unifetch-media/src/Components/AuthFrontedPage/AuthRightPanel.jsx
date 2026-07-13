@@ -10,6 +10,7 @@ import VerifyEmailSuccess from "./VerifyEmailSuccess.jsx";
 export default function AuthRightPanel() {
   const [screen, setScreen] = useState("signin");
   const [verifyType, setVerifyType] = useState("");
+  const [otpEmail, setOtpEmail] = useState("");
 
   return (
     <section className="auth-right">
@@ -84,11 +85,11 @@ export default function AuthRightPanel() {
         {screen === "signin" && <SignInForm setScreen={setScreen} />}
 
         {screen === "signup" && (
-          <SignUpForm setScreen={setScreen} setVerifyType={setVerifyType} />
+          <SignUpForm setScreen={setScreen} setVerifyType={setVerifyType}  setOtpEmail={setOtpEmail} />
         )}
 
         {screen === "verify-email" && (
-          <VerifyEmailForm setScreen={setScreen} verifyType={verifyType} />
+          <VerifyEmailForm setScreen={setScreen} verifyType={verifyType} email={otpEmail} />
         )}
 
         {screen === "verify-success" && (

@@ -33,7 +33,7 @@
 
   cursor: pointer;
 
-  transition: 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 .uf-verify-back-btn:hover {
@@ -41,32 +41,42 @@
   transform: translateX(-4px);
 }
 
+.uf-verify-back-btn:active {
+  transform: translateX(-2px);
+}
+
 /* ==========================================
-   ICON
+   VERIFY ICON
 ========================================== */
 
 .uf-verify-icon {
-  width: 78px;
-  height: 78px;
+  width: 82px;
+  height: 82px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 22px;
+  border-radius: 24px;
 
   background: linear-gradient(135deg, #7c5cff, #4f8cff);
 
   color: #ffffff;
 
   box-shadow:
-    0 18px 40px rgba(124, 92, 255, 0.25),
-    inset 0 0 20px rgba(255, 255, 255, 0.08);
+    0 18px 45px rgba(124, 92, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  transition: transform 0.3s ease;
+}
+
+.uf-verify-icon:hover {
+  transform: translateY(-3px);
 }
 
 .uf-verify-icon svg {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
 }
 
 /* ==========================================
@@ -74,58 +84,151 @@
 ========================================== */
 
 .uf-verify-title {
-  font-size: clamp(28px, 4vw, 36px);
+  color: #ffffff;
+
+  font-size: clamp(30px, 4vw, 38px);
   font-weight: 700;
   line-height: 1.2;
 
-  color: #ffffff;
+  letter-spacing: -0.5px;
 }
 
 .uf-verify-description {
-  max-width: 430px;
+  max-width: 460px;
 
   color: #9ca3af;
 
   font-size: 15px;
-  line-height: 1.75;
+  line-height: 1.8;
 }
 
 /* ==========================================
-   OTP
+   EMAIL BADGE
+========================================== */
+
+.uf-verify-email {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 18px;
+
+  border: 1px solid rgba(124, 92, 255, 0.2);
+  border-radius: 999px;
+
+  background: rgba(124, 92, 255, 0.08);
+
+  color: #d8cbff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  word-break: break-all;
+}
+
+.uf-verify-email svg {
+  color: #7c5cff;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   TIMER CARD
+========================================== */
+
+.uf-verify-timer {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  background: #17191f;
+}
+
+.uf-verify-timer-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.uf-verify-timer-left svg {
+  color: #7c5cff;
+}
+
+.uf-verify-timer-label {
+  color: #cbd5e1;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.uf-verify-time {
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================
+   OTP CONTAINER
 ========================================== */
 
 .uf-verify-otp-container {
+  width: 100%;
+
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
-
-  width: 100%;
+  gap: 12px;
 }
+
+/* ==========================================
+   OTP INPUT
+========================================== */
 
 .uf-verify-otp-input {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1;
 
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   background: #16181d;
 
-  color: #fff;
+  color: #ffffff;
 
   text-align: center;
 
-  font-size: 20px;
+  font-size: clamp(18px, 2vw, 24px);
   font-weight: 700;
 
   outline: none;
 
-  transition: .25s;
+  transition: all 0.25s ease;
+}
+
+.uf-verify-otp-input:hover {
+  border-color: rgba(124, 92, 255, 0.35);
 }
 
 .uf-verify-otp-input:focus {
+  background: #1b1d24;
+
   border-color: #7c5cff;
-  box-shadow: 0 0 0 4px rgba(124,92,255,.15);
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 0 4px rgba(124, 92, 255, 0.15),
+    0 12px 30px rgba(124, 92, 255, 0.15);
 }
 
 .uf-verify-otp-input::-webkit-inner-spin-button,
@@ -134,8 +237,53 @@
   margin: 0;
 }
 
+/* ==========================================
+   ERROR BOX
+========================================== */
+
+.uf-verify-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  padding: 15px 18px;
+
+  border: 1px solid rgba(255, 90, 90, 0.18);
+  border-radius: 14px;
+
+  background: rgba(255, 90, 90, 0.08);
+
+  color: #ff8b8b;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.uf-verify-error svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.uf-verify-error strong {
+  display: block;
+  margin-bottom: 2px;
+
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ==========================================
+   VERIFY BUTTON
+========================================== */
+
 .uf-verify-btn {
+  width: 100%;
   height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   border: none;
   border-radius: 16px;
@@ -149,17 +297,74 @@
 
   cursor: pointer;
 
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.uf-verify-btn:hover {
+.uf-verify-btn:hover:not(:disabled) {
   transform: translateY(-2px);
 
-  box-shadow: 0 18px 35px rgba(124, 92, 255, 0.28);
+  box-shadow: 0 18px 40px rgba(124, 92, 255, 0.3);
 }
 
-.uf-verify-btn:active {
+.uf-verify-btn:active:not(:disabled) {
   transform: scale(0.98);
+}
+
+.uf-verify-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.spin {
+  animation: uf-spin 0.8s linear infinite;
+}
+
+@keyframes uf-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================
+   SUCCESS MESSAGE
+========================================== */
+
+.uf-verify-success {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 15px 18px;
+
+  border: 1px solid rgba(34, 197, 94, 0.18);
+  border-radius: 14px;
+
+  background: rgba(34, 197, 94, 0.08);
+
+  color: #86efac;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.uf-verify-success svg {
+  flex-shrink: 0;
+}
+
+.uf-verify-success strong {
+  display: block;
+  margin-bottom: 2px;
+
+  color: #ffffff;
 }
 
 /* ==========================================
@@ -167,15 +372,33 @@
 ========================================== */
 
 .uf-verify-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-top: 4px;
+
   text-align: center;
 
   color: #9ca3af;
 
   font-size: 14px;
+  line-height: 1.6;
 }
 
+.uf-verify-footer strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ==========================================
+   RESEND BUTTON
+========================================== */
+
 .uf-verify-resend-btn {
-  margin-left: 8px;
+  padding: 0;
 
   border: none;
   background: transparent;
@@ -187,127 +410,157 @@
 
   cursor: pointer;
 
-  transition: color 0.25s ease;
+  transition: all 0.25s ease;
 }
 
-.uf-verify-resend-btn:hover {
-  color: #95b5ff;
+.uf-verify-resend-btn:hover:not(:disabled) {
+  color: #a78bfa;
+}
+
+.uf-verify-resend-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* ==========================================
    RESPONSIVE
 ========================================== */
 
-@media (max-width:768px){
+@media (max-width: 768px) {
+  .uf-verify-form {
+    gap: 18px;
+  }
 
-    .uf-verify-form{
-        gap:18px;
-    }
+  .uf-verify-icon {
+    width: 72px;
+    height: 72px;
+  }
 
-    .uf-verify-title{
-        font-size:32px;
-    }
+  .uf-verify-icon svg {
+    width: 30px;
+    height: 30px;
+  }
 
-    .uf-verify-description{
-        font-size:14px;
-    }
+  .uf-verify-title {
+    font-size: 32px;
+  }
 
-    .uf-verify-icon{
-        width:70px;
-        height:70px;
-    }
+  .uf-verify-description {
+    font-size: 14px;
+  }
 
-    .uf-verify-otp-container{
-        gap:10px;
-    }
+  .uf-verify-email {
+    font-size: 13px;
+    padding: 10px 16px;
+  }
 
-    .uf-verify-otp-input{
-        font-size:20px;
-    }
+  .uf-verify-timer {
+    padding: 14px 16px;
+  }
 
-    .uf-verify-btn{
-        height:56px;
-    }
+  .uf-verify-otp-container {
+    gap: 10px;
+  }
 
+  .uf-verify-btn {
+    height: 56px;
+  }
 }
 
-@media (max-width:480px){
+@media (max-width: 480px) {
+  .uf-verify-form {
+    gap: 16px;
+  }
 
-    .uf-verify-form{
-        gap:16px;
-    }
+  .uf-verify-back-btn {
+    font-size: 13px;
+  }
 
-    .uf-verify-back-btn{
-        font-size:13px;
-    }
+  .uf-verify-title {
+    font-size: clamp(24px, 6vw, 28px);
+  }
 
-    .uf-verify-title{
-        font-size:clamp(24px,6vw,28px);
-    }
+  .uf-verify-description {
+    font-size: 13px;
+    line-height: 1.7;
+  }
 
-    .uf-verify-description{
-        font-size:13px;
-        line-height:1.7;
-    }
+  .uf-verify-email {
+    width: 100%;
+    justify-content: center;
 
-    .uf-verify-icon{
-        width:60px;
-        height:60px;
+    font-size: 13px;
+  }
 
-        border-radius:16px;
-    }
+  .uf-verify-timer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 
-    .uf-verify-icon svg{
-        width:26px;
-        height:26px;
-    }
+  .uf-verify-time {
+    margin-left: 32px;
+  }
 
-    .uf-verify-otp-container{
-        gap:6px;
-    }
+  .uf-verify-otp-container {
+    gap: 6px;
+  }
 
-    .uf-verify-otp-input{
+  .uf-verify-otp-input {
+    border-radius: 12px;
+    font-size: 16px;
+  }
 
-        font-size:16px;
+  .uf-verify-error,
+  .uf-verify-success {
+    padding: 14px;
+    font-size: 13px;
+  }
 
-        border-radius:10px;
-    }
+  .uf-verify-btn {
+    height: 54px;
+    font-size: 15px;
+  }
 
-    .uf-verify-btn{
-        height:52px;
+  .uf-verify-footer {
+    flex-direction: column;
+    gap: 6px;
 
-        font-size:15px;
-    }
-
-    .uf-verify-footer{
-        font-size:13px;
-    }
-
+    font-size: 13px;
+  }
 }
 
-@media (max-width:380px){
+@media (max-width: 380px) {
+  .uf-verify-otp-container {
+    gap: 5px;
+  }
 
-    .uf-verify-otp-container{
-        gap:5px;
-    }
+  .uf-verify-otp-input {
+    border-radius: 10px;
+    font-size: 15px;
+  }
 
-    .uf-verify-otp-input{
-
-        font-size:15px;
-
-        border-radius:8px;
-    }
-
+  .uf-verify-title {
+    font-size: 24px;
+  }
 }
 
-@media (max-width:340px){
+@media (max-width: 340px) {
+  .uf-verify-otp-container {
+    gap: 4px;
+  }
 
-    .uf-verify-otp-container{
-        gap:4px;
-    }
+  .uf-verify-otp-input {
+    border-radius: 8px;
+    font-size: 14px;
+  }
 
-    .uf-verify-otp-input{
+  .uf-verify-btn {
+    height: 50px;
+    font-size: 14px;
+  }
 
-        font-size:14px;
-    }
+  .uf-verify-footer {
+    font-size: 12px;
+  }
 }

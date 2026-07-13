@@ -2,13 +2,14 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import "./style/SignForm.css";
 import SocialLogin from "./SocialLogin";
+import { registerUser } from "../../service/auth.service";
 
-export default function SignUpForm({ setScreen, setVerifyType }) {
+export default function SignUpForm({ setScreen, setVerifyType,setOtpEmail }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    fullName: "",
+    userName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -16,7 +17,7 @@ export default function SignUpForm({ setScreen, setVerifyType }) {
   });
 
   const [errors, setErrors] = useState({
-    fullName: "",
+    userName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -41,10 +42,10 @@ export default function SignUpForm({ setScreen, setVerifyType }) {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Full name is required.";
-    } else if (formData.fullName.trim().length < 3) {
-      newErrors.fullName = "Name must be at least 3 characters.";
+    if (!formData.userName.trim()) {
+      newErrors.userName = "Full name is required.";
+    } else if (formData.userName.trim().length < 3) {
+      newErrors.userName = "Name must be at least 3 characters.";
     }
 
     if (!formData.email.trim()) {
@@ -70,7 +71,7 @@ export default function SignUpForm({ setScreen, setVerifyType }) {
     }
 
     setErrors({
-      fullName: newErrors.fullName || "",
+      userName: newErrors.userName || "",
       email: newErrors.email || "",
       password: newErrors.password || "",
       confirmPassword: newErrors.confirmPassword || "",
@@ -90,16 +91,15 @@ export default function SignUpForm({ setScreen, setVerifyType }) {
     try {
       setLoading(true);
 
-      // Fake API
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log(formData);
-
-      setVerifyType("signup");
-      setScreen("verify-email");
+      const { data } = await registerUser(formData);
+      if (data.success) {
+        setOtpEmail(formData.email);
+        setVerifyType("signup");
+        setScreen("verify-email");
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      alert(error.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -110,21 +110,21 @@ export default function SignUpForm({ setScreen, setVerifyType }) {
       {/* Name */}
 
       <div className="form-group">
-        <label htmlFor="fullName">Full Name</label>
+        <label htmlFor="userName">User Name</label>
 
         <input
-          id="fullName"
+          id="userName"
           type="text"
-          name="fullName"
+          name="userName"
           placeholder="Enter your full name"
-          value={formData.fullName}
+          value={formData.userName}
           onChange={handleChange}
           autoComplete="name"
           required
         />
 
-        {errors.fullName && (
-          <span className="error-text">{errors.fullName}</span>
+        {errors.userName && (
+          <span className="error-text">{errors.userName}</span>
         )}
       </div>
 
