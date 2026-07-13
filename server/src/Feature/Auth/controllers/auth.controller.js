@@ -2,7 +2,7 @@ import User from "../../../models/user.model.js";
 import bcrypt from "bcrypt";
 import generateOTP from "../utils/generateOTP.js";
 import { redisClient } from "../../../config/redis.js";
-// import { sendOTP } from "../services/mail.service.js";
+import  sendOTP from "../utils/sendOTPEmail.js";
 
 async function RegisterUser(req, res) {
   const { userName, email, password } = req.body;
@@ -13,7 +13,7 @@ async function RegisterUser(req, res) {
   if (existingUser) {
     return res.status(409).json({
       success: false,
-      message: "Email already exists.",
+      message: "User already exists.",
     });
   }
 
@@ -24,6 +24,7 @@ async function RegisterUser(req, res) {
   const otp = generateOTP();
 
   console.log(otp);
+
   // Redis Key
   const cacheKey = `register:${email}`;
   await redisClient.set(
@@ -38,8 +39,9 @@ async function RegisterUser(req, res) {
       EX: 300,
     },
   );
+
   // 5. Send OTP Email
-  // await sendOTP(email, otp);
+  await sendOTP(email, otp);
 
   // 6. Success Response
   return res.status(200).json({
