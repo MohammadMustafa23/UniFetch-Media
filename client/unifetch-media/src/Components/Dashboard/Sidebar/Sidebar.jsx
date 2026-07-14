@@ -63,8 +63,7 @@ const menuItems = [
   },
 ];
 
-export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export default function Sidebar({ isCollapsed , setCollapsed }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -87,7 +86,7 @@ export default function Sidebar() {
 
   const handleLogoClick = () => {
     if (window.innerWidth <= 768) return;
-    setIsCollapsed((prev) => !prev);
+    setCollapsed((prev) => !prev);
   };
 
   return (
