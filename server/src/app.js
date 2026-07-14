@@ -1,5 +1,7 @@
 import express, { json } from 'express'
 import AuthRouter from './Feature/Auth/routes/auth.routes.js';
+import PreferencesRouter from './Feature/Preferences/routes/preferences.routes.js';
+import DownloderRoute from './Feature/Downloader/routes/downloader.routes.js';
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -15,5 +17,7 @@ app.use(express.json())
 app.use(cookieParser());
 
 app.use('/api',AuthRouter);
+app.use('/api',PreferencesRouter);
+app.use('/api',DownloderRoute);
 
 export default app;
