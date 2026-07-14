@@ -1,5 +1,7 @@
 import User from "../../../models/user.model.js";
 import { redisClient } from "../../../config/redis.js";
+import UserPreference from "../../Preferences/models/preferences.model.js";
+
 
 async function VerifyOTP(req, res) {
   try {
@@ -37,6 +39,10 @@ async function VerifyOTP(req, res) {
 
     // 5. Delete Redis Data
     await redisClient.del(cacheKey);
+
+    await UserPreference.create({
+      userId: user._id,
+    });
 
     // 6. Success
     return res.status(201).json({
