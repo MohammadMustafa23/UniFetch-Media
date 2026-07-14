@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { logoutUser } from "../../../service/auth.service";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
-
+import { useNavigate } from "react-router-dom";
+import ConfirmModal from "../../../common/ConfirmModal";
+import Loader from "../../../common/Loader";
 import {
   LayoutDashboard,
   Download,
@@ -63,15 +66,33 @@ const menuItems = [
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      await logoutUser();
+      setShowLogoutModal(false);
+      navigate("/authantication-page", {
+        replace: true,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogoClick = () => {
     if (window.innerWidth <= 768) return;
-
     setIsCollapsed((prev) => !prev);
   };
 
   return (
     <>
+      {loading && <Loader text="Signing you out..." />}
       {/* Mobile Toggle */}
       <button
         className="ufm-sidebar-toggle"
@@ -163,11 +184,25 @@ export default function Sidebar() {
             </div>
           )}
 
-          <button className="ufm-sidebar-logout">
+          <button
+            className="ufm-sidebar-logout"
+            onClick={() => setShowLogoutModal(true)}
+          >
             <LogOut size={18} />
           </button>
         </div>
       </aside>
+
+      <ConfirmModal
+        isOpen={showLogoutModal}
+        title="Logout"
+        message="Are you sure you want to logout from your UniFetch Media account?"
+        confirmText="Logout"
+        cancelText="Stay"
+        danger
+        onCancel={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+      />
     </>
   );
 }

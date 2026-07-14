@@ -2,13 +2,17 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import SocialLogin from "./SocialLogin";
 import "./style/SignForm.css";
-
+import { loginUser } from "../../service/auth.service";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import Loader from "../../common/Loader";
 export default function SignInForm({ setScreen }) {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const [errors, setErrors] = useState({
@@ -46,6 +50,8 @@ export default function SignInForm({ setScreen }) {
 
     if (!formData.password) {
       newErrors.password = "Password is required.";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long.";
     }
 
     setErrors({
@@ -59,118 +65,129 @@ export default function SignInForm({ setScreen }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (loading) return;
-
     if (!validateForm()) return;
 
     try {
       setLoading(true);
 
-      // Temporary API Simulation
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const { data } = await loginUser(formData);
 
-      console.log(formData);
+      if (data.success) {
+        console.log("Login Successful");
+        console.log(data.user);
 
-      // Later:
-      // await loginUser(formData);
+        toast.success(data.message);
+
+        navigate("/dashboard");
+      }
     } catch (error) {
       console.error(error);
+
+      const message =
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form className="signin-form" onSubmit={handleSubmit} noValidate>
-      {/* Email */}
+    <>
+      {loading && <Loader text="Signing you in..." />}
 
-      <div className="form-group">
-        <label htmlFor="email">Email Address</label>
+      <form className="signin-form" onSubmit={handleSubmit} noValidate>
+        {/* Email */}
 
-        <input
-          id="email"
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          autoComplete="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+        <div className="form-group">
+          <label htmlFor="email">Email Address</label>
 
-        {errors.email && <span className="error-text">{errors.email}</span>}
-      </div>
-
-      {/* Password */}
-
-      <div className="form-group">
-        <div className="label-row">
-          <label htmlFor="password">Password</label>
-
-          <button
-            type="button"
-            className="forgot-btn"
-            onClick={() => setScreen("forgot-password")}
-          >
-            Forgot Password?
-          </button>
-        </div>
-
-        <div className="password-box">
           <input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Enter your password"
-            autoComplete="current-password"
-            value={formData.password}
+            id="email"
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            autoComplete="email"
+            value={formData.email}
             onChange={handleChange}
             required
           />
 
-          <button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-            disabled={loading}
-            aria-label={showPassword ? "Hide password" : "Show password"}
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
+          {errors.email && <span className="error-text">{errors.email}</span>}
         </div>
 
-        {errors.password && (
-          <span className="error-text">{errors.password}</span>
-        )}
-      </div>
+        {/* Password */}
 
-      {/* Button */}
+        <div className="form-group">
+          <div className="label-row">
+            <label htmlFor="password">Password</label>
 
-      <button type="submit" className="signin-btn" disabled={loading}>
-        {loading ? "Signing In..." : "Sign In"}
-      </button>
+            <button
+              type="button"
+              className="forgot-btn"
+              onClick={() => setScreen("forgot-password")}
+            >
+              Forgot Password?
+            </button>
+          </div>
 
-      {/* Divider */}
+          <div className="password-box">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
 
-      <div className="divider">
-        <span>OR</span>
-      </div>
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              disabled={loading}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
-      {/* Social Login */}
+          {errors.password && (
+            <span className="error-text">{errors.password}</span>
+          )}
+        </div>
 
-      <SocialLogin />
+        {/* Button */}
 
-      {/* Bottom */}
-
-      <p className="bottom-text">
-        Don't have an account?
-        <button
-          type="button"
-          className="switch-btn"
-          onClick={() => setScreen("signup")}
-        >
-          Create Account
+        <button type="submit" className="signin-btn" disabled={loading}>
+          {loading ? "Signing In..." : "Sign In"}
         </button>
-      </p>
-    </form>
+
+        {/* Divider */}
+
+        <div className="divider">
+          <span>OR</span>
+        </div>
+
+        {/* Social Login */}
+
+        <SocialLogin />
+
+        {/* Bottom */}
+
+        <p className="bottom-text">
+          Don't have an account?
+          <button
+            type="button"
+            className="switch-btn"
+            onClick={() => setScreen("signup")}
+          >
+            Create Account
+          </button>
+        </p>
+      </form>
+    </>
   );
 }

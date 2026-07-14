@@ -1,0 +1,86 @@
+.ufm-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+
+  z-index: 9999;
+}
+
+.ufm-modal {
+  width: min(92%, 420px);
+
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+
+  padding: 28px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.ufm-modal h2 {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.ufm-modal p {
+  color: #9ca3af;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.ufm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.ufm-modal-btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  border-radius: 12px;
+
+  padding: 12px 22px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  transition: 0.25s;
+}
+
+.ufm-modal-cancel {
+  background: #1f2937;
+  color: white;
+}
+
+.ufm-modal-cancel:hover {
+  background: #374151;
+}
+
+.ufm-modal-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.ufm-modal-primary:hover {
+  background: #1d4ed8;
+}
+
+.ufm-modal-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.ufm-modal-danger:hover {
+  background: #dc2626;
+}

@@ -9,21 +9,16 @@ import {
 import { useEffect, useRef, useState } from "react";
 import "./style/VerifyEmailForm.css";
 import { toast } from "sonner";
-import { verifyOTP, resendOTP } from "../../service/auth.service";
+import { verifyOTP,resendOTP,verifyResetOTP } from "../../service/auth.service";
 
 export default function VerifyEmailForm({ setScreen, verifyType, email }) {
   const inputs = useRef([]);
   const OTP_LENGTH = 6;
-  const OTP_EXPIRE_TIME = 60;
-
+  const OTP_EXPIRE_TIME = 120;
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
-
   const [timer, setTimer] = useState(OTP_EXPIRE_TIME);
-
   const [canResend, setCanResend] = useState(false);
 
   useEffect(() => {
@@ -138,15 +133,31 @@ export default function VerifyEmailForm({ setScreen, verifyType, email }) {
       setLoading(true);
       setError("");
 
-      const { data } = await verifyOTP({
-        email,
-        otp: code,
-      });
+      let data;
 
-      if (data.success) {
-        if (verifyType === "forgot-password") {
+      if (verifyType === "forgot-password") {
+        console.log(email,code);
+        
+        const response = await verifyResetOTP({
+          email,
+          otp: code,
+        });
+
+        data = response.data;
+
+        if (data.success) {
+          sessionStorage.setItem("resetToken", data.resetToken);
           setScreen("reset-password");
-        } else {
+        }
+      } else {
+        const response = await verifyOTP({
+          email,
+          otp: code,
+        });
+
+        data = response.data;
+
+        if (data.success) {
           setScreen("verify-success");
         }
       }
@@ -166,21 +177,16 @@ export default function VerifyEmailForm({ setScreen, verifyType, email }) {
     try {
       setError("");
 
-      const { data } = await resendOTP({ email });
+      const response =
+        verifyType === "forgot-password" ? await resendResetOTP({ email }) : await resendOTP({ email });
 
-      if (data.success) {
-        // Clear OTP inputs
-        setOtp(Array(6).fill(""));
-
-        // Restart timer
-        setTimer(OTP_EXPIRE_TIME); // 60
+      if (response.data.success) {
+        setOtp(Array(OTP_LENGTH).fill(""));
+        setTimer(OTP_EXPIRE_TIME);
         setCanResend(false);
-
-        // Focus first input
         inputs.current[0]?.focus();
 
-        // Success Toast
-        toast.success("OTP resent successfully.");
+        toast.success(response.data.message);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Unable to resend OTP.");

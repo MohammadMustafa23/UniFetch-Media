@@ -1,0 +1,124 @@
+/*==========================================
+  OVERLAY
+==========================================*/
+
+.uf-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(6, 9, 17, 0.82);
+  backdrop-filter: blur(10px);
+
+  animation: ufFadeIn 0.25s ease;
+}
+
+/*==========================================
+  CARD
+==========================================*/
+
+.uf-loader-card {
+  width: min(92vw, 360px);
+
+  padding: 38px 30px;
+
+  border-radius: 24px;
+
+  background: rgba(22, 27, 40, 0.95);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  text-align: center;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+/*==========================================
+  TEXT
+==========================================*/
+
+.uf-loader-card h3 {
+  margin-top: 28px;
+  font-size: 1.3rem;
+  color: #fff;
+}
+
+.uf-loader-card p {
+  margin-top: 10px;
+  color: #a7afbe;
+  line-height: 1.6;
+}
+
+/*==========================================
+  SPINNER
+==========================================*/
+
+.uf-loader-spinner {
+  width: 74px;
+  height: 74px;
+
+  margin: auto;
+
+  position: relative;
+}
+
+.uf-loader-spinner span {
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 50%;
+
+  border: 4px solid transparent;
+  border-top-color: #6366f1;
+
+  animation: ufRotate 1.2s linear infinite;
+}
+
+.uf-loader-spinner span:nth-child(2) {
+  width: 58px;
+  height: 58px;
+
+  top: 8px;
+  left: 8px;
+
+  border-top-color: #22c55e;
+
+  animation-duration: 0.9s;
+}
+
+.uf-loader-spinner span:nth-child(3) {
+  width: 42px;
+  height: 42px;
+
+  top: 16px;
+  left: 16px;
+
+  border-top-color: #38bdf8;
+
+  animation-duration: 0.7s;
+}
+
+/*==========================================
+  ANIMATION
+==========================================*/
+
+@keyframes ufRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ufFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -100,10 +100,11 @@ export default function AuthRightPanel() {
           <ForgotPasswordForm
             setScreen={setScreen}
             setVerifyType={setVerifyType}
+            setOtpEmail={setOtpEmail}
           />
         )}
         {screen === "reset-password" && (
-          <ResetPasswordForm setScreen={setScreen} />
+          <ResetPasswordForm setScreen={setScreen} email={otpEmail}/>
         )}
         {screen === "reset-success" && (
           <ResetPasswordSuccess setScreen={setScreen} />
