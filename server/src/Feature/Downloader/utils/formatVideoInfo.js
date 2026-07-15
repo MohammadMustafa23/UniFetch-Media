@@ -226,7 +226,6 @@ export default function formatVideoInfo(video) {
 
     downloads: {
       video: videoFormats,
-
       audio: extractAudioFormats(video.formats),
     },
   };
