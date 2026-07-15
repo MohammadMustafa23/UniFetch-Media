@@ -130,7 +130,7 @@ function getQualityLabel(height) {
   return map[height] || `${height}p`;
 }
 
-export default function formatVideoInfo(video) {
+export default function formatVideoInfo(video,url) {
   const videoFormats = extractVideoFormats(video.formats);
 
   return {
@@ -139,7 +139,7 @@ export default function formatVideoInfo(video) {
     =========================== */
 
     id: video.id,
-
+    url : url,
     platform: video.extractor_key?.toLowerCase(),
 
     type:
@@ -150,7 +150,6 @@ export default function formatVideoInfo(video) {
           : "video",
 
     title: video.title,
-
     description: video.description?.slice(0, 300),
 
     thumbnail: video.thumbnail,

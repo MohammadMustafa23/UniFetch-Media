@@ -44,7 +44,7 @@ export async function getDownloadInfo(req, res) {
 
     const videoInfo = await getVideoInfo(req.body.url);
 
-    const formatted = formatVideoInfo(videoInfo);
+    const formatted = formatVideoInfo(videoInfo,req.body.url);
 
     // Save History
     await createHistoryService({
