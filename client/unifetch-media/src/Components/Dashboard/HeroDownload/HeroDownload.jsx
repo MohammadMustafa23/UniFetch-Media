@@ -15,36 +15,34 @@ import { getDownloadInfo } from "../../../service/download.service.js";
 export default function HeroDownload({ setVideoInfo, setLoading }) {
   const [url, setUrl] = useState("");
 
- const handleDownloadInfo = async () => {
-  console.log("START");
-
-  if (!url.trim()) {
-    return toast.error("Please paste a media URL.");
-  }
-
-  try {
-    setLoading(true);
-    console.log("Loading True");
-
-    const { data } = await getDownloadInfo(url);
-
-    console.log("API Response:", data);
-
-    if (data.success) {
-      setVideoInfo(data.data);
-      console.log("Video Set");
+  const handleDownloadInfo = async () => {
+    if (!url.trim()) {
+      return toast.error("Please paste a media URL.");
     }
-  } catch (error) {
-    console.log("ERROR", error);
 
-    toast.error(
-      error.response?.data?.message || "Failed to fetch media information."
-    );
-  } finally {
-    console.log("Loading False");
-    setLoading(false);
-  }
-};
+    try {
+      setLoading(true);
+      console.log("Loading True");
+
+      const { data } = await getDownloadInfo(url);
+
+      console.log("API Response:", data);
+
+      if (data.success) {
+        setVideoInfo(data.data);
+        console.log("Video Set");
+      }
+    } catch (error) {
+      console.log("ERROR", error);
+
+      toast.error(
+        error.response?.data?.message || "Failed to fetch media information.",
+      );
+    } finally {
+      console.log("Loading False");
+      setLoading(false);
+    }
+  };
   return (
     <section className="ufm-hero">
       {/* LEFT */}

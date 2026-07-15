@@ -5,16 +5,21 @@ import {
   FolderOpen,
   Share2,
   Trash2,
-  PlaySquareIcon,
-  CameraIcon ,
+  PlaySquare,
+  Camera,
   Music2,
   Play,
 } from "lucide-react";
 
+import { formatFileSize } from "../../../utils/formatFileSize.js";
+
 const icons = {
-  YouTube: <PlaySquareIcon size={18} />,
-  CameraIcon : <CameraIcon  size={18} />,
-  Spotify: <Music2 size={18} />,
+  youtube: <PlaySquare size={18} />,
+  instagram: <Camera size={18} />,
+  facebook: <Camera size={18} />,
+  tiktok: <Camera size={18} />,
+  twitter: <Camera size={18} />,
+  spotify: <Music2 size={18} />,
 };
 
 export default function DownloadCard({ item }) {
@@ -30,7 +35,7 @@ export default function DownloadCard({ item }) {
         </button>
 
         <span className="download-platform">
-          {icons[item.platform]}
+          {icons[item.platform?.toLowerCase()]}
 
           {item.platform}
         </span>
@@ -44,16 +49,16 @@ export default function DownloadCard({ item }) {
         <p>
           {item.quality}
 
-          <span>•</span>
+          <span> • </span>
 
-          {item.format}
+          {item.format?.toUpperCase()}
 
-          <span>•</span>
+          <span> • </span>
 
-          {item.size}
+          {formatFileSize(item.fileSize)}
         </p>
 
-        <small>Downloaded {item.date}</small>
+        <small>Downloaded {new Date(item.createdAt).toLocaleString()}</small>
       </div>
 
       {/* Actions */}

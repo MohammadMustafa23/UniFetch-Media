@@ -2,8 +2,8 @@ import { ArrowLeft, Eye, EyeOff, LockKeyhole } from "lucide-react";
 import { useState } from "react";
 import "./style/ResetPasswordForm.css";
 import { ResetPassword } from "../../service/auth.service";
-import PageLoader from '../../common/PageLoader'
-import {toast} from 'sonner'
+import PageLoader from "../../common/PageLoader";
+import { toast } from "sonner";
 export default function ResetPasswordForm({ setScreen }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -105,11 +105,12 @@ export default function ResetPasswordForm({ setScreen }) {
 
   return (
     <>
-      <PageLoader
-        show={loading}
-        title="Resetting Password"
-        message="Updating your password securely..."
-      />
+      {loading && (
+        <PageLoader
+          title="Sending Verification Code"
+          message="Please wait while we send the verification code..."
+        />
+      )}
 
       <form className="uf-reset-form" noValidate>
         {/* Back */}

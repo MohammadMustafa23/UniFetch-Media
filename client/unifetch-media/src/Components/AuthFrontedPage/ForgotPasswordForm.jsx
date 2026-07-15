@@ -1,7 +1,7 @@
 import { ArrowLeft, Lock } from "lucide-react";
 import { useState } from "react";
 import "./style/ForgotPasswordForm.css";
-import { forgotPassword } from "../../service/auth.service";
+import { forgotPassword, verifyResetOTP } from "../../service/auth.service";
 import { toast } from "sonner";
 import PageLoader from "../../common/PageLoader";
 
@@ -9,13 +9,12 @@ export default function ForgotPasswordForm({ setScreen, setVerifyType,setOtpEmai
   const [formData, setFormData] = useState({
     email: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
     email: "",
   });
 
-  const [loading, setLoading] = useState(false);
-
+  
   /* ===============================
       Handle Change
   =============================== */
@@ -66,8 +65,6 @@ export default function ForgotPasswordForm({ setScreen, setVerifyType,setOtpEmai
     if (!validateForm()) return;
     try {
       setLoading(true);
-
-
       const { data } = await forgotPassword({
         email: formData.email.trim(),
       });
@@ -92,15 +89,13 @@ export default function ForgotPasswordForm({ setScreen, setVerifyType,setOtpEmai
 
   return (
     <>
-      <PageLoader
-        show={loading}
+    { loading && <PageLoader
         title="Sending Verification Code"
         message="Please wait while we send the verification code..."
       />
+    }
 
       <form className="uf-forgot-form" noValidate>
-        {/* Back */}
-
         <button
           type="button"
           className="uf-forgot-back-btn"
@@ -141,7 +136,6 @@ export default function ForgotPasswordForm({ setScreen, setVerifyType,setOtpEmai
             autoComplete="email"
             value={formData.email}
             onChange={handleChange}
-            required
           />
 
           {errors.email && <span className="error-text">{errors.email}</span>}

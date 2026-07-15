@@ -1,4 +1,4 @@
-import './PageLoader.css'
+import "./PageLoader.css";
 export default function PageLoader({
   title = "Please wait",
   message = "Processing your request...",

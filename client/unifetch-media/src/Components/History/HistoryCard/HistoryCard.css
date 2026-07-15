@@ -4,20 +4,27 @@ HISTORY CARD
 
 .history-card {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  padding: 22px;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 18px;
+
   background: #111722;
+
   border: 1px solid rgba(255, 255, 255, 0.06);
+
   border-radius: 18px;
-  transition: 0.3s;
+
+  transition: 0.25s;
 }
 
 .history-card:hover {
   transform: translateY(-3px);
+
   border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.25);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
 }
 
 /*==========================================
@@ -26,49 +33,104 @@ LEFT
 
 .history-card-left {
   display: flex;
+
   align-items: center;
+
   gap: 18px;
+
   flex: 1;
+
   min-width: 0;
 }
 
-.history-platform {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff;
+/*==========================================
+THUMBNAIL
+==========================================*/
+
+.history-thumbnail {
+  width: 180px;
+
+  aspect-ratio: 16/9;
+
+  object-fit: cover;
+
+  border-radius: 14px;
+
   flex-shrink: 0;
+
+  background: #1b2231;
 }
+
+/*==========================================
+INFO
+==========================================*/
 
 .history-info {
   flex: 1;
+
   min-width: 0;
 }
 
 .history-info h3 {
-  font-size: 17px;
-  font-weight: 600;
   color: #fff;
-  margin-bottom: 8px;
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+  line-height: 1.4;
+
+  margin-bottom: 10px;
+
   white-space: nowrap;
+
   overflow: hidden;
+
   text-overflow: ellipsis;
 }
 
 .history-info p {
   display: flex;
+
+  align-items: center;
+
   flex-wrap: wrap;
-  gap: 10px;
-  font-size: 14px;
+
+  gap: 8px;
+
   color: #8b94a7;
+
+  font-size: 14px;
 }
 
-.history-info p span {
-  opacity: 0.5;
+.history-info p > span {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+}
+
+/* platform badge */
+
+.history-platform {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  background: #1b2231;
+
+  color: #d8deea;
+
+  font-size: 13px;
+
+  text-transform: capitalize;
 }
 
 /*==========================================
@@ -77,32 +139,12 @@ RIGHT
 
 .history-card-right {
   display: flex;
+
   align-items: center;
-  gap: 18px;
-}
 
-/*==========================================
-STATUS
-==========================================*/
+  gap: 16px;
 
-.history-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.history-success {
-  background: #163321;
-  color: #4ade80;
-}
-
-.history-failed {
-  background: #3a1a1a;
-  color: #f87171;
+  flex-shrink: 0;
 }
 
 /*==========================================
@@ -111,26 +153,39 @@ ACTIONS
 
 .history-actions {
   display: flex;
+
   gap: 10px;
 }
 
 .history-actions button {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+
+  height: 42px;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   border: none;
+
   border-radius: 12px;
+
   background: #1b2231;
-  color: #c4cad8;
+
+  color: #c6cfdd;
+
   cursor: pointer;
-  transition: 0.3s;
+
+  transition: 0.25s;
 }
 
 .history-actions button:hover {
   background: #6366f1;
+
   color: #fff;
+
   transform: translateY(-2px);
 }
 
@@ -139,44 +194,81 @@ ACTIONS
 }
 
 /*==========================================
-RESPONSIVE
+TABLET
 ==========================================*/
 
 @media (max-width: 992px) {
   .history-card {
-    flex-direction: column;
     align-items: flex-start;
+  }
+
+  .history-thumbnail {
+    width: 150px;
+  }
+
+  .history-info h3 {
+    font-size: 17px;
+  }
+}
+
+/*==========================================
+MOBILE
+==========================================*/
+
+@media (max-width: 768px) {
+  .history-card {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .history-card-left {
+    width: 100%;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .history-thumbnail {
+    width: 100%;
+
+    max-width: none;
+  }
+
+  .history-info {
+    width: 100%;
+  }
+
+  .history-info h3 {
+    white-space: normal;
   }
 
   .history-card-right {
     width: 100%;
-    justify-content: space-between;
+
+    justify-content: flex-end;
   }
 }
 
-@media (max-width: 768px) {
-  .history-platform {
-    width: 52px;
-    height: 52px;
-  }
-
-  .history-info h3 {
-    font-size: 16px;
-  }
-
-  .history-info p {
-    font-size: 13px;
-  }
-}
+/*==========================================
+SMALL MOBILE
+==========================================*/
 
 @media (max-width: 480px) {
-  .history-card-left {
-    flex-direction: column;
-    align-items: flex-start;
+  .history-info p {
+    gap: 6px;
+
+    font-size: 13px;
   }
 
-  .history-card-right {
-    flex-wrap: wrap;
-    gap: 12px;
+  .history-actions {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .history-actions button {
+    flex: 1;
   }
 }

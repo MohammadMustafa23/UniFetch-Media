@@ -10,19 +10,38 @@ import RecentDownloads from "../Components/Dashboard/RecentDownloads/RecentDownl
 import DashboardAside from "../Components/Dashboard/Tips/DashboardAside";
 import Footer from "../Components/Dashboard/Footer/Footer";
 import PageLoader from "../common/PageLoader";
-
+import { startDownload } from "../service/download.service";
 import "../Components/Dashboard/style/Dashboard.css";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const [collapsed, setCollapsed] = useState(false);
   const [videoInfo, setVideoInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleDownload = () => {
-    alert("Download Button Clicked");
-    console.log("Download Started");
-  };
+  const handleDownload = async ({ quality, type }) => {
+    try {
+      console.log(videoInfo.url,quality,type);
+      
+      const response = await startDownload({
+        title : videoInfo.title,
+        thumbnail : videoInfo.thumbnail,
+        platform : videoInfo.platform,
+        duration : videoInfo.duration,
+        url: videoInfo.url,
+        quality,
+        format: type === "video" ? "mp4" : "mp3",
+      });
 
+      toast.success(response.data.message);
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+
+      toast.error(error.response?.data?.message || "Download failed");
+    }
+  };
   return (
     <div
       className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
@@ -61,12 +80,14 @@ export default function Dashboard() {
       )}
 
       {!loading && videoInfo && (
-        <div className="ufm-dp-overlay">
-          <PreviewCard
-            videoInfo={videoInfo}
-            onClose={() => setVideoInfo(null)}
-            onDownload={handleDownload}
-          />
+        <div className="ufm-preview-overlay">
+          <div className="ufm-dp-overlay">
+            <PreviewCard
+              videoInfo={videoInfo}
+              onClose={() => setVideoInfo(null)}
+              onDownload={handleDownload}
+            />
+          </div>
         </div>
       )}
     </div>

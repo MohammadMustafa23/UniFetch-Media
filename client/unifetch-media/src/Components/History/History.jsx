@@ -9,14 +9,8 @@ import HistoryHeader from "./HistoryHeader/HistoryHeader";
 import HistoryFilter from "./HistoryFilter/HistoryFilter";
 import HistoryList from "./HistoryList/HistoryList";
 
-// import { useGSAP } from "@gsap/react";
-// import HistoryAnimation from "../../Animation/HistoryAnimation";
 
 export default function History() {
-  // useGSAP(() => {
-  //   return HistoryAnimation();
-  // });
-
   return (
     <div className="ufm-dashboard">
       <Sidebar />

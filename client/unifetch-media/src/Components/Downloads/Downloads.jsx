@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import "../Dashboard/style/Dashboard.css";
 import "./Downloads.css";
 
@@ -9,13 +11,28 @@ import DownloadsHeader from "./DownloadsHeader/DownloadsHeader";
 import DownloadsToolbar from "./DownloadsToolbar/DownloadsToolbar";
 import DownloadsGrid from "./DownloadsGrid/DownloadsGrid";
 
-// import { useGSAP } from "@gsap/react";
-// import DownloadsAnimation from "../../Animation/DownloadsAnimation";
+import { getDownloads } from "../../service/download.service.js";
 
 export default function Downloads() {
-  // useGSAP(() => {
-  //   return DownloadsAnimation();
-  // });
+  const [downloads, setDownloads] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDownloads();
+  }, []);
+
+  async function fetchDownloads() {
+    try {
+      const response = await getDownloads();
+      console.log(response);
+      
+      setDownloads(response.data.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="ufm-dashboard">
@@ -29,7 +46,7 @@ export default function Downloads() {
 
           <DownloadsToolbar />
 
-          <DownloadsGrid />
+          <DownloadsGrid downloads={downloads} loading={loading} />
         </section>
 
         <Footer />
