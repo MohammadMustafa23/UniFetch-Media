@@ -1,31 +1,29 @@
 import "./QueueItem.css";
 
 import {
-  Pause,
-  Play,
-  RotateCcw,
-  ArrowUp,
-  ArrowDown,
-  Trash2,
-  PlaySquareIcon,
-  Music2,
   Camera,
+  Music2,
+  PlaySquareIcon,
 } from "lucide-react";
 
 import QueueProgress from "../QueueProgress/QueueProgress";
 import QueueActions from "../QueueActions/QueueActions";
 
 const platformIcons = {
-  Instagram: <Camera size={18} />,
-  YouTube: <PlaySquareIcon size={18} />,
-  Spotify: <Music2 size={18} />,
+  youtube: <PlaySquareIcon size={18} />,
+  instagram: <Camera size={18} />,
+  spotify: <Music2 size={18} />,
 };
 
 const QueueItem = ({ item }) => {
+  const platform = (item.platform || "").toLowerCase();
+
   return (
     <div className="queue-item">
       <div className="queue-item-left">
-        <div className="queue-thumb">{platformIcons[item.platform]}</div>
+        <div className="queue-thumb">
+          {platformIcons[platform] || <PlaySquareIcon size={18} />}
+        </div>
 
         <div className="queue-content">
           <h3>{item.title}</h3>
@@ -35,25 +33,29 @@ const QueueItem = ({ item }) => {
 
             <span>•</span>
 
-            {item.quality}
+            {item.quality || "Best"}
 
             <span>•</span>
 
-            {item.size}
+            {item.fileSize > 0
+              ? `${(item.fileSize / (1024 * 1024)).toFixed(2)} MB`
+              : "--"}
           </p>
 
-          <QueueProgress progress={item.progress} />
+          <QueueProgress progress={item.progress || 0} />
         </div>
       </div>
 
       <div className="queue-item-right">
-        <div className={`queue-status ${item.status.toLowerCase()}`}>
+        <div className={`queue-status ${(item.status || "").toLowerCase()}`}>
           {item.status}
         </div>
 
-        <span className="queue-percent">{item.progress}%</span>
+        <span className="queue-percent">
+          {item.progress || 0}%
+        </span>
 
-        <QueueActions />
+        <QueueActions item={item} />
       </div>
     </div>
   );

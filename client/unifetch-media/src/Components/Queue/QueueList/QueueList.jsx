@@ -1,45 +1,47 @@
+import { useCallback, useEffect, useState } from "react";
+
 import "./QueueList.css";
 
 import QueueItem from "../QueueItem/QueueItem";
-import EmptyQueue from '../EmptyQueue/EmptyQueue'
-
-const dummyQueue = [
-  {
-    id: 1,
-    title: "Instagram Reel.mp4",
-    platform: "Instagram",
-    quality: "720P",
-    size: "128 MB",
-    progress: 22,
-    status: "Paused",
-  },
-  {
-    id: 2,
-    title: "YouTube Tutorial.mp4",
-    platform: "YouTube",
-    quality: "1080P",
-    size: "1.2 GB",
-    progress: 68,
-    status: "Downloading",
-  },
-  {
-    id: 3,
-    title: "Music Playlist.mp3",
-    platform: "Spotify",
-    quality: "320kbps",
-    size: "94 MB",
-    progress: 100,
-    status: "Completed",
-  },
-];
+import EmptyQueue from "../EmptyQueue/EmptyQueue";
+import { getQueue } from "../../../service/download.service";
 
 const QueueList = () => {
+  const [queue, setQueue] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchQueue = useCallback(async () => {
+    try {
+      const res = await getQueue();
+
+      if (res.data.success) {
+        setQueue(res.data.data || []);
+      }
+    } catch (error) {
+      console.error("Queue Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchQueue();
+    const interval = setInterval(fetchQueue, 2000);
+    return () => clearInterval(interval);
+  }, [fetchQueue]);
+
+  if (loading) {
+    return <p>Loading Queue...</p>;
+    // Later:
+    // return <PageLoader title="Loading Queue..." />;
+  }
+
   return (
     <section className="queue-list">
-      {dummyQueue.length === 0 ? (
-        <EmptyQueue />
+      {queue.length > 0 ? (
+        queue.map((item) => <QueueItem key={item._id} item={item} />)
       ) : (
-        dummyQueue.map((item) => <QueueItem key={item.id} item={item} />)
+        <EmptyQueue />
       )}
     </section>
   );

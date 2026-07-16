@@ -1,49 +1,8 @@
-import { useEffect, useState } from "react";
 import "./ProfileCard.css";
 import { User, Mail, Lock } from "lucide-react";
-import { getprofile } from "../../../service/auth.service";
-import { toast } from "sonner";
 
-export default function ProfileCard() {
-  const [profile, setProfile] = useState({
-    userName: "",
-    email: "",
-    password: "********",
-  });
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const { data } = await getprofile();
-
-      if (data.success) {
-        setProfile({
-          userName: data.user.userName,
-          email: data.user.email,
-          password: "********",
-        });
-      }
-    } catch (error) {
-      console.error(error);
-
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to load profile."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
+export default function ProfileCard({ profile}) {
+  if (!profile) return null;
   return (
     <section className="profile-card">
       <h2>Profile</h2>
@@ -59,6 +18,12 @@ export default function ProfileCard() {
           <input
             type="text"
             value={profile.userName}
+            onChange={(e) =>
+              setProfile({
+                ...profile,
+                userName: e.target.value,
+              })
+            }
             readOnly
           />
         </div>
@@ -75,6 +40,12 @@ export default function ProfileCard() {
           <input
             type="email"
             value={profile.email}
+            onChange={(e) =>
+              setProfile({
+                ...profile,
+                email: e.target.value,
+              })
+            }
             readOnly
           />
         </div>
@@ -88,17 +59,9 @@ export default function ProfileCard() {
         <div className="profile-input">
           <Lock size={18} />
 
-          <input
-            type="password"
-            value={profile.password}
-            readOnly
-          />
+          <input type="password" value="********" readOnly />
         </div>
       </div>
-
-      <button className="profile-save-btn">
-        Save Changes
-      </button>
     </section>
   );
 }

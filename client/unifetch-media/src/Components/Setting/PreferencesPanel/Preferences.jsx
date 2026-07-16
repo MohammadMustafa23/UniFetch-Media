@@ -1,7 +1,14 @@
 import "./Preferences.css";
 import { Download, Clipboard, Moon, Image, ChevronDown } from "lucide-react";
 
-export default function Preferences() {
+export default function Preferences({
+  preferences,
+  setPreferences,
+  onSave,
+  saving,
+}) {
+  if (!preferences) return null;
+
   return (
     <section className="preferences-card">
       <h2>Preferences</h2>
@@ -21,7 +28,19 @@ export default function Preferences() {
         </div>
 
         <label className="switch">
-          <input type="checkbox" defaultChecked />
+          <input
+            type="checkbox"
+            checked={preferences.download.autoDownload}
+            onChange={(e) =>
+              setPreferences({
+                ...preferences,
+                download: {
+                  ...preferences.download,
+                  autoDownload: e.target.checked,
+                },
+              })
+            }
+          />
 
           <span className="slider"></span>
         </label>
@@ -42,7 +61,19 @@ export default function Preferences() {
         </div>
 
         <label className="switch">
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            checked={preferences.download.autoPaste}
+            onChange={(e) =>
+              setPreferences({
+                ...preferences,
+                download: {
+                  ...preferences.download,
+                  autoPaste: e.target.checked,
+                },
+              })
+            }
+          />
 
           <span className="slider"></span>
         </label>
@@ -63,7 +94,19 @@ export default function Preferences() {
         </div>
 
         <label className="switch">
-          <input type="checkbox" defaultChecked />
+          <input
+            type="checkbox"
+            checked={preferences.appearance.theme === "dark"}
+            onChange={(e) =>
+              setPreferences({
+                ...preferences,
+                appearance: {
+                  ...preferences.appearance,
+                  theme: e.target.checked ? "dark" : "light",
+                },
+              })
+            }
+          />
 
           <span className="slider"></span>
         </label>
@@ -84,16 +127,32 @@ export default function Preferences() {
         </div>
 
         <div className="quality-select">
-          <select>
-            <option>1080p</option>
-            <option>720p</option>
-            <option>480p</option>
-            <option>360p</option>
+          <select
+            value={preferences.download.quality}
+            onChange={(e) =>
+              setPreferences({
+                ...preferences,
+                download: {
+                  ...preferences.download,
+                  quality: e.target.value,
+                },
+              })
+            }
+          >
+            <option value="best">Best</option>
+            <option value="1080p">1080p</option>
+            <option value="720p">720p</option>
+            <option value="480p">480p</option>
+            <option value="360p">360p</option>
           </select>
 
           <ChevronDown size={18} />
         </div>
       </div>
+
+      <button className="profile-save-btn" onClick={onSave} disabled={saving}>
+        {saving ? "Saving..." : "Save Preferences"}
+      </button>
     </section>
   );
 }
