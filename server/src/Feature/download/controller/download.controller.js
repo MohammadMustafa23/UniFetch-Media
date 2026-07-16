@@ -5,6 +5,8 @@ export async function createDownload(req, res) {
   try {
     const userId = req.user._id;
 
+    console.log(req.body.type)
+    
     const { url, title , thumbnail, platform,duration, quality = "best" ,format = "mp4" } = req.body;
 
     // Create download record

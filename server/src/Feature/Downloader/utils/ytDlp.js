@@ -59,24 +59,46 @@ export function downloadVideo({
   format = "mp4",
   type = "video",
 }) {
-  const args = [
-    "--newline",
-    "--no-playlist",
+  const args = ["--newline", "--no-playlist", "--ffmpeg-location", FFMPEG_PATH];
 
-    "--ffmpeg-location",
-    FFMPEG_PATH,
+  // ============================
+  // AUDIO DOWNLOAD
+  // ============================
+  if (type === "audio" || format === "mp3") {
+    args.push(
+      "-f",
+      "bestaudio/best",
 
-    "-f",
-    getFormatSelector(quality, type),
+      "-x",
 
-    "-o",
-    outputPath,
+      "--audio-format",
+      "mp3",
 
-    "--merge-output-format",
-    format,
+      "--audio-quality",
+      "0",
 
-    url,
-  ];
+      "-o",
+      outputPath,
+    );
+  }
+
+  // ============================
+  // VIDEO DOWNLOAD
+  // ============================
+  else {
+    args.push(
+      "-f",
+      getFormatSelector(quality, "video"),
+
+      "-o",
+      outputPath,
+
+      "--merge-output-format",
+      format,
+    );
+  }
+
+  args.push(url);
 
   console.log("yt-dlp args:", args);
 

@@ -30,12 +30,19 @@ export async function updatePreferences(req, res) {
         message: "No preferences provided to update.",
       });
     }
+    console.log("PAss 1");
+    
 
     const allowedFields = ["appearance", "download", "privacy"];
     const requestFields = Object.keys(req.body);
+    console.log(requestFields);
+    
     const invalidFields = requestFields.filter(
       (field) => !allowedFields.includes(field),
     );
+
+    console.log(invalidFields.length);
+    
 
     if (invalidFields.length > 0) {
       return res.status(400).json({
@@ -43,6 +50,8 @@ export async function updatePreferences(req, res) {
         message: `Invalid field(s): ${invalidFields.join(", ")}`,
       });
     }
+
+    
     const preferences = await updateUserPreferences(req.user._id, req.body);
 
     res.status(200).json({
