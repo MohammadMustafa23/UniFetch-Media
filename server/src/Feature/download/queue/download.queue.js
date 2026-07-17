@@ -4,10 +4,14 @@ import { downloadVideo } from "../../Downloader/utils/ytDlp.js";
 import { createDownloadPath } from "../utils/downloadPath.js";
 import { safeFileName } from "../utils/fileName.js";
 import { findDownloadedFile } from "../utils/findDownloadedFile.js";
+import fs from "fs";
 class DownloadQueue {
   constructor() {
     this.queue = [];
     this.isDownloading = false;
+
+    this.currentProcess = null;
+    this.currentDownloadId = null;
   }
 
   // Add Download to Queue
@@ -17,6 +21,73 @@ class DownloadQueue {
     this.process();
   }
 
+  async pause(downloadId) {
+    if (
+      !this.currentProcess ||
+      this.currentDownloadId !== downloadId.toString()
+    ) {
+      throw new Error("This download is not currently running.");
+    }
+    this.currentProcess.kill("SIGSTOP");
+    await Download.findByIdAndUpdate(downloadId, {
+      status: "paused",
+    });
+    console.log("⏸ Download Paused");
+  }
+
+  async resume(downloadId) {
+    if (
+      !this.currentProcess ||
+      this.currentDownloadId !== downloadId.toString()
+    ) {
+      throw new Error("This download is not paused.");
+    }
+
+    this.currentProcess.kill("SIGCONT");
+
+    await Download.findByIdAndUpdate(downloadId, {
+      status: "downloading",
+    });
+
+    console.log("▶️ Download Resumed");
+  }
+
+  async cancel(downloadId) {
+    // Remove from queue if waiting
+    this.queue = this.queue.filter(
+      (id) => id.toString() !== downloadId.toString(),
+    );
+
+    await Download.findByIdAndDelete(downloadId);
+
+    if (!download) {
+      throw new Error("Download not found.");
+    }
+
+    // If this download is currently running
+    if (
+      this.currentProcess &&
+      this.currentDownloadId === downloadId.toString()
+    ) {
+      this.currentProcess.kill("SIGTERM");
+
+      this.currentProcess = null;
+      this.currentDownloadId = null;
+      this.isDownloading = false;
+    }
+
+    // Delete downloaded/partial file if it exists
+    if (download.filePath && fs.existsSync(download.filePath)) {
+      fs.unlinkSync(download.filePath);
+    }
+
+    await Download.findByIdAndDelete(downloadId);
+
+    // Continue with next queued download
+    this.process();
+
+    console.log("🗑 Download deleted");
+  }
   async updateProgress(downloadId, line) {
     try {
       if (!line.includes("[download]")) return;
@@ -95,8 +166,9 @@ class DownloadQueue {
         format: download.format,
       });
 
-      // Save Running Process (for future cancel feature)
+      // Save Running Process
       this.currentProcess = ytProcess;
+      this.currentDownloadId = download._id.toString();
 
       // Read Progress
       let buffer = "";
@@ -155,8 +227,8 @@ class DownloadQueue {
       });
     } finally {
       this.currentProcess = null;
+      this.currentDownloadId = null;
       this.isDownloading = false;
-
       // Start Next Download
       this.process();
     }
