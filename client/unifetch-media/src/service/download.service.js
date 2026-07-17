@@ -18,3 +18,21 @@ export const getQueue = () => {
 export const autoDownload = (data) => {
   return api.post("/download/autoDownload", data);
 };
+
+
+// queue Managment
+export const retryDownload = (id) => {
+  return api.post(`/download/retry/${id}`);
+};
+
+export const pauseDownload = (id) => {
+  return api.post(`/download/pause/${id}`);
+};
+
+export const resumeDownload = (id) => {
+  return api.post(`/download/resume/${id}`);
+};
+
+export const deleteDownload = (id) => {
+  return api.delete(`/download/delete/${id}`);
+};
