@@ -1,0 +1,41 @@
+/*==========================================
+QUEUE / HISTORY FILTER
+==========================================*/
+
+.history-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 32px;
+  flex-wrap: wrap;
+}
+
+.history-filter-btn {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #151b28;
+  color: #9ca8c3;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.history-filter-btn:hover {
+  background: #1b2232;
+  color: #ffffff;
+  border-color: rgba(122, 92, 255, 0.35);
+}
+
+.history-filter-active {
+  background: linear-gradient(135deg, #7c5cff, #6b4eff);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 10px 24px rgba(124, 92, 255, 0.25);
+}
+
+.history-filter-active:hover {
+  background: linear-gradient(135deg, #7c5cff, #6b4eff);
+  color: #ffffff;
+}

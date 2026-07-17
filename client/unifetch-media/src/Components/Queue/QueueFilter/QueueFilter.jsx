@@ -1,7 +1,7 @@
-import "./HistoryFilter.css";
+import "./QueueFilter.css";
 
-export default function HistoryFilter({ active, setActive }) {
-  const filters = ["All", "Completed", "Failed"];
+export default function QueueFilter({ active, setActive }) {
+  const filters = ["All", "Queued", "Downloading", "Paused", "Failed"];
 
   return (
     <div className="history-filter">

@@ -6,14 +6,13 @@ import QueueItem from "../QueueItem/QueueItem";
 import EmptyQueue from "../EmptyQueue/EmptyQueue";
 import { getQueue } from "../../../service/download.service";
 
-const QueueList = () => {
+const QueueList = ({ filter }) => {
   const [queue, setQueue] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchQueue = useCallback(async () => {
     try {
       const res = await getQueue();
-
       if (res.data.success) {
         setQueue(res.data.data || []);
       }
@@ -36,10 +35,15 @@ const QueueList = () => {
     // return <PageLoader title="Loading Queue..." />;
   }
 
+  const filteredQueue = filter === "All"? queue
+      : queue.filter(
+          (item) => item.status.toLowerCase() === filter.toLowerCase(),
+        );
+
   return (
     <section className="queue-list">
-      {queue.length > 0 ? (
-        queue.map((item) => <QueueItem key={item._id} item={item} />)
+      {filteredQueue.length > 0 ? (
+        filteredQueue.map((item) => <QueueItem key={item._id} item={item} />)
       ) : (
         <EmptyQueue />
       )}

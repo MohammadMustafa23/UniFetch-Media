@@ -14,3 +14,7 @@ export const getDownloads = () => {
 export const getQueue = () => {
   return api.get("/download/queue");
 };
+
+export const autoDownload = (data) => {
+  return api.post("/download/autoDownload", data);
+};

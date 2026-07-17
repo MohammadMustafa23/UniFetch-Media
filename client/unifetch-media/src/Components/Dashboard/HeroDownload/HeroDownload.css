@@ -136,6 +136,7 @@
   color: #fff;
   font-size: 15px;
   font-weight: 600;
+  margin-top: 12px;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   transition: 0.3s;
 }

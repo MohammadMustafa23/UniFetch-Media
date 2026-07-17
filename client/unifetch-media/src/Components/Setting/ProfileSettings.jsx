@@ -46,6 +46,8 @@ export default function ProfileSettings() {
         setProfile(profileRes.data.user);
       }
 
+      console.log(preferencesRes.data);
+      
       if (preferencesRes.data.success) {
         setPreferences(preferencesRes.data.data);
       }

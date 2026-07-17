@@ -1,4 +1,7 @@
 import api from './axios.js'
 
-export function getHistory(params = {}) {return api.get("/history/get", {params});
-}
+export const getHistory = (filter = "All") => {
+  const params = filter === "All" ? {} : { status: filter };
+
+  return api.get("/history/get", { params });
+};

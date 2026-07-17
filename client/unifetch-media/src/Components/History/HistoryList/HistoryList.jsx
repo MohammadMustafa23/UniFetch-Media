@@ -3,25 +3,23 @@ import "./HistoryList.css";
 
 import HistoryCard from "../HistoryCard/HistoryCard";
 import HistoryEmpty from "../HistoryEmpty/HistoryEmpty";
+import PageLoader from "../../../common/PageLoader";
 
-import PageLoader from '../../../common/PageLoader'
+import { getHistory } from "../../../service/history.service";
 
-// import your api
-import {getHistory} from "../../../service/history.service";
-
-export default function HistoryList() {
+export default function HistoryList({ filter }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [filter]);
 
   async function fetchHistory() {
     try {
       setLoading(true);
 
-      const { data } = await getHistory();
+      const { data } = await getHistory(filter);
 
       console.log(data.data);
       
@@ -34,10 +32,10 @@ export default function HistoryList() {
   }
 
   if (loading) {
-    return <PageLoader/>
+    return <PageLoader />;
   }
 
-  if (history.length === 0) {
+  if (!history.length) {
     return <HistoryEmpty />;
   }
 

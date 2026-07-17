@@ -10,37 +10,61 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import { getDownloadInfo } from "../../../service/download.service.js";
+import {
+  getDownloadInfo,
+  autoDownload,
+} from "../../../service/download.service.js";
+import isSupportedUrl from "../../../utils/isSupportedURL.js";
 
-export default function HeroDownload({ setVideoInfo, setLoading }) {
-  const [url, setUrl] = useState("");
-
-  const handleDownloadInfo = async () => {
-    if (!url.trim()) {
+export default function HeroDownload({
+  setVideoInfo,
+  setLoading,
+  url,
+  setUrl,
+  preference,
+}) {
+  const handleDownloadInfo = async (mediaUrl = url) => {
+    if (!mediaUrl.trim()) {
       return toast.error("Please paste a media URL.");
     }
 
     try {
       setLoading(true);
-      console.log("Loading True");
 
-      const { data } = await getDownloadInfo(url);
+      // Auto Download Enabled
+      if (preference?.download?.autoDownload) {
+        const { data } = await autoDownload({ url: mediaUrl });
 
-      console.log("API Response:", data);
+        if (data.success) {
+          toast.success(data.message);
+          setUrl("");
+          return;
+        }
+      }
+
+      // Manual Preview
+      const { data } = await getDownloadInfo(mediaUrl);
 
       if (data.success) {
         setVideoInfo(data.data);
-        console.log("Video Set");
       }
     } catch (error) {
-      console.log("ERROR", error);
-
       toast.error(
         error.response?.data?.message || "Failed to fetch media information.",
       );
     } finally {
-      console.log("Loading False");
       setLoading(false);
+    }
+  };
+  const handleAutoPaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!isSupportedUrl(text)) {
+        return toast.error("Clipboard doesn't contain a supported URL.");
+      }
+      setUrl(text);
+    } catch {
+      toast.error("Unable to access clipboard.");
     }
   };
   return (
@@ -78,6 +102,22 @@ export default function HeroDownload({ setVideoInfo, setLoading }) {
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
+            onPaste={(e) => {
+              const pastedUrl = e.clipboardData.getData("text");
+
+              // Update input
+              setUrl(pastedUrl);
+
+              // Auto start download only if enabled
+              if (
+                preference?.download?.autoDownload &&
+                isSupportedUrl(pastedUrl)
+              ) {
+                setTimeout(() => {
+                  handleDownloadInfo(pastedUrl);
+                }, 100);
+              }
+            }}
             placeholder="Paste YouTube / Instagram URL..."
             className="ufm-hero-input"
           />
@@ -92,6 +132,12 @@ export default function HeroDownload({ setVideoInfo, setLoading }) {
         >
           <Download size={18} />
           Download Now
+          <ArrowRight size={18} />
+        </button>
+
+        <button className="ufm-hero-download-btn" onClick={handleAutoPaste}>
+          <Download size={18} />
+          Auto Paste
           <ArrowRight size={18} />
         </button>
 
