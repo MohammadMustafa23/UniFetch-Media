@@ -4,13 +4,35 @@ import downloadQueue from "../queue/download.queue.js";
 export async function createDownload(req, res) {
   try {
     const userId = req.user._id;
+    const {
+      videoId,
+      id,
+      url,
+      title,
+      thumbnail,
+      platform,
+      duration,
+      quality = "best",
+      format = "mp4",
+    } = req.body;
 
-    console.log(req.body.type)
     
-    const { url, title , thumbnail, platform,duration, quality = "best" ,format = "mp4" } = req.body;
+    const existingDownload = await Download.findOne({
+      videoId,
+      userId,
+      platform,
+      status: { $in: ["queued", "downloading", "completed"] },
+    });
 
+    if (existingDownload) {
+      return res.status(409).json({
+        success: false,
+        message: "This media is already in your download queue.",
+      });
+    }
     // Create download record
     const download = await Download.create({
+      videoId,
       userId,
       url,
       title,

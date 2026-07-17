@@ -5,6 +5,8 @@ node_modules/
 .env
 .env.*
 
+
+downloads/
 # Logs
 logs/
 *.log
@@ -16,6 +18,8 @@ pnpm-debug.log*
 temp/
 uploads/
 storage/
+downloads/
+
 
 # Build
 dist/

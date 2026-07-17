@@ -1,5 +1,4 @@
-const allowedFields = ["url", "quality", "format"];
-
+const allowedFields = ["url", "quality", "format","videoId"];
 const allowedQualities = [
   "best",
   "2160",

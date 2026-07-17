@@ -30,7 +30,9 @@ export async function createHistory(req, res) {
 
 export async function getHistory(req, res) {
   try {
-    const history = await getHistoryService(req.user._id);
+    const { status } = req.query;
+
+    const history = await getHistoryService(req.user._id, status);
 
     return res.json({
       success: true,

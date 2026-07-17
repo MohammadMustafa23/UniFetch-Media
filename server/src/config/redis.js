@@ -1,19 +1,21 @@
-import { createClient } from "redis";
-import {REDIS_URL} from './env.js'
-export const redisClient = createClient({
-  url: REDIS_URL
-});
+import { Redis } from "@upstash/redis";
+import { UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN } from "./env.js";
 
-redisClient.on("error", (err) => {
-  console.log("Redis Error:", err);
+export const redisClient = new Redis({
+  url: UPSTASH_REDIS_REST_URL,
+  token: UPSTASH_REDIS_REST_TOKEN,
 });
 
 export const connectRedis = async () => {
   try {
-    await redisClient.connect();
-    console.log("Redis Connected 👍");
+    // Test the connection
+    await redisClient.ping();
+
+    console.log("✅ Upstash Redis Connected");
+    return true;
   } catch (error) {
-    console.log("Redis Connection Failed:", error);
+    console.error("❌ Upstash Redis Connection Failed");
+    console.error(error.message);
+    process.exit(1);
   }
 };
-

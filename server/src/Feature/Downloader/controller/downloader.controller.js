@@ -3,7 +3,8 @@ import { validateDownload } from "../validation/downloader.validation.js";
 import { getVideoInfo } from "../utils/ytDlp.js";
 import formatVideoInfo from "../utils/formatVideoInfo.js";
 import { createHistoryService } from "../../History/service/history.service.js";
-import History from '../../History/models/history.model.js'
+import History from "../../History/models/history.model.js";
+import { extractYouTubeVideoId } from "../utils/extractYouTubeVideoId.js";
 
 export async function getDownloadInfo(req, res) {
   try {
@@ -17,10 +18,30 @@ export async function getDownloadInfo(req, res) {
       });
     }
 
+    const { url } = req.body;
+
+    // Detect Platform
+    const platform = detectPlatform(url);
+
+    if (platform === "other") {
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported platform.",
+      });
+    }
+
+    // ==============================
+    // Check History First
+
+    // ==============================
+    const videoId = extractYouTubeVideoId(url);
+
+  
     const history = await History.findOne({
       userId: req.user._id,
-      url: req.body.url,
-    });
+      platform: platform,
+      videoId,
+    }).lean();
 
     if (history) {
       return res.status(200).json({
@@ -31,31 +52,26 @@ export async function getDownloadInfo(req, res) {
       });
     }
 
-    // Detect Platform
-    const platform = detectPlatform(req.body.url);
+    // ==============================
+    // Fetch Video Info
+    // ==============================
+    const videoInfo = await getVideoInfo(url);
 
-    // Unsupported Platform
-    if (platform === "other") {
-      return res.status(400).json({
-        success: false,
-        message: "Unsupported platform.",
-      });
-    }
+    const formatted = formatVideoInfo(videoInfo, url);
 
-    const videoInfo = await getVideoInfo(req.body.url);
-
-    const formatted = formatVideoInfo(videoInfo,req.body.url);
-
+    // ==============================
     // Save History
+    // ==============================
     await createHistoryService({
       userId: req.user._id,
-      url: req.body.url,
+      url,
       platform,
       videoInfo: formatted,
     });
 
     return res.status(200).json({
       success: true,
+      fromCache: false,
       message: "Video information fetched successfully.",
       data: formatted,
     });

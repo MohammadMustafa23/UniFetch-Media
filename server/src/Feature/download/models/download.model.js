@@ -7,7 +7,11 @@ const downloadSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
+    videoId :{
+      type: String,
+      required: true,
+      trim: true,
+    },
     title: {
       type: String,
       required: true,
