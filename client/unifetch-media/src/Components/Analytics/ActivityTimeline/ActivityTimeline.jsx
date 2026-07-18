@@ -1,48 +1,75 @@
 import "./ActivityTimeline.css";
 
-import { CheckCircle2, XCircle, Bot } from "lucide-react";
+import { CheckCircle2, XCircle, Clock3, PauseCircle } from "lucide-react";
 
-const activities = [
-  {
-    id: 1,
-    icon: <CheckCircle2 size={18} />,
-    title: "React Tutorial.mp4",
-    time: "Today • 10:42 AM",
-    type: "success",
-  },
-  {
-    id: 2,
-    icon: <Bot size={18} />,
-    title: "Automation Started",
-    time: "Yesterday • 09:18 PM",
-    type: "automation",
-  },
-  {
-    id: 3,
-    icon: <XCircle size={18} />,
-    title: "Instagram Reel",
-    time: "Yesterday • 08:27 PM",
-    type: "failed",
-  },
-];
+const getIcon = (status) => {
+  switch (status) {
+    case "completed":
+      return <CheckCircle2 size={18} />;
 
-export default function ActivityTimeline() {
+    case "failed":
+      return <XCircle size={18} />;
+
+    case "paused":
+      return <PauseCircle size={18} />;
+
+    default:
+      return <Clock3 size={18} />;
+  }
+};
+
+const getType = (status) => {
+  switch (status) {
+    case "completed":
+      return "success";
+
+    case "failed":
+      return "failed";
+
+    case "paused":
+      return "paused";
+
+    default:
+      return "automation";
+  }
+};
+
+const formatTime = (date) => {
+  return new Date(date).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+};
+
+export default function ActivityTimeline({ analytics }) {
+  const activities = analytics?.recentActivity || [];
+
   return (
     <section className="ufm-activity">
       <h2>Recent Activity</h2>
 
       <div className="ufm-activity-list">
-        {activities.map((item) => (
-          <div key={item.id} className="ufm-activity-item">
-            <div className={`ufm-activity-icon ${item.type}`}>{item.icon}</div>
+        {activities.length === 0 ? (
+          <p>No recent activity.</p>
+        ) : (
+          activities.map((item) => (
+            <div key={item._id} className="ufm-activity-item">
+              <div className={`ufm-activity-icon ${getType(item.status)}`}>
+                {getIcon(item.status)}
+              </div>
 
-            <div className="ufm-activity-info">
-              <h4>{item.title}</h4>
+              <div className="ufm-activity-info">
+                <h4>{item.title}</h4>
 
-              <p>{item.time}</p>
+                <p>
+                  {item.platform} • {item.status}
+                </p>
+
+                <small>{formatTime(item.updatedAt)}</small>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </section>
   );

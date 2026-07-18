@@ -19,7 +19,38 @@ import FileDistribution from "./FileDistribution/FileDistribution";
 import PlatformUsage from "./PlatformUsage/PlatformUsage";
 import ActivityTimeline from "./ActivityTimeline/ActivityTimeline";
 
+import { useEffect, useState } from "react";
+import { getDashboardAnalytics } from "../../service/analytics.service.js";
+import PageLoader from "../../common/PageLoader.jsx";
+
 export default function Analytics() {
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const res = await getDashboardAnalytics();
+        setAnalytics(res.data.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalytics();
+  }, []);
+
+
+  if (loading) {
+    return (
+      <PageLoader
+        title="Loading Analytics"
+        message="Preparing your dashboard..."
+      />
+    );
+  }
   return (
     <div className="ufm-dashboard">
       <Sidebar />
@@ -32,15 +63,15 @@ export default function Analytics() {
 
           <div className="analytics-grid">
             <div className="analytics-left">
-              <DownloadsChart />
+             <DownloadsChart analytics={analytics} />
 
-              <PlatformUsage />
+              <PlatformUsage analytics={analytics} />
             </div>
 
             <div className="analytics-right">
-              <FileDistribution />
+              <FileDistribution analytics={analytics} />
 
-              <ActivityTimeline />
+              <ActivityTimeline  analytics={analytics} />
             </div>
           </div>
         </section>
