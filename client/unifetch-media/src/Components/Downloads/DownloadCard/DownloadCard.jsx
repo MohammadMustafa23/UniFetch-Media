@@ -1,14 +1,14 @@
 import "./DownloadCard.css";
 
 import {
-  Heart,
-  FolderOpen,
+  Play,
+  Smartphone,
   Share2,
   Trash2,
-  PlaySquare,
+  Link2,
   Camera,
   Music2,
-  Play,
+  PlaySquare,
 } from "lucide-react";
 
 import { formatFileSize } from "../../../utils/formatFileSize.js";
@@ -22,7 +22,13 @@ const icons = {
   spotify: <Music2 size={18} />,
 };
 
-export default function DownloadCard({ item }) {
+export default function DownloadCard({
+  item,
+  onPlay,
+  onSave,
+  onShare,
+  onDelete,
+}) {
   return (
     <article className="download-card">
       {/* Thumbnail */}
@@ -30,8 +36,12 @@ export default function DownloadCard({ item }) {
       <div className="download-thumb">
         <img src={item.thumbnail} alt={item.title} />
 
-        <button className="download-play">
-          <Play size={18} fill="white" />
+        <button
+          className="download-play"
+          aria-label="Play video"
+          onClick={() => onPlay?.(item)}
+        >
+          <Play size={18} />
         </button>
 
         <span className="download-platform">
@@ -64,19 +74,31 @@ export default function DownloadCard({ item }) {
       {/* Actions */}
 
       <div className="download-actions">
-        <button>
-          <Heart size={18} />
+        {/* Play */}
+        <button
+          type="button"
+          title="Play"
+          aria-label="Play video"
+          onClick={() => onPlay?.(item)}
+        >
+          <Play size={18} />
         </button>
 
-        <button>
-          <FolderOpen size={18} />
+        {/* Save to Mobile */}
+        <button className="primary-btn" onClick={() => onSave?.(item)}>
+          <Smartphone size={18} />
         </button>
 
-        <button>
+        {/* Share */}
+        <button title="Share" onClick={() => onShare?.(item)}>
           <Share2 size={18} />
         </button>
-
-        <button className="delete-btn">
+        {/* Delete */}
+        <button
+          className="delete-btn"
+          title="Delete"
+          onClick={() => onDelete?.(item)}
+        >
           <Trash2 size={18} />
         </button>
       </div>
