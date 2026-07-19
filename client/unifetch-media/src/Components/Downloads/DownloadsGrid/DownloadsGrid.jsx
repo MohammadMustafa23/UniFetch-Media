@@ -18,14 +18,17 @@ import {
 
 export default function DownloadsGrid({
   downloads,
+  setDownloads,
   loading,
-  fetchDownloads, // Pass from parent
+  fetchDownloads,
 }) {
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedDownload, setSelectedDownload] = useState(null);
+
+  const [deleting, setDeleting] = useState(false);
 
   const handlePlay = (item) => {
     setSelectedVideo(item);
@@ -49,19 +52,25 @@ export default function DownloadsGrid({
     if (!selectedDownload) return;
 
     try {
+      setDeleting(true);
+
       const response = await deleteDownload(selectedDownload._id);
 
       toast.success(response.message);
 
-      // Refresh downloads
-      if (fetchDownloads) {
-        await fetchDownloads();
-      }
+      // Remove immediately from UI
+      setDownloads((prev) =>
+        prev.filter((item) => item._id !== selectedDownload._id),
+      );
+
+      // Optional: sync with server
+      await fetchDownloads();
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to delete download.",
       );
     } finally {
+      setDeleting(false);
       setShowDeleteModal(false);
       setSelectedDownload(null);
     }
@@ -72,6 +81,15 @@ export default function DownloadsGrid({
       <PageLoader
         title="Loading Downloads"
         message="Fetching your downloaded media library..."
+      />
+    );
+  }
+
+  if (deleting) {
+    return (
+      <PageLoader
+        title="Deleting Download"
+        message="Please wait while we remove your download..."
       />
     );
   }

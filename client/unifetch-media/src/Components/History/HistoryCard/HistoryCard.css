@@ -89,6 +89,10 @@ INFO
   text-overflow: ellipsis;
 }
 
+.history-action.success {
+  background: #22c55e;
+  color: white;
+}
 .history-info p {
   display: flex;
 

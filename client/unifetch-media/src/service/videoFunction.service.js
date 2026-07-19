@@ -9,6 +9,7 @@ export const playDownload = (id) => {
 };
 
 export const deleteDownload = async (id) => {
+  console.log(id);
   const { data } = await api.delete(`/download/delete/${id}`);
   return data;
 };

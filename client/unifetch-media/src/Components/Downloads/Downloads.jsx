@@ -24,8 +24,6 @@ export default function Downloads() {
   async function fetchDownloads() {
     try {
       const response = await getDownloads();
-      console.log(response);
-      
       setDownloads(response.data.data);
     } catch (error) {
       console.error(error);
@@ -46,7 +44,12 @@ export default function Downloads() {
 
           <DownloadsToolbar />
 
-          <DownloadsGrid downloads={downloads} loading={loading} />
+          <DownloadsGrid
+            downloads={downloads}
+            setDownloads={setDownloads}
+            loading={loading}
+            fetchDownloads={fetchDownloads}
+          />
         </section>
 
         <Footer />

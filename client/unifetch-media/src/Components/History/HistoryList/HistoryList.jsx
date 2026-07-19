@@ -22,7 +22,7 @@ export default function HistoryList({ filter }) {
       const { data } = await getHistory(filter);
 
       console.log(data.data);
-      
+
       setHistory(data.data);
     } catch (error) {
       console.error(error);
@@ -42,7 +42,7 @@ export default function HistoryList({ filter }) {
   return (
     <section className="history-list">
       {history.map((item) => (
-        <HistoryCard key={item._id} item={item} />
+        <HistoryCard key={item._id} item={item} fetchHistory={fetchHistory} />
       ))}
     </section>
   );

@@ -1,46 +1,73 @@
+import { useEffect, useState } from "react";
+
 import "../Dashboard/style/Dashboard.css";
 import "./Favorites.css";
 
-/* ==========================================
-   DASHBOARD COMPONENTS
-========================================== */
-
+/* Dashboard */
 import Sidebar from "../../Components/Dashboard/Sidebar/Sidebar";
 import Topbar from "../../Components/Dashboard/Topbar/Topbar";
 import Footer from "../../Components/Dashboard/Footer/Footer";
 
-/* ==========================================
-   FAVORITES COMPONENTS
-========================================== */
-
+/* Favorites */
 import FavoritesHeader from "./FavoritesHeader/FavoritesHeader";
 import FavoriteList from "./FavoritesList/FavoriteList";
 import EmptyFavorites from "./EmptyFavorites/EmptyFavorites";
 
+import PageLoader from "../../common/PageLoader";
+
+import { getFavorites } from "../../service/history.service.js";
+
 export default function Favorites() {
-  // Later this will come from API
-  const hasFavorites = true;
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  async function fetchFavorites() {
+    try {
+      setLoading(true);
+
+      const response = await getFavorites();
+
+      setFavorites(response.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
+
+  if (loading) {
+    return (
+      <PageLoader
+        title="Loading Favorites..."
+        subtitle="Fetching your favorite media."
+      />
+    );
+  }
 
   return (
     <div className="ufm-dashboard">
-      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content */}
       <main className="ufm-dashboard-main">
-        {/* Topbar */}
         <Topbar />
 
-        {/* Favorites */}
         <section className="favorites-page">
           <FavoritesHeader />
 
-          
-
-          {hasFavorites ? <FavoriteList /> : <EmptyFavorites />}
+          {favorites.length > 0 ? (
+            <FavoriteList
+              favorites={favorites}
+              fetchFavorites={fetchFavorites}
+            />
+          ) : (
+            <EmptyFavorites />
+          )}
         </section>
 
-        {/* Footer */}
         <Footer />
       </main>
     </div>
