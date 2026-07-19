@@ -1,4 +1,5 @@
 import fs from "fs";
+import { promises as fsPromises } from "fs";
 import mime from "mime-types";
 import Download from "../download/models/download.model.js";
 import path from "path";
@@ -108,7 +109,6 @@ export const saveDownload = async (req, res) => {
 
     const fileName = `${safeTitle}${extension}`;
     console.log(fileName);
-    
 
     res.download(download.filePath, fileName);
   } catch (error) {
@@ -122,8 +122,10 @@ export const saveDownload = async (req, res) => {
 };
 
 export const deleteDownload = async (req, res) => {
+  console.log("DELETE DOWNLOAD API HIT");
   try {
     const { id } = req.params;
+    console.log(id);
 
     const download = await Download.findOne({
       _id: id,
@@ -137,28 +139,26 @@ export const deleteDownload = async (req, res) => {
       });
     }
 
+    console.log(download);
+
     // Delete local file (if it exists)
-    if (download.filePath) {
-      try {
-        await fs.unlink(download.filePath);
-      } catch (err) {
-        // Ignore if file is already missing
-        if (err.code !== "ENOENT") {
-          console.error("File delete error:", err);
-        }
+    fs.unlink(download.filePath, async (err) => {
+      if (err) {
+        return res.status(404).json({
+          success: false,
+          message: "File Delete Error",
+        });
       }
-    }
 
-    // Delete MongoDB document
-    await download.deleteOne();
+      await download.deleteOne();
 
-    return res.status(200).json({
-      success: true,
-      message: "Download deleted successfully.",
+      return res.status(200).json({
+        success: true,
+        message: "Download deleted successfully.",
+      });
     });
   } catch (error) {
     console.error("Delete Download:", error);
-
     return res.status(500).json({
       success: false,
       message: "Failed to delete download.",

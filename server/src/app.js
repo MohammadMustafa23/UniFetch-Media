@@ -23,9 +23,8 @@ app.use(cookieParser());
 app.use("/api", AuthRouter);
 app.use("/api", PreferencesRouter);
 app.use("/api", DownloderRoute);
+app.use("/api", VideoFuncRoute);
 app.use("/api", HistoryRoute);
 app.use("/api", DownloadRoute);
 app.use("/api", storageRoute);
-app.use("/api", VideoFuncRoute);
-
 export default app;
