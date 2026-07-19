@@ -16,6 +16,11 @@ export const loginUser = (data) => {
     return api.post('/auth/login',data);
 }
 
+
+export const loginwithGoogle = (data) => {
+    return api.post('/auth/google',data);
+}
+
 export const getCurrentUser = () => {
     return api.get('/auth/me');
 } 
