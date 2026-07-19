@@ -4,6 +4,10 @@ import generateOTP from "../utils/generateOTP.js";
 import { redisClient } from "../../../config/redis.js";
 import sendOTP from "../utils/sendOTPEmail.js";
 import jwt from "jsonwebtoken";
+import googleClient from "../utils/googleAuth.js";
+import crypto from "crypto";
+import UserPreference from "../../Preferences/models/preferences.model.js";
+
 async function RegisterUser(req, res) {
   const { userName, email, password } = req.body;
 
@@ -22,8 +26,6 @@ async function RegisterUser(req, res) {
 
   //   3. Generate OTP
   const otp = generateOTP();
-
-  console.log(otp);
 
   // Redis Key
   const cacheKey = `register:${email}`;
@@ -310,11 +312,9 @@ async function ResetPassword(req, res) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-
     user.password = hashedPassword;
 
     await user.save();
-
 
     return res.status(200).json({
       success: true,
@@ -331,6 +331,112 @@ async function ResetPassword(req, res) {
   }
 }
 
+const googleLogin = async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({
+        success: false,
+        message: "Google authorization code is required.",
+      });
+    }
+
+    // Exchange authorization code for tokens
+    const { tokens } = await googleClient.getToken(code);
+
+    if (!tokens?.id_token) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to retrieve Google ID token.",
+      });
+    }
+
+    // Verify Google ID Token
+    const ticket = await googleClient.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid Google token.",
+      });
+    }
+
+    const { sub: googleId, email, name, picture, email_verified } = payload;
+
+    if (!email || !googleId) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to retrieve Google account information.",
+      });
+    }
+
+    if (!email_verified) {
+      return res.status(403).json({
+        success: false,
+        message: "Google email is not verified.",
+      });
+    }
+
+    // Find user
+    let user = await User.findOne({ email });
+    if (!user) {
+      const randomPassword = crypto.randomUUID();
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      user = await User.create({
+        userName: name,
+        email,
+        password: hashedPassword,
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      },
+    );
+
+    const preference = await UserPreference.findOne({
+      userId: user._id,
+    });
+
+    if (!preference) {
+      await UserPreference.create({
+        userId: user._id,
+      });
+    }
+    // Set Cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Google login successful.",
+      user,
+    });
+  } catch (error) {
+    console.error("Google Login Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Google authentication failed.",
+    });
+  }
+};
+
 export {
   RegisterUser,
   LoginUser,
@@ -340,4 +446,5 @@ export {
   ForgotPassword,
   VerifyResetOTP,
   ResetPassword,
+  googleLogin,
 };

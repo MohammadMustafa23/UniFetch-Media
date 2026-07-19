@@ -26,7 +26,7 @@ const preferenceSchema = new mongoose.Schema(
 
       autoPaste: {
         type: Boolean,
-        default: true,
+        default: false,
       },
 
       quality: {
