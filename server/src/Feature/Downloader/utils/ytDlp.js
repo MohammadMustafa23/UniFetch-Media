@@ -98,6 +98,13 @@ export function downloadVideo({
     );
   }
 
+  // ✅ Add here
+  args.push(
+    "--progress-template",
+    "%(progress._percent_str)s|%(progress.speed)s|%(progress.eta)s",
+  );
+
+  // URL should always be last
   args.push(url);
 
   console.log("yt-dlp args:", args);

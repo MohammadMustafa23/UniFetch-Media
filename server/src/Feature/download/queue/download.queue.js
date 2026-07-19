@@ -3,6 +3,7 @@ import path from "path";
 import { downloadVideo } from "../../Downloader/utils/ytDlp.js";
 import { createDownloadPath } from "../utils/downloadPath.js";
 import { safeFileName } from "../utils/fileName.js";
+import { getIO } from "../../../socket/socket.js";
 import { findDownloadedFile } from "../utils/findDownloadedFile.js";
 import fs from "fs";
 class DownloadQueue {
@@ -90,36 +91,53 @@ class DownloadQueue {
   }
   async updateProgress(downloadId, line) {
     try {
-      if (!line.includes("[download]")) return;
+      line = line.trim();
 
-      const progressMatch = line.match(/(\d+(?:\.\d+)?)%/);
-      const speedMatch = line.match(/at\s+([^\s]+)/);
-      const etaMatch = line.match(/ETA\s+([0-9:]+)/);
+      // Ignore empty lines
+      if (!line) return;
 
-      const progress = progressMatch
-        ? Math.floor(Number(progressMatch[1]))
-        : undefined;
+      // Expected format:
+      // 12.5%|123456.78|15
+      const parts = line.split("|");
 
-      const speed = speedMatch ? speedMatch[1] : "";
+      if (parts.length < 3) return;
 
-      const eta = etaMatch ? etaMatch[1] : "";
+      const progress = Math.floor(parseFloat(parts[0].replace("%", "")));
 
-      const update = {};
+      if (Number.isNaN(progress)) return;
 
-      if (progress !== undefined) update.progress = progress;
+      const speed = parts[1] || "";
+      const eta = parts[2] || "";
 
-      if (speed) update.downloadSpeed = speed;
+      const download = await Download.findById(downloadId);
 
-      if (eta) update.eta = eta;
+      if (!download) return;
 
-      if (Object.keys(update).length > 0) {
-        await Download.findByIdAndUpdate(downloadId, update);
-      }
-    } catch (error) {
-      console.error("Progress Parse Error:", error.message);
+      // Ignore duplicate/old updates
+      if (progress < download.progress) return;
+
+      const update = {
+        progress,
+        downloadSpeed: speed,
+        eta,
+      };
+
+      await Download.findByIdAndUpdate(downloadId, update);
+
+      const room = download.userId.toString();
+
+      console.log("📤 Progress:", update);
+
+      getIO()
+        .to(room)
+        .emit("download-progress", {
+          downloadId: downloadId.toString(),
+          ...update,
+        });
+    } catch (err) {
+      console.error("Progress Error:", err);
     }
   }
-
   // Process Queue
   async process() {
     // Already downloading
