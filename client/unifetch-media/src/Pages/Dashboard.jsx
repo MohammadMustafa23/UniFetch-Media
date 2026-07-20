@@ -14,6 +14,7 @@ import { startDownload } from "../service/download.service";
 import "../Components/Dashboard/style/Dashboard.css";
 import { toast } from "sonner";
 import { getPreferences } from "../service/preferences.service.js";
+import { getDashboard } from "../service/analytics.service.js";
 
 export default function Dashboard() {
   const [collapsed, setCollapsed] = useState(false);
@@ -21,6 +22,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
   const [preference, setPreference] = useState(null);
+
+  const [dashboard, setDashboard] = useState(null);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
 
   const handleDownload = async ({ quality, type }) => {
     try {
@@ -59,6 +63,34 @@ export default function Dashboard() {
     loadPreferences();
   }, []);
 
+  useEffect(() => {
+    const loadDashboard = async () => {
+      try {
+        const { data } = await getDashboard();
+
+        if (data.success) {
+          setDashboard(data.data);
+        }
+      } catch (error) {
+        toast.error("Failed to load dashboard");
+        console.error(error);
+      } finally {
+        setDashboardLoading(false);
+      }
+    };
+
+    loadDashboard();
+  }, []);
+
+  if (dashboardLoading) {
+    return (
+      <PageLoader
+        title="Loading Dashboard..."
+        subtitle="Fetching your latest downloads..."
+      />
+    );
+  }
+
   return (
     <div
       className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
@@ -78,18 +110,20 @@ export default function Dashboard() {
               preference={preference}
             />
 
-            <Stats />
+            <Stats stats={dashboard.stats} />
           </div>
 
           <aside className="ufm-dashboard-right">
-            <DashboardAside />
+            <DashboardAside
+              today={dashboard.today}
+              latestUpdates={dashboard.latestUpdates}
+            />
           </aside>
         </div>
 
-        <Queue />
+        <Queue queue={dashboard.liveQueue} />
 
-        <RecentDownloads />
-
+        <RecentDownloads downloads={dashboard.recentDownloads} />
         <Footer />
       </main>
 

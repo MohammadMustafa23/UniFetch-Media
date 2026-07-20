@@ -8,28 +8,23 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
-const updates = [
-  {
-    icon: <Zap size={18} />,
-    title: "Smart Auto Detect",
-    desc: "Platform detection is now 30% faster.",
-  },
-  {
-    icon: <Bell size={18} />,
-    title: "Download Complete",
-    desc: "Node.js Crash Course finished successfully.",
-  },
-  {
-    icon: <CheckCircle2 size={18} />,
-    title: "Queue Optimized",
-    desc: "Background downloads are now more stable.",
-  },
+const tips = [
+  "Paste any YouTube or Instagram URL.",
+  "Highest quality is selected automatically.",
+  "Downloads continue in the background.",
+  "Manage everything from Queue.",
 ];
 
-export default function DashboardAside() {
+const iconMap = {
+  auto: <Zap size={18} />,
+  completed: <CheckCircle2 size={18} />,
+  queue: <Bell size={18} />,
+};
+
+export default function DashboardAside({ today, latestUpdates = [] }) {
   return (
     <aside className="ufm-aside">
-      {/* Tips */}
+      {/* Quick Tips */}
 
       <div className="ufm-aside-card">
         <div className="ufm-aside-head">
@@ -38,14 +33,13 @@ export default function DashboardAside() {
         </div>
 
         <ul className="ufm-tip-list">
-          <li>Paste any YouTube or Instagram URL.</li>
-          <li>Highest quality is selected automatically.</li>
-          <li>Downloads continue in the background.</li>
-          <li>Manage everything from Queue.</li>
+          {tips.map((tip, index) => (
+            <li key={index}>{tip}</li>
+          ))}
         </ul>
       </div>
 
-      {/* Activity */}
+      {/* Today's Activity */}
 
       <div className="ufm-aside-card">
         <div className="ufm-aside-head">
@@ -55,18 +49,18 @@ export default function DashboardAside() {
 
         <div className="ufm-activity">
           <div>
-            <h2>28</h2>
+            <h2>{today?.downloads ?? 0}</h2>
             <span>Downloads</span>
           </div>
 
           <div>
-            <h2>7.2GB</h2>
+            <h2>{today?.bandwidth ?? "0 MB"}</h2>
             <span>Bandwidth</span>
           </div>
         </div>
       </div>
 
-      {/* Updates */}
+      {/* Latest Updates */}
 
       <div className="ufm-aside-card">
         <div className="ufm-aside-head">
@@ -75,19 +69,25 @@ export default function DashboardAside() {
         </div>
 
         <div className="ufm-update-list">
-          {updates.map((item, index) => (
-            <div key={index} className="ufm-update-item">
-              <div className="ufm-update-icon">{item.icon}</div>
+          {latestUpdates.length > 0 ? (
+            latestUpdates.map((item) => (
+              <div key={item.id} className="ufm-update-item">
+                <div className="ufm-update-icon">
+                  {iconMap[item.type] || <Bell size={18} />}
+                </div>
 
-              <div className="ufm-update-content">
-                <h4>{item.title}</h4>
+                <div className="ufm-update-content">
+                  <h4>{item.title}</h4>
 
-                <p>{item.desc}</p>
+                  <p>{item.description}</p>
+                </div>
+
+                <ArrowUpRight size={18} />
               </div>
-
-              <ArrowUpRight size={18} />
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="ufm-no-updates">No recent updates.</p>
+          )}
         </div>
       </div>
     </aside>

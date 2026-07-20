@@ -1,37 +1,39 @@
 import "./Stats.css";
 import { Download, Activity, CheckCircle2, HardDrive } from "lucide-react";
 
-const stats = [
-  {
-    icon: <Download size={26} />,
-    value: "1,248",
-    label: "Total Downloads",
-    info: "+12 Today",
-  },
-  {
-    icon: <Activity size={26} />,
-    value: "08",
-    label: "Active Downloads",
-    info: "Running",
-  },
-  {
-    icon: <CheckCircle2 size={26} />,
-    value: "1,240",
-    label: "Completed",
-    info: "99.4% Success",
-  },
-  {
-    icon: <HardDrive size={26} />,
-    value: "42 GB",
-    label: "Storage Used",
-    info: "64 GB Total",
-  },
-];
+export default function Stats({ stats }) {
+  if (!stats) return null;
 
-export default function Stats() {
+  const cards = [
+    {
+      icon: <Download size={26} />,
+      value: stats.totalDownloads.toLocaleString(),
+      label: "Total Downloads",
+      info: `+${stats.todayDownloads} Today`,
+    },
+    {
+      icon: <Activity size={26} />,
+      value: stats.activeDownloads.toString().padStart(2, "0"),
+      label: "Active Downloads",
+      info: "Running",
+    },
+    {
+      icon: <CheckCircle2 size={26} />,
+      value: stats.completedDownloads.toLocaleString(),
+      label: "Completed",
+      info: `${stats.successRate}% Success`,
+    },
+    {
+      icon: <HardDrive size={26} />,
+      value: stats.storageUsed,
+      label: "Storage Used",
+      info: `${stats.storageLimit} Total`,
+    },
+  ];
+
   return (
     <section className="ufm-stats">
-      {stats.map((item, index) => (
+      {cards.map((item, index) => (
         <div className="ufm-stat-card" key={index}>
           <div className="ufm-stat-icon">{item.icon}</div>
 

@@ -31,6 +31,8 @@ export default function Analytics() {
     const fetchAnalytics = async () => {
       try {
         const res = await getDashboardAnalytics();
+        console.log(res.data.data);
+        
         setAnalytics(res.data.data);
       } catch (error) {
         console.error(error);

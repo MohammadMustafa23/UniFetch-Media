@@ -1,30 +1,22 @@
 import "./Queue.css";
-import { Pause, X, PlaySquareIcon , CameraIcon } from "lucide-react";
+import { Pause, X, PlaySquare, Camera, Music2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import EmptyQueue from "../../Queue/EmptyQueue/EmptyQueue";
 
-const downloads = [
-  {
-    id: 1,
-    title: "React Dashboard Tutorial",
-    platform: "YouTube",
-    progress: 72,
-    speed: "12.8 MB/s",
-    eta: "18 sec",
-    thumbnail: "https://placehold.co/90x60",
-    icon: <PlaySquareIcon size={18} />,
-  },
-  {
-    id: 2,
-    title: "Travel Reel 4K",
-    platform: "Instagram",
-    progress: 35,
-    speed: "6.4 MB/s",
-    eta: "41 sec",
-    thumbnail: "https://placehold.co/90x60",
-    icon: <CameraIcon size={18} />,
-  },
-];
+export default function Queue({ queue = [] }) {
+  const navigate = useNavigate();
 
-export default function Queue() {
+  const getPlatformIcon = (platform) => {
+    switch (platform?.toLowerCase()) {
+      case "youtube":
+        return <PlaySquare size={18} />;
+      case "instagram":
+        return <Camera size={18} />;
+      default:
+        return <Music2 size={18} />;
+    }
+  };
+
   return (
     <section className="ufm-queue">
       <div className="ufm-queue-header">
@@ -33,60 +25,68 @@ export default function Queue() {
           <p>Monitor all active downloads.</p>
         </div>
 
-        <button className="ufm-queue-view-btn">View All</button>
+        <button
+          className="ufm-queue-view-btn"
+          onClick={() => navigate("/queue")}
+        >
+          View All
+        </button>
       </div>
 
       <div className="ufm-queue-list">
-        {downloads.map((item) => (
-          <div key={item.id} className="ufm-queue-card">
-            <img
-              src={item.thumbnail}
-              alt={item.title}
-              className="ufm-queue-thumb"
-            />
+        {queue.length > 0 ? (
+          queue.map((item) => (
+            <div key={item._id} className="ufm-queue-card">
+              <img
+                src={item.thumbnail}
+                alt={item.title}
+                className="ufm-queue-thumb"
+              />
 
-            <div className="ufm-queue-content">
-              <div className="ufm-queue-top">
-                <div>
-                  <h3>{item.title}</h3>
+              <div className="ufm-queue-content">
+                <div className="ufm-queue-top">
+                  <div>
+                    <h3>{item.title}</h3>
 
-                  <span className="ufm-queue-platform">
-                    {item.icon}
+                    <span className="ufm-queue-platform">
+                      {getPlatformIcon(item.platform)}
+                      {item.platform}
+                    </span>
+                  </div>
 
-                    {item.platform}
-                  </span>
+                  <div className="ufm-queue-actions">
+                    <button title="Pause">
+                      <Pause size={18} />
+                    </button>
+
+                    <button title="Cancel">
+                      <X size={18} />
+                    </button>
+                  </div>
                 </div>
 
-                <div className="ufm-queue-actions">
-                  <button>
-                    <Pause size={18} />
-                  </button>
-
-                  <button>
-                    <X size={18} />
-                  </button>
+                <div className="ufm-queue-progress">
+                  <div
+                    className="ufm-queue-progress-fill"
+                    style={{
+                      width: `${item.progress || 0}%`,
+                    }}
+                  />
                 </div>
-              </div>
 
-              <div className="ufm-queue-progress">
-                <div
-                  className="ufm-queue-progress-fill"
-                  style={{
-                    width: `${item.progress}%`,
-                  }}
-                ></div>
-              </div>
+                <div className="ufm-queue-footer">
+                  <span>{item.progress || 0}%</span>
 
-              <div className="ufm-queue-footer">
-                <span>{item.progress}%</span>
+                  <span>{item.downloadSpeed || "--"}</span>
 
-                <span>{item.speed}</span>
-
-                <span>{item.eta}</span>
+                  <span>{item.eta || "--"}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <EmptyQueue/>
+        )}
       </div>
     </section>
   );
