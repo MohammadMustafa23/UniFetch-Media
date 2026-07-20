@@ -12,41 +12,54 @@ export function initSocket(server) {
   });
 
   io.on("connection", async (socket) => {
-    const cookieHeader = socket.handshake.headers.cookie || "";
+    try {
+      const cookieHeader = socket.handshake.headers.cookie || "";
 
-    const cookies = Object.fromEntries(
-      cookieHeader
-        .split("; ")
-        .filter(Boolean)
-        .map((cookie) => cookie.split("=")),
-    );
+      const cookies = Object.fromEntries(
+        cookieHeader
+          .split("; ")
+          .filter(Boolean)
+          .map((cookie) => cookie.split("=")),
+      );
 
-    const token = cookies.token;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const token = cookies.token;
 
-    const user = await User.findById(decoded.id);
+      console.log("Token:", token);
 
-    if (!user) {
-      socket.disconnect();
-      return;
+      if (!token) {
+        console.log("❌ No token found");
+        socket.disconnect(true);
+        return;
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      const user = await User.findById(decoded.id);
+
+      if (!user) {
+        console.log("❌ User not found");
+        socket.disconnect(true);
+        return;
+      }
+
+      socket.join(user._id.toString());
+
+      socket.emit("welcome", {
+        message: "Welcome to UniFetch Socket!",
+      });
+
+      socket.on("join-room", (room) => {
+        socket.join(room);
+        console.log(`${socket.id} joined ${room}`);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("🔴 Socket Disconnected:", socket.id);
+      });
+    } catch (error) {
+      console.error("Socket Auth Error:", error.message);
+      socket.disconnect(true);
     }
-
-    socket.join(user._id.toString());
-    // Add this
-    socket.emit("welcome", {
-      message: "Welcome to UniFetch Socket!",
-    });
-
-    // Create Room
-    socket.on("join-room", (room) => {
-      socket.join(room);
-
-      console.log(`${socket.id} joined ${room}`);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("🔴 Socket Disconnected:", socket.id);
-    });
   });
   return io;
 }

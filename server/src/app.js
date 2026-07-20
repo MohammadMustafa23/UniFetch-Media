@@ -6,6 +6,7 @@ import HistoryRoute from "./Feature/History/routes/history.routes.js";
 import DownloadRoute from "./Feature/download/routes/download.routes.js";
 import storageRoute from "../src/Feature/storage/storage.routes.js";
 import VideoFuncRoute from "../src/Feature/VideoFunctions/playDownload.route.js";
+import NotificationRoute from "./Feature/notification/routes/notification.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -27,4 +28,5 @@ app.use("/api", VideoFuncRoute);
 app.use("/api", HistoryRoute);
 app.use("/api", DownloadRoute);
 app.use("/api", storageRoute);
+app.use("/api", NotificationRoute);
 export default app;

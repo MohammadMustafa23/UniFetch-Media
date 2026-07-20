@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import googleClient from "../utils/googleAuth.js";
 import crypto from "crypto";
 import UserPreference from "../../Preferences/models/preferences.model.js";
+import { createNotification } from "../../notification/service/notification.service.js";
 
 async function RegisterUser(req, res) {
   const { userName, email, password } = req.body;
@@ -94,9 +95,17 @@ const LoginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    await createNotification({
+      userId: user._id,
+      title: "Welcome Back 👋",
+      message: "You have successfully signed in to your UniFetch account.",
+      type: "info",
+    });
+
     return res.status(200).json({
       success: true,
       message: "Login Successful",
+      userName: user.userName,
     });
   } catch (error) {
     console.error(error);
@@ -183,23 +192,27 @@ async function ForgotPassword(req, res) {
 
     const otp = generateOTP();
 
-    await redisClient.setEx(
-      `reset:${email}`,
-      300,
-      JSON.stringify({
+    console.log(otp);
+
+    await redisClient.set(
+      `forget:${email}`,
+      {
+        email,
         otp,
-      }),
+      },
+      {
+        ex: 300, // 5 minutes
+      },
     );
 
     await sendOTP(email, otp);
-
     return res.status(200).json({
       success: true,
       message: "Password reset OTP sent successfully.",
     });
   } catch (error) {
-    console.error("ForgotPassword Error :", error);
-
+    console.log(error);
+    
     return res.status(500).json({
       success: false,
       message: "Internal server error.",
@@ -218,7 +231,7 @@ async function VerifyResetOTP(req, res) {
       });
     }
 
-    const cacheKey = `reset:${email}`;
+    const cacheKey = `forget:${email}`;
     const cachedData = await redisClient.get(cacheKey);
 
     if (!cachedData) {
@@ -228,8 +241,10 @@ async function VerifyResetOTP(req, res) {
       });
     }
 
-    const { otp: storedOTP } = JSON.parse(cachedData);
+    const { otp: storedOTP } = cachedData;
 
+    console.log(otp,storedOTP);
+    
     if (storedOTP !== otp) {
       return res.status(400).json({
         success: false,
@@ -252,6 +267,7 @@ async function VerifyResetOTP(req, res) {
       message: "OTP verified successfully.",
       resetToken,
     });
+
   } catch (error) {
     console.error("VerifyResetOTP Error:", error);
     return res.status(500).json({
@@ -422,10 +438,17 @@ const googleLogin = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    await createNotification({
+      userId: user._id,
+      title: "Welcome Back 👋",
+      message: "Signed in successfully using your Google account.",
+      type: "info",
+    });
+
     return res.status(200).json({
       success: true,
       message: "Google login successful.",
-      user,
+      userName: user.userName,
     });
   } catch (error) {
     console.error("Google Login Error:", error);

@@ -7,6 +7,7 @@ async function VerifyOTP(req, res) {
   try {
     const { email, otp } = req.body;
 
+    
     // 1. Get Redis Data
     const cacheKey = `register:${email}`;
 
@@ -19,8 +20,10 @@ async function VerifyOTP(req, res) {
       });
     }
 
+    
+
     // 2. Parse Redis Data
-    const userData = JSON.parse(cachedData);
+    const userData = cachedData;
 
     // 3. Compare OTP
     if (userData.otp !== otp) {

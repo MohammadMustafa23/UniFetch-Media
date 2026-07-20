@@ -5,6 +5,7 @@ import { createDownloadPath } from "../utils/downloadPath.js";
 import { safeFileName } from "../utils/fileName.js";
 import { getIO } from "../../../socket/socket.js";
 import { findDownloadedFile } from "../utils/findDownloadedFile.js";
+import { createNotification } from "../../notification/service/notification.service.js";
 import fs from "fs";
 class DownloadQueue {
   constructor() {
@@ -235,6 +236,16 @@ class DownloadQueue {
         filePath: actualFile || "",
       });
 
+      await createNotification({
+        userId: download.userId,
+        title: "Download Complete",
+        message: `${download.title} has been downloaded successfully.`,
+        type: "success",
+        metadata: {
+          downloadId: download._id,
+        },
+      });
+
       console.log(`✅ Completed: ${download.title}`);
     } catch (error) {
       console.error("Queue Error:", error);
@@ -242,6 +253,16 @@ class DownloadQueue {
       await Download.findByIdAndUpdate(downloadId, {
         status: "failed",
         error: error.message,
+      });
+
+      await createNotification({
+        userId: download.userId,
+        title: "Download Failed",
+        message: `${download.title} couldn't be downloaded.`,
+        type: "error",
+        metadata: {
+          downloadId: download._id,
+        },
       });
     } finally {
       this.currentProcess = null;
