@@ -20,10 +20,8 @@ export default function SocialLogin() {
       try {
 
         const { data } = await loginwithGoogle({ code });
-
         localStorage.setItem("accessToken", data.accessToken);
-
-        toast.success(`Welcome ${data.user.userName}!`);
+        toast.success(`Welcome ${data.userName}!`);
 
         navigate("/dashboard", { replace: true });
       } catch (error) {

@@ -5,6 +5,7 @@ import "./Sidebar.css";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../../../common/ConfirmModal";
 import Loader from "../../../common/Loader";
+import socket from '../../../socket/socket.js'
 import {
   LayoutDashboard,
   Download,
@@ -63,7 +64,7 @@ const menuItems = [
   },
 ];
 
-export default function Sidebar({ isCollapsed , setCollapsed }) {
+export default function Sidebar({ isCollapsed, setCollapsed }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -73,8 +74,15 @@ export default function Sidebar({ isCollapsed , setCollapsed }) {
     try {
       setLoading(true);
       await logoutUser();
+      // Disconnect Socket.IO
+      if (socket.connected) {
+        socket.disconnect();
+        console.log("🔴 Socket Disconnected");
+      }
+
       setShowLogoutModal(false);
-      navigate("/authantication-page", {
+
+      navigate("/", {
         replace: true,
       });
     } catch (error) {

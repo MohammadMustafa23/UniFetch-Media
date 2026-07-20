@@ -1,0 +1,292 @@
+/*==========================================
+NOTIFICATION DROPDOWN
+==========================================*/
+
+.ufm-notification-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+
+  width: 390px;
+  max-height: 560px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #11151f;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+
+  animation: notificationOpen 0.22s ease;
+
+  z-index: 9999;
+}
+
+/*==========================================
+HEADER
+==========================================*/
+
+.ufm-notification-header {
+  padding: 18px 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ufm-notification-header h3 {
+  color: #fff;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.ufm-notification-header span {
+  color: #8d96a8;
+  font-size: 13px;
+}
+
+/*==========================================
+BODY
+==========================================*/
+
+.ufm-notification-body {
+  flex: 1;
+
+  max-height: 430px;
+
+  overflow-y: auto;
+
+  padding: 10px;
+}
+
+.ufm-notification-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ufm-notification-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+/*==========================================
+CARD
+==========================================*/
+
+.ufm-notification-card {
+  display: flex;
+  gap: 14px;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  transition: 0.25s;
+
+  cursor: pointer;
+
+  margin-bottom: 10px;
+}
+
+.ufm-notification-card:hover {
+  background: #1a2030;
+}
+
+.ufm-notification-card.unread {
+  background: rgba(124, 92, 255, 0.08);
+
+  border: 1px solid rgba(124, 92, 255, 0.18);
+}
+
+/*==========================================
+ICON
+==========================================*/
+
+.ufm-notification-icon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: rgba(124, 92, 255, 0.12);
+
+  color: #8b5cf6;
+}
+
+/*==========================================
+CONTENT
+==========================================*/
+
+.ufm-notification-info {
+  flex: 1;
+}
+
+.ufm-notification-info h4 {
+  color: #fff;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  margin-bottom: 6px;
+}
+
+.ufm-notification-info p {
+  color: #a5afc2;
+
+  font-size: 14px;
+
+  line-height: 1.55;
+
+  margin-bottom: 8px;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  overflow: hidden;
+}
+
+.ufm-notification-info small {
+  color: #7d8797;
+
+  font-size: 12px;
+}
+
+/*==========================================
+EMPTY
+==========================================*/
+
+.ufm-notification-empty {
+  padding: 70px 20px;
+
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ufm-notification-empty svg {
+  color: #8b5cf6;
+
+  margin-bottom: 18px;
+}
+
+.ufm-notification-empty h4 {
+  color: #fff;
+
+  margin-bottom: 8px;
+}
+
+.ufm-notification-empty p {
+  color: #8d96a8;
+
+  font-size: 14px;
+}
+
+/*==========================================
+FOOTER
+==========================================*/
+
+.ufm-notification-footer {
+  padding: 16px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ufm-notification-footer button {
+  width: 100%;
+  height: 46px;
+
+  border: none;
+  outline: none;
+
+  cursor: pointer;
+
+  border-radius: 12px;
+
+  background: #1a2030;
+
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  transition: 0.25s;
+}
+
+.ufm-notification-footer button:hover {
+  background: #252d42;
+}
+
+/*==========================================
+ANIMATION
+==========================================*/
+
+@keyframes notificationOpen {
+  from {
+    opacity: 0;
+
+    transform: translateY(-12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+  }
+}
+
+/*==========================================
+TABLET
+==========================================*/
+
+@media (max-width: 768px) {
+  .ufm-notification-dropdown {
+    width: 350px;
+
+    right: -20px;
+  }
+}
+
+/*==========================================
+MOBILE
+==========================================*/
+
+@media (max-width: 500px) {
+  .ufm-notification-dropdown {
+    position: fixed;
+
+    top: 80px;
+
+    left: 12px;
+
+    right: 12px;
+
+    width: auto;
+
+    max-height: 75vh;
+  }
+}

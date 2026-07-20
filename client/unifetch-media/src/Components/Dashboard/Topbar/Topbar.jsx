@@ -1,15 +1,37 @@
 import "./Topbar.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Bell, Sun, Moon, ChevronDown } from "lucide-react";
+
+import { getNotifications } from "../../../service/notification.service.js";
+import NotificationDropdown from "../../../common/NotificationDropdown.jsx";
 
 export default function Topbar() {
   const [darkMode, setDarkMode] = useState(true);
 
+  const [notifications, setNotifications] = useState([]);
+
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  async function fetchNotifications() {
+    try {
+      const data = await getNotifications();
+      setNotifications(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const unreadCount = notifications.filter((item) => !item.isRead).length;
+
   return (
     <header className="ufm-topbar">
-      {/* Left */}
+      {/* SEARCH */}
 
-      <div className="ufm-topbar-left">
+      <div className="ufm-topbar-search-section">
         <div className="ufm-topbar-search">
           <Search size={20} className="ufm-topbar-search-icon" />
 
@@ -21,9 +43,9 @@ export default function Topbar() {
         </div>
       </div>
 
-      {/* Right */}
+      {/* ACTIONS */}
 
-      <div className="ufm-topbar-right">
+      <div className="ufm-topbar-actions">
         {/* Theme */}
 
         <button
@@ -35,13 +57,26 @@ export default function Topbar() {
 
         {/* Notification */}
 
-        <button className="ufm-topbar-icon-btn">
-          <Bell size={20} />
+        <div className="ufm-notification-wrapper">
+          <button
+            className="ufm-topbar-icon-btn"
+            onClick={() => setShowNotifications((prev) => !prev)}
+          >
+            <Bell size={20} />
 
-          <span className="ufm-topbar-dot"></span>
-        </button>
+            {unreadCount > 0 && (
+              <span className="ufm-topbar-badge">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
+          </button>
 
-        {/* Profile */}
+          {showNotifications && (
+            <NotificationDropdown notifications={notifications} />
+          )}
+        </div>
+
+        {/* PROFILE */}
 
         <button className="ufm-topbar-profile">
           <div className="ufm-topbar-avatar">M</div>

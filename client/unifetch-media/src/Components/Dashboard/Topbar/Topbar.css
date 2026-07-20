@@ -1,5 +1,5 @@
 /* ==========================================================
-   UFM TOPBAR
+   TOPBAR
 ========================================================== */
 
 .ufm-topbar {
@@ -9,26 +9,22 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 28px;
 
-  margin-bottom: 34px;
+  margin-bottom: 32px;
 }
 
 /* ==========================================================
-   LEFT
+   SEARCH SECTION
 ========================================================== */
 
-.ufm-topbar-left {
+.ufm-topbar-search-section {
   flex: 1;
 }
 
-/* ==========================================================
-   SEARCH
-========================================================== */
-
 .ufm-topbar-search {
   width: 100%;
-  max-width: 520px;
+  max-width: 540px;
   height: 56px;
 
   position: relative;
@@ -36,21 +32,21 @@
   display: flex;
   align-items: center;
 
-  border-radius: 16px;
-
   background: #111827;
 
   border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
 
   transition: 0.3s;
 }
 
 .ufm-topbar-search:hover {
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.25);
 }
 
 .ufm-topbar-search:focus-within {
   border-color: #6366f1;
+
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
 }
 
@@ -58,7 +54,7 @@
   position: absolute;
   left: 18px;
 
-  color: #7f8aa3;
+  color: #7d8798;
 }
 
 .ufm-topbar-search-input {
@@ -68,10 +64,10 @@
   border: none;
   outline: none;
 
-  padding-left: 54px;
-  padding-right: 18px;
-
   background: transparent;
+
+  padding-left: 52px;
+  padding-right: 18px;
 
   color: #fff;
 
@@ -79,14 +75,14 @@
 }
 
 .ufm-topbar-search-input::placeholder {
-  color: #7f8aa3;
+  color: #7d8798;
 }
 
 /* ==========================================================
-   RIGHT SECTION
+   ACTIONS
 ========================================================== */
 
-.ufm-topbar-right {
+.ufm-topbar-actions {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -106,46 +102,67 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-
   background: #111827;
 
   color: #fff;
 
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+
   cursor: pointer;
 
-  transition: all 0.3s ease;
+  transition: 0.25s;
 }
 
 .ufm-topbar-icon-btn:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
-  background: #161f31;
+  background: #171f31;
 
   border-color: rgba(99, 102, 241, 0.35);
 }
 
 .ufm-topbar-icon-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
-.ufm-topbar-dot {
+/* ==========================================================
+   NOTIFICATION
+========================================================== */
+
+.ufm-notification-wrapper {
+  position: relative;
+}
+
+/* Notification Badge */
+
+.ufm-topbar-badge {
   position: absolute;
 
-  top: 14px;
+  top: 8px;
+  right: 8px;
 
-  right: 14px;
+  min-width: 18px;
+  height: 18px;
 
-  width: 9px;
+  padding: 0 5px;
 
-  height: 9px;
-
-  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   background: #ef4444;
 
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  border-radius: 999px;
+
   border: 2px solid #111827;
+
+  line-height: 1;
 }
 
 /* ==========================================================
@@ -153,143 +170,227 @@
 ========================================================== */
 
 .ufm-topbar-profile {
-  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-  outline: none;
+  padding: 8px 12px;
 
-  cursor: pointer;
-
-  padding: 8px 10px;
-
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 18px;
 
   background: #111827;
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-
   color: #fff;
 
-  transition: 0.3s;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
 }
 
 .ufm-topbar-profile:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+
+  background: #171f31;
 
   border-color: rgba(99, 102, 241, 0.35);
 }
 
+.ufm-topbar-profile:active {
+  transform: scale(0.98);
+}
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
 .ufm-topbar-avatar {
-  width: 44px;
-
-  height: 44px;
-
-  border-radius: 50%;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
+  width: 46px;
+  height: 46px;
 
   flex-shrink: 0;
 
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  font-weight: 700;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
 
   color: #fff;
 
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  font-size: 16px;
+  font-weight: 700;
+
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
 }
 
+/* ==========================================================
+   USER INFO
+========================================================== */
+
 .ufm-topbar-user {
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .ufm-topbar-user h4 {
   margin: 0;
 
-  font-size: 15px;
+  color: #fff;
 
+  font-size: 15px;
   font-weight: 600;
+
+  line-height: 1.2;
+}
+
+.ufm-topbar-user span {
+  margin-top: 4px;
+
+  color: #9ca3af;
+
+  font-size: 12px;
+}
+
+/* Chevron */
+
+.ufm-topbar-profile svg:last-child {
+  color: #7d8798;
+
+  transition: 0.25s;
+}
+
+.ufm-topbar-profile:hover svg:last-child {
+  transform: rotate(180deg);
 
   color: #fff;
 }
 
-.ufm-topbar-user span {
-  display: block;
-
-  margin-top: 3px;
-
-  font-size: 12px;
-
-  color: #9ca3af;
-}
-
 /* ==========================================================
-   RESPONSIVE
+   TABLET
 ========================================================== */
 
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .ufm-topbar {
-    gap: 16px;
-  }
-
-  .ufm-topbar-user {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .ufm-topbar {
-    margin-top: 72px;
-
-    flex-direction: column;
-
-    align-items: stretch;
-
-    height: auto;
-  }
-
-  .ufm-topbar-left {
-    width: 100%;
+    gap: 18px;
   }
 
   .ufm-topbar-search {
     max-width: 100%;
   }
 
-  .ufm-topbar-right {
-    justify-content: flex-end;
+  .ufm-topbar-user {
+    display: none;
+  }
+
+  .ufm-topbar-profile {
+    padding: 8px;
   }
 }
 
-@media (max-width: 480px) {
-  .ufm-topbar-right {
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+  .ufm-topbar {
+    height: 64px;
+
+    margin-bottom: 22px;
+
+    gap: 12px;
+  }
+
+  /* Hide Search */
+
+  .ufm-topbar-search-section {
+    display: none;
+  }
+
+  /* Right Side */
+
+  .ufm-topbar-actions {
+    width: 100%;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
     gap: 10px;
   }
 
+  /* Smaller Buttons */
+
   .ufm-topbar-icon-btn {
     width: 46px;
-
     height: 46px;
 
     border-radius: 14px;
   }
 
+  /* Hide Profile */
+
   .ufm-topbar-profile {
-    padding: 6px;
+    display: none;
   }
 
-  .ufm-topbar-avatar {
-    width: 40px;
+  /* Badge */
 
-    height: 40px;
+  .ufm-topbar-badge {
+    min-width: 16px;
+    height: 16px;
+
+    font-size: 10px;
+
+    top: 6px;
+    right: 6px;
   }
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+  .ufm-topbar {
+    margin-bottom: 18px;
+  }
+
+  .ufm-topbar-actions {
+    gap: 8px;
+  }
+
+  .ufm-topbar-icon-btn {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+  }
+
+  .ufm-topbar-badge {
+    top: 4px;
+    right: 4px;
+
+    min-width: 15px;
+    height: 15px;
+
+    font-size: 9px;
+  }
+}
+
+/* ==========================================================
+   ANIMATIONS
+========================================================== */
+
+.ufm-topbar-icon-btn,
+.ufm-topbar-profile,
+.ufm-topbar-search {
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
 }

@@ -14,7 +14,7 @@ import { verifyOTP,resendOTP,verifyResetOTP } from "../../service/auth.service";
 export default function VerifyEmailForm({ setScreen, verifyType, email }) {
   const inputs = useRef([]);
   const OTP_LENGTH = 6;
-  const OTP_EXPIRE_TIME = 120;
+  const OTP_EXPIRE_TIME = 300;
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -25,7 +25,7 @@ export default function VerifyEmailForm({ setScreen, verifyType, email }) {
     inputs.current[0]?.focus();
   }, []);
 
-  useEffect(() => {
+    useEffect(() => {
     if (timer <= 0) {
       setCanResend(true);
       return;
@@ -150,6 +150,7 @@ export default function VerifyEmailForm({ setScreen, verifyType, email }) {
           setScreen("reset-password");
         }
       } else {
+        console.log(code);
         const response = await verifyOTP({
           email,
           otp: code,

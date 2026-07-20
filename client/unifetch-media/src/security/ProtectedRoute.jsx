@@ -14,17 +14,11 @@ export default function ProtectedRoute({ children }) {
         const { data } = await getCurrentUser();
 
         if (data.success) {
+          setIsAuthenticated(true);
+
           if (!socket.connected) {
             socket.connect();
-
-            socket.on("welcome", (data) => {
-              console.log(data.message);
-
-              socket.emit("join-room", "test-room");
-            });
           }
-
-          setIsAuthenticated(true);
         }
       } catch (error) {
         setIsAuthenticated(false);
@@ -34,6 +28,18 @@ export default function ProtectedRoute({ children }) {
     };
 
     verifyUser();
+
+    const handleWelcome = (data) => {
+      console.log(data.message);
+
+      socket.emit("join-room", "test-room");
+    };
+
+    socket.on("welcome", handleWelcome);
+
+    return () => {
+      socket.off("welcome", handleWelcome);
+    };
   }, []);
 
   if (loading) {

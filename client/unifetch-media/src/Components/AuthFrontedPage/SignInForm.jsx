@@ -74,11 +74,8 @@ export default function SignInForm({ setScreen }) {
 
       if (data.success) {
         console.log("Login Successful");
-        console.log(data.user);
-
-        toast.success(data.message);
-
-        navigate("/dashboard");
+        toast.success(`Welcome ${data.userName}!`);
+        navigate("/dashboard", { replace: true });
       }
     } catch (error) {
       console.error(error);
