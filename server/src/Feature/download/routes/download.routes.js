@@ -6,6 +6,7 @@ import { getQueue } from "../controller/getQueue.controller.js";
 import { autoDownload } from "../controller/autoDownload.controller.js";4
 import {retryDownload,pauseDownload,resumeDownload,cancelDownload} from '../controller/download.function.js'
 import {getDashboardAnalytics} from "../controller/analytics.controller.js";
+import {getDashboard} from '../controller/dashboard.controller.js'
 
 const DownloadRoute = Router();
 
@@ -18,6 +19,7 @@ DownloadRoute.post("/download/pause/:id", verifyJWT, pauseDownload);
 DownloadRoute.post("/download/resume/:id", verifyJWT, resumeDownload);
 DownloadRoute.delete("/download/delete/:id", verifyJWT, cancelDownload);
 DownloadRoute.get("/analytics/dashboard", verifyJWT, getDashboardAnalytics);
+DownloadRoute.get('/user/dashboard',verifyJWT,getDashboard);
 
 
 export default DownloadRoute;
