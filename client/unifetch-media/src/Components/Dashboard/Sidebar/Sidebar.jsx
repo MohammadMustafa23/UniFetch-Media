@@ -4,8 +4,8 @@ import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../../../common/ConfirmModal";
-import Loader from "../../../common/Loader";
-import socket from '../../../socket/socket.js'
+import PageLoader from "../../../common/PageLoader.jsx";
+import socket from "../../../socket/socket.js";
 import {
   LayoutDashboard,
   Download,
@@ -99,7 +99,12 @@ export default function Sidebar({ isCollapsed, setCollapsed }) {
 
   return (
     <>
-      {loading && <Loader text="Signing you out..." />}
+      {loading && (
+        <PageLoader
+          text="Signing you out..."
+          subText="Please wait while we securely log you out."
+        />
+      )}
       {/* Mobile Toggle */}
       <button
         className="ufm-sidebar-toggle"

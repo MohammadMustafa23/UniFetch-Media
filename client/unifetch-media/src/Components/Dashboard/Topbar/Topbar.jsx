@@ -1,20 +1,65 @@
 import "./Topbar.css";
-import { useEffect, useState } from "react";
-import { Search, Bell, Sun, Moon, ChevronDown } from "lucide-react";
+import { useEffect, useState, useMemo } from "react";
+import { Search, Bell, ChevronDown } from "lucide-react";
+import debounce from "lodash.debounce";
 
+import { globalSearch } from "../../../service/history.service.js";
 import { getNotifications } from "../../../service/notification.service.js";
+
 import NotificationDropdown from "../../../common/NotificationDropdown.jsx";
+import SearchDropdown from "../../../common/SearchDropdown.jsx";
 
 export default function Topbar() {
-  const [darkMode, setDarkMode] = useState(true);
-
   const [notifications, setNotifications] = useState([]);
-
   const [showNotifications, setShowNotifications] = useState(false);
+
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState({
+    downloads: [],
+    history: [],
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleSearch = useMemo(
+    () =>
+      debounce(async (value) => {
+        if (value.trim().length < 2) {
+          setResults({
+            downloads: [],
+            history: [],
+          });
+
+          setShowDropdown(false);
+          return;
+        }
+
+        try {
+          setLoading(true);
+
+          const data = await globalSearch(value);
+
+          console.log(data);
+
+          setResults(data);
+          setShowDropdown(true);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      }, 300),
+    [],
+  );
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+
+    return () => {
+      handleSearch.cancel();
+    };
+  }, [handleSearch]);
 
   async function fetchNotifications() {
     try {
@@ -37,26 +82,30 @@ export default function Topbar() {
 
           <input
             type="text"
-            placeholder="Search downloads, history..."
             className="ufm-topbar-search-input"
+            placeholder="Search downloads, history..."
+            value={query}
+            onChange={(e) => {
+              const value = e.target.value;
+              setQuery(value);
+              handleSearch(value);
+            }}
           />
+
+          {showDropdown && (
+            <SearchDropdown
+              results={results}
+              loading={loading}
+              query={query}
+              onClose={() => setShowDropdown(false)}
+            />
+          )}
         </div>
       </div>
 
       {/* ACTIONS */}
 
       <div className="ufm-topbar-actions">
-        {/* Theme */}
-
-        <button
-          className="ufm-topbar-icon-btn"
-          onClick={() => setDarkMode(!darkMode)}
-        >
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-
-        {/* Notification */}
-
         <div className="ufm-notification-wrapper">
           <button
             className="ufm-topbar-icon-btn"
@@ -76,14 +125,11 @@ export default function Topbar() {
           )}
         </div>
 
-        {/* PROFILE */}
-
         <button className="ufm-topbar-profile">
           <div className="ufm-topbar-avatar">M</div>
 
           <div className="ufm-topbar-user">
             <h4>Mohammad</h4>
-
             <span>Premium</span>
           </div>
 

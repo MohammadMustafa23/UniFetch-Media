@@ -1,41 +1,84 @@
-/* ==========================================
-   SONNER THEME
-========================================== */
+/* ============================
+   UniFetch Premium Toast
+============================ */
 
-[data-sonner-toaster] {
-  --normal-bg: #17191f !important;
-  --normal-border: rgba(124, 92, 255, 0.18) !important;
-  --normal-text: #ffffff !important;
+.uf-toast {
+  background: linear-gradient(
+    180deg,
+    rgba(34, 37, 46, 0.98),
+    rgba(24, 26, 33, 0.98)
+  ) !important;
 
-  --success-bg: linear-gradient(135deg, #7c5cff, #4f8cff);
-  --success-border: rgba(124, 92, 255, 0.3);
-  --success-text: #ffffff;
+  color: #f8fafc !important;
 
-  --error-bg: #2a171b;
-  --error-border: rgba(255, 86, 86, 0.25);
-  --error-text: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-left: 4px solid #22c55e;
 
-  --warning-bg: #2d2414;
-  --warning-border: rgba(255, 193, 7, 0.25);
-  --warning-text: #ffffff;
+  border-radius: 14px !important;
+
+  padding: 16px 18px !important;
+  min-height: 68px;
+
+  backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px rgba(255, 255, 255, 0.04);
+
+  transition: all 0.25s ease;
 }
 
-[data-sonner-toast] {
-  border-radius: 16px !important;
-
-  backdrop-filter: blur(18px);
-
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35) !important;
-
-  font-family: inherit;
+.uf-toast:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, 0.5),
+    0 8px 18px rgba(0, 0, 0, 0.3);
 }
 
-[data-sonner-toast] [data-title] {
-  font-size: 14px;
+.uf-toast-title {
+  font-size: 15px;
   font-weight: 600;
+  letter-spacing: 0.2px;
+  color: #fff;
 }
 
-[data-sonner-toast] [data-description] {
+.uf-toast-description {
+  margin-top: 3px;
   font-size: 13px;
-  color: #cbd5e1;
+  color: #a8b0be;
+  line-height: 1.45;
+}
+
+.uf-toast-close {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #b8c1cc !important;
+  border-radius: 8px !important;
+  transition: 0.2s;
+}
+
+.uf-toast-close:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+}
+
+/* Success */
+[data-sonner-toast][data-type="success"] {
+  border-left-color: #22c55e !important;
+}
+
+/* Error */
+[data-sonner-toast][data-type="error"] {
+  border-left-color: #ef4444 !important;
+}
+
+/* Warning */
+[data-sonner-toast][data-type="warning"] {
+  border-left-color: #f59e0b !important;
+}
+
+/* Info */
+[data-sonner-toast][data-type="info"] {
+  border-left-color: #3b82f6 !important;
 }

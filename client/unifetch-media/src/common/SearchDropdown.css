@@ -1,0 +1,151 @@
+/*==========================================
+SEARCH DROPDOWN
+==========================================*/
+
+.ufm-search-dropdown {
+  position: absolute;
+
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+
+  background: #111827;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+
+  overflow: hidden;
+
+  z-index: 99999;
+
+  max-height: 420px;
+  overflow-y: auto;
+
+  animation: searchOpen 0.2s ease;
+}
+
+/*==========================================
+SECTION TITLE
+==========================================*/
+
+.ufm-search-title {
+  padding: 14px 18px;
+
+  background: #171f31;
+
+  color: #9ca3af;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+}
+
+/*==========================================
+ITEM
+==========================================*/
+
+.ufm-search-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 14px 18px;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.ufm-search-item:hover {
+  background: rgba(99, 102, 241, 0.12);
+}
+
+.ufm-search-item > svg {
+  flex-shrink: 0;
+
+  color: #8b5cf6;
+}
+
+/*==========================================
+INFO
+==========================================*/
+
+.ufm-search-info {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.ufm-search-info h4 {
+  margin: 0;
+
+  color: #fff;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ufm-search-info span {
+  margin-top: 6px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+/*==========================================
+EMPTY
+==========================================*/
+
+.ufm-search-loading,
+.ufm-search-empty {
+  padding: 28px;
+
+  text-align: center;
+
+  color: #94a3b8;
+}
+
+/*==========================================
+SCROLLBAR
+==========================================*/
+
+.ufm-search-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ufm-search-dropdown::-webkit-scrollbar-thumb {
+  background: #2b3347;
+
+  border-radius: 999px;
+}
+
+/*==========================================
+ANIMATION
+==========================================*/
+
+@keyframes searchOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

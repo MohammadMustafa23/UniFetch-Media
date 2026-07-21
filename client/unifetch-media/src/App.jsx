@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 
-import Loader from "./common/Loader";
+import PageLoader from "./common/PageLoader";
 import ProtectedRoute from "./security/ProtectedRoute";
 
 /* ==========================================
@@ -46,10 +46,23 @@ function App() {
         visibleToasts={3}
         toastOptions={{
           duration: 3000,
+          classNames: {
+            toast: "uf-toast",
+            title: "uf-toast-title",
+            description: "uf-toast-description",
+            closeButton: "uf-toast-close",
+          },
         }}
       />
 
-      <Suspense fallback={<Loader text="Loading page..." />}>
+      <Suspense
+        fallback={
+          <PageLoader
+            title="Loading Page"
+            subtitle="Preparing your experience..."
+          />
+        }
+      >
         <Routes>
           {/* Public Routes */}
 

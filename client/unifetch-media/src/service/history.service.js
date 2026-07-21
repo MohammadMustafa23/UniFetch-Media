@@ -24,3 +24,12 @@ export const getFavorites = async () => {
   const { data } = await api.get("/history/favorites");
   return data;
 };
+
+
+export const globalSearch = async (query) => {
+  const { data } = await api.get(`/search`, {
+    params: { q: query }
+  });
+
+  return data;
+};
