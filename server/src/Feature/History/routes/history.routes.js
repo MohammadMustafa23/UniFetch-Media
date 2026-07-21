@@ -5,15 +5,41 @@ import {
   toggleFavorite,
   deleteHistory,
   downloadFromHistory,
-  getFavorites
+  getFavorites,
 } from "../controller/ActionsButton.controller.js";
+import {historyDownloadLimiter,historyWriteLimiter} from '../rateLimit/historyRateLimiter.js'
 const HistoryRoute = express.Router();
 
-HistoryRoute.post("/history/add", verifyJWT, createHistory);
+HistoryRoute.post(
+  "/history/add",
+  verifyJWT,
+  historyWriteLimiter,
+  createHistory,
+);
+
 HistoryRoute.get("/history/get", verifyJWT, getHistory);
-HistoryRoute.patch("/history/favorite/:id", verifyJWT, toggleFavorite);
-HistoryRoute.delete("/history/delete/:id", verifyJWT, deleteHistory);
-HistoryRoute.post("/history/download/:id", verifyJWT, downloadFromHistory);
+
+HistoryRoute.patch(
+  "/history/favorite/:id",
+  verifyJWT,
+  historyWriteLimiter,
+  toggleFavorite,
+);
+
+HistoryRoute.delete(
+  "/history/delete/:id",
+  verifyJWT,
+  historyWriteLimiter,
+  deleteHistory,
+);
+
+HistoryRoute.post(
+  "/history/download/:id",
+  verifyJWT,
+  historyDownloadLimiter,
+  downloadFromHistory,
+);
+
 HistoryRoute.get("/history/favorites", verifyJWT, getFavorites);
 
 export default HistoryRoute;
