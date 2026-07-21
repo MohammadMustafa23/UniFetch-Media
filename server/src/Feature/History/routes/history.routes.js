@@ -8,6 +8,8 @@ import {
   getFavorites,
 } from "../controller/ActionsButton.controller.js";
 import {historyDownloadLimiter,historyWriteLimiter} from '../rateLimit/historyRateLimiter.js'
+import { globalSearch } from "../controller/search.controller.js";
+
 const HistoryRoute = express.Router();
 
 HistoryRoute.post(
@@ -41,5 +43,7 @@ HistoryRoute.post(
 );
 
 HistoryRoute.get("/history/favorites", verifyJWT, getFavorites);
+HistoryRoute.get("/search", verifyJWT, globalSearch);
+
 
 export default HistoryRoute;
