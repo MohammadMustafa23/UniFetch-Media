@@ -155,6 +155,8 @@ class DownloadQueue {
       // Get Latest Download Data
       const download = await Download.findById(downloadId);
 
+      console.log("Queue Storage:", download.storageProvider);
+
       if (!download) {
         this.isDownloading = false;
         return this.process();
@@ -201,7 +203,6 @@ class DownloadQueue {
 
         for (const line of lines) {
           console.log(line);
-
           await this.updateProgress(download._id, line);
         }
       });
@@ -234,6 +235,16 @@ class DownloadQueue {
         progress: 100,
         eta: "",
         filePath: actualFile || "",
+      });
+
+      console.log(
+        "📤 Emitting download-completed to:",
+        download.userId.toString(),
+      );
+
+      getIO().to(download.userId.toString()).emit("download-completed", {
+        downloadId: download._id.toString(),
+        storageProvider: download.storageProvider,
       });
 
       await createNotification({

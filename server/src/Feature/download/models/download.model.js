@@ -7,7 +7,7 @@ const downloadSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    videoId :{
+    videoId: {
       type: String,
       required: true,
       trim: true,
@@ -27,6 +27,12 @@ const downloadSchema = new mongoose.Schema(
       type: String,
       enum: ["youtube", "instagram", "facebook", "tiktok", "twitter", "other"],
       required: true,
+    },
+
+    storageProvider: {
+      type: String,
+      enum: ["device", "platform"],
+      default: "device",
     },
 
     thumbnail: {

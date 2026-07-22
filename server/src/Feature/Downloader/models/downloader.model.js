@@ -53,6 +53,12 @@ const downloadSchema = new mongoose.Schema(
       default: "best",
     },
 
+    storageProvider: {
+      type: String,
+      enum: ["device", "cloudinary"],
+      default: "device",
+    },
+
     format: {
       type: String,
       enum: ["mp4", "webm", "mp3", "m4a"],

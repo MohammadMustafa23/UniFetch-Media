@@ -1,9 +1,19 @@
 import Download from "../models/download.model.js";
 import downloadQueue from "../queue/download.queue.js";
+import Preference from "../../Preferences/models/preferences.model.js";
 
 export async function createDownload(req, res) {
   try {
     const userId = req.user._id;
+
+    const preference = await Preference.findOne({ userId });
+    if (!preference) {
+      return res.status(404).json({
+        success: false,
+        message: "Preferences not found.",
+      });
+    }
+
     const {
       videoId,
       id,
@@ -16,12 +26,10 @@ export async function createDownload(req, res) {
       format = "mp4",
     } = req.body;
 
-    
     const existingDownload = await Download.findOne({
       videoId,
       userId,
       platform,
-      status: { $in: ["queued", "downloading", "completed"] },
     });
 
     if (existingDownload) {
@@ -30,7 +38,7 @@ export async function createDownload(req, res) {
         message: "This media is already in your download queue.",
       });
     }
-    // Create download record
+
     const download = await Download.create({
       videoId,
       userId,
@@ -41,7 +49,7 @@ export async function createDownload(req, res) {
       duration,
       quality,
       format,
-
+      storageProvider: preference.storage.provider,
       status: "queued",
       progress: 0,
     });

@@ -30,19 +30,13 @@ export async function updatePreferences(req, res) {
         message: "No preferences provided to update.",
       });
     }
-    console.log("PAss 1");
-    
 
-    const allowedFields = ["appearance", "download", "privacy"];
+    // Allowed preference sections
+    const allowedFields = ["autodownload", "storage", "quality"];
     const requestFields = Object.keys(req.body);
-    console.log(requestFields);
-    
     const invalidFields = requestFields.filter(
-      (field) => !allowedFields.includes(field),
+      (field) => !allowedFields.includes(field.toLowerCase())
     );
-
-    console.log(invalidFields.length);
-    
 
     if (invalidFields.length > 0) {
       return res.status(400).json({
@@ -51,18 +45,20 @@ export async function updatePreferences(req, res) {
       });
     }
 
-    
-    const preferences = await updateUserPreferences(req.user._id, req.body);
+    const preferences = await updateUserPreferences(
+      req.user._id,
+      req.body
+    );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Preferences updated successfully.",
       data: preferences,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to update preferences.",
     });
   }
 }

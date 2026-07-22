@@ -139,11 +139,11 @@ export async function downloadFromHistory(req, res) {
       thumbnail: video.thumbnail,
       platform: detectPlatform(history.url),
       duration: video.duration,
-      quality: preference.download.quality,
+      quality: preference.quality,
       format:
-        preference.download.mediaType === "audio"
-          ? preference.download.audioFormat
-          : preference.download.videoFormat,
+        preference.mediaType === "audio"
+          ? preference.audioFormat
+          : preference.videoFormat,
       status: "queued",
       progress: 0,
     });

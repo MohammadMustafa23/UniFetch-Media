@@ -9,7 +9,7 @@ export async function autoDownload(req, res) {
   try {
     const { url } = req.body;
 
-    if (!url ) {
+    if (!url) {
       return res.status(400).json({
         success: false,
         message: "URL is required.",
@@ -38,7 +38,7 @@ export async function autoDownload(req, res) {
       });
     }
 
-    // Prepare download data
+    console.log("Storage Provider:", preference.storage.provider);
     const downloadData = {
       videoId: video.id,
       userId,
@@ -47,11 +47,9 @@ export async function autoDownload(req, res) {
       thumbnail: video.thumbnail,
       platform: detectPlatform(url),
       duration: video.duration,
-      quality: preference.download.quality,
-      format:
-        preference.download.mediaType === "audio"
-          ? preference.download.audioFormat
-          : preference.download.videoFormat,
+      quality: preference.quality,
+      format: "mp4",
+      storageProvider: preference.storage.provider,
     };
 
     // Check duplicate
@@ -77,6 +75,8 @@ export async function autoDownload(req, res) {
       status: "queued",
       progress: 0,
     });
+
+    console.log("Saved Storage:", download.storageProvider);
 
     // Add to queue
     downloadQueue.add(download._id);

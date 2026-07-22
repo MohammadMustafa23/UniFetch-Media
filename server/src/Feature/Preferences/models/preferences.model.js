@@ -10,30 +10,23 @@ const preferenceSchema = new mongoose.Schema(
       index: true,
     },
 
-    appearance: {
-      theme: {
+    storage: {
+      provider: {
         type: String,
-        enum: ["light", "dark"],
-        default: "dark",
+        enum: ["device", "cloudinary"],
+        default: "device",
       },
     },
 
-    download: {
-      autoDownload: {
-        type: Boolean,
-        default: false,
-      },
+    autoDownload: {
+      type: Boolean,
+      default: false,
+    },
 
-      autoPaste: {
-        type: Boolean,
-        default: false,
-      },
-
-      quality: {
-        type: String,
-        enum: ["best", "1080p", "720p", "480p", "360p"],
-        default: "best",
-      },
+    quality: {
+      type: String,
+      enum: ["best", "1080p", "720p", "480p", "360p"],
+      default: "best",
     },
   },
   {

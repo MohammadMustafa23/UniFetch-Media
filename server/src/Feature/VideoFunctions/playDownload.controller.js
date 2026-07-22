@@ -96,7 +96,7 @@ export const saveDownload = async (req, res) => {
       });
     }
 
-    if (!fs.existsSync(download.filePath)) {
+    if (!download.filePath || !fs.existsSync(download.filePath)) {
       return res.status(404).json({
         success: false,
         message: "File not found.",
@@ -104,22 +104,48 @@ export const saveDownload = async (req, res) => {
     }
 
     const extension = path.extname(download.filePath);
-
     const safeTitle = download.title.replace(/[<>:"/\\|?*]+/g, "").trim();
-
     const fileName = `${safeTitle}${extension}`;
-    console.log(fileName);
 
-    res.download(download.filePath, fileName);
+    res.download(download.filePath, fileName, async (err) => {
+      if (err) {
+        console.error("Download Error:", err);
+
+        if (!res.headersSent) {
+          return res.status(500).json({
+            success: false,
+            message: "Failed to download file.",
+          });
+        }
+
+        return;
+      }
+
+      // Delete temporary file only for device storage
+      if (download.storageProvider === "device") {
+        try {
+          if (fs.existsSync(download.filePath)) {
+            await fs.promises.unlink(download.filePath);
+          }
+
+          await Download.findByIdAndDelete(download._id);
+
+          console.log("🗑 Temporary file deleted:", fileName);
+        } catch (cleanupError) {
+          console.error("Cleanup Error:", cleanupError);
+        }
+      }
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Save Download:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Failed to download file.",
     });
   }
 };
+
 
 export const deleteDownload = async (req, res) => {
   console.log("DELETE DOWNLOAD API HIT");
