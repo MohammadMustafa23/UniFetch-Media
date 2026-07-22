@@ -1,5 +1,5 @@
 import "./Preferences.css";
-import { Download, Clipboard, Moon, Image, ChevronDown } from "lucide-react";
+import { Download, HardDrive, Film, ChevronDown } from "lucide-react";
 
 export default function Preferences({
   preferences,
@@ -30,14 +30,11 @@ export default function Preferences({
         <label className="switch">
           <input
             type="checkbox"
-            checked={preferences.download.autoDownload}
+            checked={preferences.autoDownload}
             onChange={(e) =>
               setPreferences({
                 ...preferences,
-                download: {
-                  ...preferences.download,
-                  autoDownload: e.target.checked,
-                },
+                autoDownload: e.target.checked,
               })
             }
           />
@@ -46,96 +43,62 @@ export default function Preferences({
         </label>
       </div>
 
-      {/* Auto Paste */}
+      {/* Storage Location */}
 
       <div className="pref-item">
         <div className="pref-left">
           <div className="pref-icon">
-            <Clipboard size={18} />
+            <HardDrive size={18} />
           </div>
 
           <div>
-            <h4>Auto Paste</h4>
-            <p>Catch copied links automatically</p>
-          </div>
-        </div>
-
-        <label className="switch">
-          <input
-            type="checkbox"
-            checked={preferences.download.autoPaste}
-            onChange={(e) =>
-              setPreferences({
-                ...preferences,
-                download: {
-                  ...preferences.download,
-                  autoPaste: e.target.checked,
-                },
-              })
-            }
-          />
-
-          <span className="slider"></span>
-        </label>
-      </div>
-
-      {/* Theme */}
-
-      <div className="pref-item">
-        <div className="pref-left">
-          <div className="pref-icon">
-            <Moon size={18} />
-          </div>
-
-          <div>
-            <h4>Dark / Light Mode</h4>
-            <p>Switch dashboard appearance</p>
-          </div>
-        </div>
-
-        <label className="switch">
-          <input
-            type="checkbox"
-            checked={preferences.appearance.theme === "dark"}
-            onChange={(e) =>
-              setPreferences({
-                ...preferences,
-                appearance: {
-                  ...preferences.appearance,
-                  theme: e.target.checked ? "dark" : "light",
-                },
-              })
-            }
-          />
-
-          <span className="slider"></span>
-        </label>
-      </div>
-
-      {/* Download Quality */}
-
-      <div className="pref-item">
-        <div className="pref-left">
-          <div className="pref-icon">
-            <Image size={18} />
-          </div>
-
-          <div>
-            <h4>Download Quality</h4>
-            <p>Default quality for downloads</p>
+            <h4>Storage Location</h4>
+            <p>Choose where downloaded files are stored</p>
           </div>
         </div>
 
         <div className="quality-select">
           <select
-            value={preferences.download.quality}
+            value={preferences.storage.provider}
             onChange={(e) =>
               setPreferences({
                 ...preferences,
-                download: {
-                  ...preferences.download,
-                  quality: e.target.value,
+                storage: {
+                  ...preferences.storage,
+                  provider: e.target.value,
                 },
+              })
+            }
+          >
+            <option value="device">Device</option>
+            <option value="cloudinary">Cloud Storage</option>
+          </select>
+
+          <ChevronDown size={18} />
+        </div>
+      </div>
+
+      {/* Video Quality */}
+
+      <div className="pref-item">
+        <div className="pref-left">
+          <div className="pref-icon">
+            <Film size={18} />
+          </div>
+
+          <div>
+            <h4>Video Quality</h4>
+            <p>Preferred quality for new downloads</p>
+          </div>
+        </div>
+
+        <div className="quality-select">
+          <select
+            value={preferences.quality}
+            onChange={(e) =>
+              setPreferences({
+                ...preferences,
+                quality: e.target.value,
               })
             }
           >

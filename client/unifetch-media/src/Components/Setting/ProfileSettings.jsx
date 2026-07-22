@@ -41,13 +41,12 @@ export default function ProfileSettings() {
         getPreferences(),
       ]);
 
-      
       if (profileRes.data.success) {
         setProfile(profileRes.data.user);
       }
 
       console.log(preferencesRes.data);
-      
+
       if (preferencesRes.data.success) {
         setPreferences(preferencesRes.data.data);
       }
@@ -63,33 +62,32 @@ export default function ProfileSettings() {
   };
 
   const handleSaveChanges = async () => {
-  try {
-    setSaving(true);
+    try {
+      setSaving(true);
 
-    const payload = {
-      appearance: preferences.appearance,
-      download: preferences.download,
-      privacy: preferences.privacy,
-    };
+      const payload = {
+        storage: preferences.storage,
+        autoDownload: preferences.autoDownload,
+        quality: preferences.quality,
+      };
 
-    const { data } = await updatePreferences(payload);
+      const { data } = await updatePreferences(payload);
 
-    if (data.success) {
-      setPreferences(data.data);
+      if (data.success) {
+        setPreferences(data.data);
 
-      toast.success(data.message);
+        toast.success(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        error.response?.data?.message || "Failed to update preferences.",
+      );
+    } finally {
+      setSaving(false);
     }
-  } catch (error) {
-    console.error(error);
-
-    toast.error(
-      error.response?.data?.message ||
-      "Failed to update preferences."
-    );
-  } finally {
-    setSaving(false);
-  }
-};
+  };
 
   if (loading) {
     return (
