@@ -1,2 +1,1 @@
-# UniFetch-Media
-⭐  🚧 UniFetch Media is a MERN-stack media management application currently under development. The project focuses on building a modern, responsive UI, secure authentication, and a scalable backend architecture.
+⭐ UniFetch Media is a full-stack MERN media management platform that enables users to fetch, organize, and manage media from multiple platforms. It features secure authentication, real-time download tracking, cloud storage integration, and a modern responsive UI, built with a scalable backend architecture.
