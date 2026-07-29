@@ -31,6 +31,9 @@ export async function updatePreferences(req, res) {
       });
     }
 
+    console.log(req.body);
+    
+
     // Allowed preference sections
     const allowedFields = ["autodownload", "storage", "quality"];
     const requestFields = Object.keys(req.body);

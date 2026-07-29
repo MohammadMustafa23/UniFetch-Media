@@ -64,7 +64,6 @@ export async function createDownload(req, res) {
     });
   } catch (error) {
     console.error("Create Download Error:", error);
-
     return res.status(500).json({
       success: false,
       message: "Failed to create download.",

@@ -77,9 +77,9 @@ export async function autoDownload(req, res) {
     });
 
     console.log("Saved Storage:", download.storageProvider);
-
     // Add to queue
-    downloadQueue.add(download._id);
+    downloadQueue.add(download);
+    
     return res.status(201).json({
       success: true,
       message: "Download added to queue successfully.",

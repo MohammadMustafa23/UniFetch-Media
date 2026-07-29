@@ -13,7 +13,7 @@ const preferenceSchema = new mongoose.Schema(
     storage: {
       provider: {
         type: String,
-        enum: ["device", "cloudinary"],
+        enum: ["device", "platform"],
         default: "device",
       },
     },

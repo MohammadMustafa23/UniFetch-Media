@@ -19,6 +19,8 @@ class DownloadQueue {
   // Add Download to Queue
   add(downloadId) {
     this.queue.push(downloadId);
+    console.log(downloadId);
+    
     console.log(`📥 Added to Queue (${this.queue.length})`);
     this.process();
   }
@@ -153,7 +155,7 @@ class DownloadQueue {
 
     try {
       // Get Latest Download Data
-      const download = await Download.findById(downloadId);
+      const download = await Download.findById(dow);
 
       console.log("Queue Storage:", download.storageProvider);
 
