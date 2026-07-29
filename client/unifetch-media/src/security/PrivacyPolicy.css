@@ -1,0 +1,338 @@
+/* ==========================================================
+   LEGAL PAGE
+========================================================== */
+
+.legal-page {
+  position: relative;
+
+  min-height: 100vh;
+
+  padding: 120px 20px 80px;
+
+  color: #f5f7fb;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(88, 101, 242, 0.18),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(0, 209, 255, 0.12),
+      transparent 35%
+    ),
+    #07090f;
+
+  overflow: hidden;
+}
+
+.legal-page::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+
+  background-size: 60px 60px;
+
+  opacity: 0.45;
+}
+
+.legal-page::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at center,
+    transparent 45%,
+    rgba(0, 0, 0, 0.45)
+  );
+}
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.legal-container {
+  position: relative;
+  z-index: 2;
+
+  max-width: 980px;
+
+  margin: 0 auto;
+
+  padding: 60px;
+
+  border-radius: 28px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(17, 20, 28, 0.72);
+
+  backdrop-filter: blur(30px);
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    inset 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* ==========================================================
+   BACK BUTTON
+========================================================== */
+
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 11px 18px;
+
+  border-radius: 999px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #8ab4ff;
+
+  text-decoration: none;
+  font-weight: 600;
+
+  transition: 0.25s;
+}
+
+.legal-back:hover {
+  color: white;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  transform: translateX(-4px);
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.legal-container h1 {
+  margin-top: 36px;
+  margin-bottom: 14px;
+
+  font-size: clamp(2.5rem, 5vw, 4rem);
+
+  line-height: 1.1;
+
+  letter-spacing: -0.03em;
+
+  color: white;
+}
+
+.legal-updated {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 8px 14px;
+
+  margin-bottom: 30px;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: #93a0b7;
+
+  font-size: 0.92rem;
+}
+
+.legal-intro {
+  color: #d4dae7;
+
+  line-height: 1.9;
+
+  font-size: 1.06rem;
+
+  padding-bottom: 36px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================
+   SECTION
+========================================================== */
+
+.legal-container section {
+  padding: 34px 0;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.legal-container section:last-child {
+  border-bottom: none;
+}
+
+.legal-container h2 {
+  margin-bottom: 18px;
+
+  font-size: 1.45rem;
+
+  color: white;
+}
+
+.legal-container p {
+  color: #b8c3d5;
+
+  line-height: 1.9;
+}
+
+/* ==========================================================
+   LIST
+========================================================== */
+
+.legal-container ul {
+  margin-top: 18px;
+
+  display: grid;
+  gap: 14px;
+
+  padding: 0;
+
+  list-style: none;
+}
+
+.legal-container li {
+  position: relative;
+
+  padding-left: 28px;
+
+  color: #b8c3d5;
+
+  line-height: 1.8;
+}
+
+.legal-container li::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 11px;
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #4f8cff;
+
+  box-shadow: 0 0 14px rgba(79, 140, 255, 0.7);
+}
+
+/* ==========================================================
+   LINKS
+========================================================== */
+
+.legal-container a {
+  color: #8ab4ff;
+
+  transition: 0.25s;
+}
+
+.legal-container a:hover {
+  color: white;
+}
+
+/* ==========================================================
+   SCROLLBAR
+========================================================== */
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07090f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 992px) {
+  .legal-container {
+    padding: 42px;
+  }
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+  .legal-page {
+    padding: 95px 16px 50px;
+  }
+
+  .legal-container {
+    padding: 28px;
+
+    border-radius: 22px;
+  }
+
+  .legal-container h1 {
+    margin-top: 30px;
+
+    font-size: 2.4rem;
+  }
+
+  .legal-container h2 {
+    font-size: 1.25rem;
+  }
+
+  .legal-container p,
+  .legal-container li {
+    font-size: 0.96rem;
+  }
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+  .legal-page {
+    padding-inline: 12px;
+  }
+
+  .legal-container {
+    padding: 22px;
+  }
+
+  .legal-back {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .legal-container h1 {
+    font-size: 2rem;
+  }
+}

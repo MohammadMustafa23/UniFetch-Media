@@ -1,7 +1,17 @@
 import "./style/CTASection.css";
 import { ArrowRight, Download } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useRef,useState } from "react";
 
-export default function CTASection() {
+export default function CTASection({featuresRef}) {
+  const navigate = useNavigate();
+  const scrollTo = (ref) => {
+    ref.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <section className="ctaSection">
       <div className="ctaSection__container">
@@ -17,12 +27,15 @@ export default function CTASection() {
           </p>
 
           <div className="ctaSection__actions">
-            <button className="ctaSection__primary">
+            <button
+              className="ctaSection__primary"
+              onClick={() => navigate("/authantication-page")}
+            >
               <Download size={18} />
               Get Started Free
             </button>
 
-            <button className="ctaSection__secondary">
+            <button className="ctaSection__secondary"  onClick={() => scrollTo(featuresRef)} >
               Explore Features
               <ArrowRight size={18} />
             </button>

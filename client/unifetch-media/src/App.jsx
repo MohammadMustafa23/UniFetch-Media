@@ -30,6 +30,9 @@ const Storage = lazy(() => import("./Components/Storage/Storage"));
 
 const Settings = lazy(() => import("./Components/Setting/ProfileSettings"));
 
+const PrivacyPolicy = lazy(() => import("./security/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./security/TermsOfService"));
+
 /* ==========================================
    APP
 ========================================== */
@@ -143,6 +146,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
         </Routes>
       </Suspense>
     </>

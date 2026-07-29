@@ -8,6 +8,7 @@ import PageLoader from "../../../common/PageLoader";
 import QueueItem from "../QueueItem/QueueItem";
 import EmptyQueue from "../EmptyQueue/EmptyQueue";
 import { getQueue } from "../../../service/download.service";
+import { saveDownload } from "../../../service/videoFunction.service.js";
 
 const QueueList = ({ filter }) => {
   const [queue, setQueue] = useState([]);
@@ -16,7 +17,6 @@ const QueueList = ({ filter }) => {
   const fetchQueue = useCallback(async () => {
     try {
       const res = await getQueue();
-
       if (res.data.success) {
         setQueue(res.data.data || []);
       }
@@ -33,8 +33,11 @@ const QueueList = ({ filter }) => {
   }, [fetchQueue]);
 
   // Live Progress Updates
+  // Live Progress Updates
   useEffect(() => {
     const handleProgress = (data) => {
+      console.log("📤 Progress Event:", data);
+
       setQueue((prev) =>
         prev.map((item) =>
           item._id === data.downloadId
@@ -49,7 +52,6 @@ const QueueList = ({ filter }) => {
         ),
       );
 
-      // Remove completed download after 1 second
       if (data.progress >= 100) {
         setTimeout(() => {
           setQueue((prev) =>
@@ -59,10 +61,43 @@ const QueueList = ({ filter }) => {
       }
     };
 
+    const handleCompleted = async ({ downloadId, storageProvider }) => {
+      console.log("🎉 download-completed received");
+      console.log("Download ID:", downloadId);
+      console.log("Storage:", storageProvider);
+
+      if (storageProvider !== "device") {
+        console.log("⏭ Skipped because storage is not device");
+        return;
+      }
+
+      try {
+        console.log("📥 Calling saveDownload()...");
+
+        await saveDownload(downloadId);
+
+        console.log("✅ Browser download started");
+      } catch (error) {
+        console.error("❌ saveDownload failed:", error);
+
+        if (error.response) {
+          console.error("Status:", error.response.status);
+          console.error("Data:", error.response.data);
+        }
+      }
+    };
+
+    // Register listeners
     socket.on("download-progress", handleProgress);
+    socket.on("download-completed", handleCompleted);
+
+    console.log("🎧 QueueList socket listeners registered");
 
     return () => {
       socket.off("download-progress", handleProgress);
+      socket.off("download-completed", handleCompleted);
+
+      console.log("🛑 QueueList socket listeners removed");
     };
   }, []);
 

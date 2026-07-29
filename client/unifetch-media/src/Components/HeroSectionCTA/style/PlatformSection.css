@@ -6,8 +6,8 @@
   width: 100%;
   padding: 0 70px;
   background: #07080b;
-  border-bottom: 1px solid #23242A;
-  border-top: 1px solid #23242A;
+  border-bottom: 1px solid #23242a;
+  border-top: 1px solid #23242a;
 }
 
 .platformSection__container {
@@ -49,14 +49,8 @@
   height: 2px;
   border-radius: 999px;
 
-  background: linear-gradient(
-    90deg,
-    #6d7cff 0%,
-    #8b5cf6 100%
-  );
+  background: linear-gradient(90deg, #6d7cff 0%, #8b5cf6 100%);
 }
-
-
 
 .platformSection__title {
   max-width: 700px;
@@ -161,10 +155,31 @@
 /* ===========================================
    Responsive
 =========================================== */
+/* ===========================================
+   Responsive
+=========================================== */
+
+@media (max-width: 1200px) {
+  .platformSection {
+    padding: 0 36px;
+  }
+
+  .platformSection__container {
+    padding: 56px 24px;
+  }
+}
 
 @media (max-width: 992px) {
   .platformSection {
-    padding: 90px 20px;
+    padding: 0 24px;
+  }
+
+  .platformSection__container {
+    padding: 52px 12px;
+  }
+
+  .platformSection__header {
+    margin-bottom: 26px;
   }
 
   .platformSection__grid {
@@ -178,16 +193,25 @@
 
 @media (max-width: 768px) {
   .platformSection {
-    padding: 80px 16px;
+    padding: 0 16px;
+  }
+
+  .platformSection__container {
+    padding: 46px 0;
   }
 
   .platformSection__header {
-    margin-bottom: 45px;
+    margin-bottom: 24px;
   }
 
-  .platformSection__label p {
-    font-size: 12px;
-    letter-spacing: 3px;
+  .platformSection__title {
+    max-width: 100%;
+    font-size: clamp(1.7rem, 6vw, 2rem);
+  }
+
+  .platformSection__label {
+    margin-bottom: 12px;
+    letter-spacing: 0.18em;
   }
 
   .platformSection__grid {
@@ -195,35 +219,99 @@
   }
 
   .platformSection__card {
-    padding: 13px 20px;
+    padding: 13px 18px;
   }
 
   .platformSection__icon {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
   .platformSection__name {
-    font-size: 15px;
+    font-size: 0.95rem;
+  }
+
+  .platformSection__moreBtn {
+    padding: 14px 24px;
   }
 }
 
 @media (max-width: 576px) {
   .platformSection {
-    padding: 70px 16px;
+    padding: 0 14px;
+  }
+
+  .platformSection__container {
+    padding: 42px 0;
+  }
+
+  .platformSection__header {
+    margin-bottom: 22px;
   }
 
   .platformSection__grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
     gap: 12px;
+
+    width: 100%;
   }
 
   .platformSection__card {
     width: 100%;
+
     justify-content: center;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 18px 12px;
+
+    text-align: center;
+
+    border-radius: 18px;
+  }
+
+  .platformSection__icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .platformSection__name {
+    font-size: 0.92rem;
   }
 
   .platformSection__moreBtn {
     width: 100%;
+
     justify-content: center;
+
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 420px) {
+  .platformSection__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .platformSection__card {
+    flex-direction: row;
+
+    justify-content: flex-start;
+
+    text-align: left;
+
+    padding: 16px 18px;
+
+    border-radius: 16px;
+  }
+
+  .platformSection__icon {
+    width: 36px;
+    height: 36px;
   }
 }

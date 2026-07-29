@@ -274,54 +274,121 @@
 /* ===========================================
    Responsive
 =========================================== */
+/* ===========================================
+   Responsive
+=========================================== */
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
+  .analyticsSection {
+    padding: 100px 24px;
+  }
+
+  .analyticsSection__header {
+    margin-bottom: 56px;
+  }
+}
+
+@media (max-width: 992px) {
+  .analyticsSection {
+    padding: 90px 20px;
+  }
+
+  .analyticsSection__header {
+    margin-bottom: 48px;
+  }
+
+  .analyticsSection__title {
+    font-size: clamp(2rem, 5vw, 2.6rem);
+  }
+
   .analyticsSection__grid {
     grid-template-columns: 1fr;
+
+    gap: 22px;
+  }
+
+  .analyticsCard {
+    padding: 28px;
   }
 
   .analyticsCard--small {
-    padding: 50px 30px;
+    padding: 42px 28px;
   }
 }
 
 @media (max-width: 768px) {
   .analyticsSection {
-    padding: 90px 18px;
+    padding: 80px 18px;
   }
 
-  .analyticsStats {
-    gap: 25px;
+  .analyticsSection__header {
+    text-align: center;
 
-    flex-wrap: wrap;
+    max-width: 100%;
+
+    margin-bottom: 40px;
   }
 
-  .analyticsStat h4 {
-    font-size: 2.2rem;
+  .analyticsSection__label {
+    justify-content: center;
   }
 
-  .analyticsChart {
-    height: 190px;
+  .analyticsSection__title {
+    font-size: clamp(1.9rem, 7vw, 2.3rem);
   }
 
-  .analyticsChart__item {
-    width: 34px;
+  .analyticsCard {
+    padding: 24px;
   }
 
   .analyticsCard h3 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+  }
+
+  .analyticsCard__desc {
+    margin-bottom: 30px;
+
+    max-width: 100%;
+  }
+
+  .analyticsStats {
+    justify-content: space-between;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 36px;
+  }
+
+  .analyticsStat {
+    flex: 1 1 45%;
+  }
+
+  .analyticsStat h4 {
+    font-size: 1.8rem;
+  }
+
+  .analyticsChart {
+    height: 180px;
+  }
+
+  .analyticsChart__item {
+    width: 30px;
+  }
+
+  .analyticsChart__bar {
+    width: 18px;
   }
 
   .analyticsDonut {
     width: 180px;
-
     height: 180px;
   }
 
   .analyticsDonut__inner {
-    width: 120px;
-
-    height: 120px;
+    width: 122px;
+    height: 122px;
   }
 
   .analyticsDonut__inner h2 {
@@ -329,13 +396,19 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .analyticsSection {
     padding: 70px 16px;
   }
 
+  .analyticsSection__header {
+    margin-bottom: 32px;
+  }
+
   .analyticsCard {
     padding: 22px;
+
+    border-radius: 18px;
   }
 
   .analyticsStats {
@@ -343,7 +416,11 @@
 
     gap: 18px;
 
-    margin-bottom: 35px;
+    margin-bottom: 30px;
+  }
+
+  .analyticsStat {
+    text-align: center;
   }
 
   .analyticsChart {
@@ -351,18 +428,68 @@
   }
 
   .analyticsChart__item {
-    width: 28px;
+    width: 26px;
   }
 
   .analyticsChart__bar {
     width: 16px;
   }
 
+  .analyticsDonut {
+    width: 165px;
+    height: 165px;
+
+    margin: 20px auto;
+  }
+
+  .analyticsDonut__inner {
+    width: 112px;
+    height: 112px;
+  }
+
+  .analyticsDonut__inner h2 {
+    font-size: 2rem;
+  }
+
   .analyticsLegend {
-    flex-direction: column;
+    justify-content: center;
 
-    align-items: center;
+    flex-wrap: wrap;
 
-    gap: 14px;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .analyticsSection {
+    padding: 60px 14px;
+  }
+
+  .analyticsCard {
+    padding: 20px;
+  }
+
+  .analyticsCard h3 {
+    font-size: 1.3rem;
+  }
+
+  .analyticsCard__desc {
+    font-size: 0.95rem;
+  }
+
+  .analyticsChart {
+    height: 135px;
+  }
+
+  .analyticsChart__item {
+    width: 22px;
+  }
+
+  .analyticsChart__bar {
+    width: 14px;
+  }
+
+  .analyticsChart__item span {
+    font-size: 0.65rem;
   }
 }

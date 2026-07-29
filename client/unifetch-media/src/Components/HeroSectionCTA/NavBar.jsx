@@ -98,17 +98,6 @@ export default function NavBar({
             {item.label}
           </button>
         ))}
-
-        <button
-          className="uf-mobile-signin"
-          onClick={() => {
-            setOpen(false);
-            navigate("/authantication-page");
-          }}
-        >
-          Sign in
-        </button>
-
         <button
           className="uf-mobile-download"
           onClick={() => {

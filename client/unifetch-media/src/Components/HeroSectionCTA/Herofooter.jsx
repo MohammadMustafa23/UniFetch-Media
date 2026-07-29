@@ -1,26 +1,23 @@
 import "./style/Herofooter.css";
-
-import { Download, GitGraph, PlaySquareIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function HeroFooter() {
   return (
     <footer className="heroFooter">
-      <p>UniFetch Media v2.4.0</p>
+      <p>UniFetch Media v1.0.0</p>
 
       <div className="ufm-footer-links">
-        <a href="#">Documentation</a>
-        <a href="#">Support</a>
-        <a href="#">Feedback</a>
-        <a href="#">Terms</a>
-        <a href="#">Privacy</a>
+        <Link to="https://github.com/MohammadMustafa23/UniFetch-Media">Documentation</Link>
+        <Link to="/feedback">Feedback</Link>
+        <Link to="/terms-of-service">Terms</Link>
+        <Link to="/privacy-policy">Privacy</Link>
       </div>
+
       <div className="heroFooter__container">
         {/* Huge Brand */}
-
         <div className="heroFooter__watermark">UniFetch</div>
 
         {/* Bottom */}
-
         <div className="heroFooter__bottom">
           <p>
             © 2026 UniFetch Media. Portfolio project — built with the MERN
@@ -28,9 +25,8 @@ export default function HeroFooter() {
           </p>
 
           <div>
-            <a href="#">Terms</a>
-
-            <a href="#">Privacy</a>
+            <Link to="/terms-of-service">Terms</Link>
+            <Link to="/privacy-policy">Privacy</Link>
           </div>
         </div>
       </div>

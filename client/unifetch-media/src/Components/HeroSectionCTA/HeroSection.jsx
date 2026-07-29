@@ -17,7 +17,6 @@ import {
 export default function HeroSection() {
   return (
     <section className="hero">
-
       {/* Background */}
 
       <div className="hero-grid"></div>
@@ -27,11 +26,9 @@ export default function HeroSection() {
       <div className="hero-gradient-bottom"></div>
 
       <div className="container hero-wrapper">
-
         {/* LEFT */}
 
         <div className="hero-left">
-
           <div className="hero-badge">
             <span className="dot"></span>
             Now with Auto Download
@@ -46,27 +43,21 @@ export default function HeroSection() {
           </h1>
 
           <p>
-            Download, organize, and manage your favorite media with a
-            faster, smarter, more intuitive experience — one platform
-            for fetching links, previewing content, and running your
-            queue on autopilot.
+            Download, organize, and manage your favorite media with a faster,
+            smarter, more intuitive experience — one platform for fetching
+            links, previewing content, and running your queue on autopilot.
           </p>
 
           <div className="hero-buttons">
-
-            <button className="primary-btn">
-              Get started free
-            </button>
+            <button className="primary-btn">Get started free</button>
 
             <button className="secondary-btn">
               See it in action
               <ArrowRight size={18} />
             </button>
-
           </div>
 
           <div className="hero-features">
-
             <div className="feature-chip">
               <Zap size={15} />
               10x faster queue
@@ -81,107 +72,74 @@ export default function HeroSection() {
               <Download size={15} />
               Resume anytime
             </div>
-
           </div>
-
         </div>
 
         {/* RIGHT */}
 
         <div className="hero-right">
-
-        
           <div className="dashboard">
-
             {/* Sidebar */}
 
             <div className="sidebar">
-
               <div className="side-logo"></div>
 
               <LayoutGrid size={18} />
               <PlusSquare size={18} />
               <BarChart3 size={18} />
               <User size={18} />
-
             </div>
 
             {/* Main */}
 
             <div className="dashboard-content">
-
               <div className="dashboard-header">
-
                 <h3>Queue</h3>
 
                 <div className="search-box">
-
                   <Search size={15} />
 
-                  <input
-                    placeholder="https://source.example/media/x8"
-                  />
-
+                  <input placeholder="https://source.example/media/x8" />
                 </div>
-
               </div>
 
               <div className="dashboard-body">
-
                 {/* Preview */}
 
                 <div className="preview-card">
-
                   <div className="preview-image">
-
                     <div className="play-btn">
                       <Play size={18} fill="white" />
                     </div>
-
                   </div>
 
-                  <h4>
-                    Studio Session — Full Take
-                  </h4>
+                  <h4>Studio Session — Full Take</h4>
 
-                  <span>
-                    by CreatorStudio · 04:12
-                  </span>
+                  <span>by CreatorStudio · 04:12</span>
 
                   <div className="tags">
-
                     <span>1080p</span>
 
                     <span>720p</span>
 
                     <span>MP3</span>
-
                   </div>
 
-                  <button className="download-btn">
-                    Download
-                  </button>
-
+                  <button className="download-btn">Download</button>
                 </div>
 
                 {/* Active Downloads */}
 
                 <div className="download-panel">
-
                   <h5>ACTIVE DOWNLOADS</h5>
 
                   <div className="download-item">
-
                     <div>
-
                       <Video size={16} />
-
                       Launch_Trailer_Final.mp4
-
                     </div>
 
                     <small>64%</small>
-
                   </div>
 
                   <div className="progress">
@@ -189,27 +147,19 @@ export default function HeroSection() {
                   </div>
 
                   <div className="download-item">
-
                     <div>
-
                       <Music2 size={16} />
-
                       Podcast_Ep42.mp3
-
                     </div>
 
                     <small>31%</small>
-
                   </div>
 
                   <div className="progress">
-                    <span
-                      style={{ width: "31%" }}
-                    ></span>
+                    <span style={{ width: "31%" }}></span>
                   </div>
 
                   <div className="stats">
-
                     <div>
                       <h3>12</h3>
                       <span>Queued</span>
@@ -224,20 +174,13 @@ export default function HeroSection() {
                       <h3>0</h3>
                       <span>Failed</span>
                     </div>
-
                   </div>
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
         </div>
-
       </div>
-
     </section>
   );
 }

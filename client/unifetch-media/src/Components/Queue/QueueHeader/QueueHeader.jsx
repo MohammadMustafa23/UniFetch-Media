@@ -1,7 +1,10 @@
 import "./QueueHeader.css";
 import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const QueueHeader = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="queue-header">
       <div className="queue-header-left">
@@ -13,7 +16,7 @@ const QueueHeader = () => {
         </p>
       </div>
 
-      <button className="queue-add-btn">
+      <button className="queue-add-btn" onClick={() => navigate("/dashboard")}>
         <Plus size={18} />
         Add Link
       </button>

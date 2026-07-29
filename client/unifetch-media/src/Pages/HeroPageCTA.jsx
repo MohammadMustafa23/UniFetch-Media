@@ -87,7 +87,7 @@ export default function HeroPageCTA() {
         </section>
 
         <section className="cta-section">
-          <CTASection />
+          <CTASection featuresRef={featuresRef} />
         </section>
 
       </main>

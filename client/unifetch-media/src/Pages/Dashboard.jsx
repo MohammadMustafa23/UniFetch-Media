@@ -28,10 +28,9 @@ export default function Dashboard() {
 
   const handleDownload = async ({ quality, type }) => {
     try {
-      console.log(videoInfo.id);
-
+      
       const response = await startDownload({
-        videoId: videoInfo.id,
+        videoId: videoInfo.id ? videoInfo.id : videoInfo.videoId,
         title: videoInfo.title,
         thumbnail: videoInfo.thumbnail,
         platform: videoInfo.platform,
@@ -40,11 +39,9 @@ export default function Dashboard() {
         quality,
         format: type === "video" ? "mp4" : "mp3",
       });
-
       toast.success(response.data.message);
     } catch (error) {
       console.error(error);
-
       toast.error(error.response?.data?.message || "Download failed");
     }
   };

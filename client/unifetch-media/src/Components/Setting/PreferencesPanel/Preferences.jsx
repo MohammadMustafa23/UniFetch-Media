@@ -71,7 +71,7 @@ export default function Preferences({
             }
           >
             <option value="device">Device</option>
-            <option value="cloudinary">Cloud Storage</option>
+            <option value="platform">Platform</option>
           </select>
 
           <ChevronDown size={18} />

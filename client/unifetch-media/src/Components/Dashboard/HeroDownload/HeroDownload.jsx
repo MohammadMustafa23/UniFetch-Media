@@ -32,9 +32,8 @@ export default function HeroDownload({
       setLoading(true);
 
       // Auto Download Enabled
-      if (preference?.download?.autoDownload) {
+      if (preference?.autoDownload) {
         const { data } = await autoDownload({ url: mediaUrl });
-
         if (data.success) {
           toast.success(data.message);
           setUrl("");
@@ -45,6 +44,8 @@ export default function HeroDownload({
       // Manual Preview
       const { data } = await getDownloadInfo(mediaUrl);
 
+      console.log(data.data);
+      
       if (data.success) {
         setVideoInfo(data.data);
       }
@@ -110,7 +111,7 @@ export default function HeroDownload({
 
               // Auto start download only if enabled
               if (
-                preference?.download?.autoDownload &&
+                preference?.autoDownload &&
                 isSupportedUrl(pastedUrl)
               ) {
                 setTimeout(() => {

@@ -31,14 +31,18 @@ export default function ProtectedRoute({ children }) {
 
     const handleWelcome = (data) => {
       console.log(data.message);
-
-      socket.emit("join-room", "test-room");
     };
 
     socket.on("welcome", handleWelcome);
 
+    // 👇 Add this here
+    socket.on("download-completed", (data) => {
+      console.log("✅ ProtectedRoute received:", data);
+    });
+
     return () => {
       socket.off("welcome", handleWelcome);
+      socket.off("download-completed");
     };
   }, []);
 
