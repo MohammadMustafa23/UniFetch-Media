@@ -1,27 +1,41 @@
 import "./Loader.css";
 
 export default function Loader({
-  text = "Preparing Workspace...",
+  text = "Preparing your workspace...",
   fullScreen = true,
 }) {
   return (
     <div className={fullScreen ? "ufm-loader-overlay" : "ufm-loader"}>
-      <div className="ufm-loader-container">
-        {/* Orbit Loader */}
-        <div className="ufm-loader-orbit">
-          <span className="ufm-dot dot-1"></span>
-          <span className="ufm-dot dot-2"></span>
-          <span className="ufm-dot dot-3"></span>
-          <span className="ufm-dot dot-4"></span>
+      <div className="ufm-loader-card">
+        {/* Animated Logo */}
+        <div className="ufm-logo">
+          <div className="ufm-ring ring-1"></div>
+          <div className="ufm-ring ring-2"></div>
 
-          <div className="ufm-loader-core">
+          <div className="ufm-center">
             <span>UF</span>
           </div>
         </div>
 
-        <h3 className="ufm-loader-title">UniFetch Media</h3>
+        {/* Brand */}
+        <h2 className="ufm-brand">
+          UniFetch <span>Media</span>
+        </h2>
 
-        <p className="ufm-loader-text">{text}</p>
+        {/* Status */}
+        <p className="ufm-status">{text}</p>
+
+        {/* Progress */}
+        <div className="ufm-progress">
+          <div className="ufm-progress-fill"></div>
+        </div>
+
+        {/* Loading Dots */}
+        <div className="ufm-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
     </div>
   );

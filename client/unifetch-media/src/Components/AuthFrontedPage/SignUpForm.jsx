@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./style/SignForm.css";
 import SocialLogin from "./SocialLogin";
 import { registerUser } from "../../service/auth.service";
+import Loader from '../../common/Loader'
 
 export default function SignUpForm({ setScreen, setVerifyType,setOtpEmail }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -81,6 +82,7 @@ export default function SignUpForm({ setScreen, setVerifyType,setOtpEmail }) {
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -104,6 +106,12 @@ export default function SignUpForm({ setScreen, setVerifyType,setOtpEmail }) {
       setLoading(false);
     }
   };
+
+  if(loading) {
+    return (
+      <Loader text="Creating Account For You"/>
+    )
+  }
 
   return (
     <form className="signup-form" onSubmit={handleSubmit} noValidate>

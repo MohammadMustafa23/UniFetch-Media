@@ -16,64 +16,119 @@ import {
   deleteDownload,
 } from "../../../service/download.service.js";
 
+import { useState } from "react";
+
 const QueueActions = ({ item }) => {
+  const [loadingAction, setLoadingAction] = useState(null);
+
   const handlePause = async () => {
     try {
+      setLoadingAction("pause");
       await pauseDownload(item._id);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoadingAction(null);
     }
   };
 
   const handleResume = async () => {
     try {
+      setLoadingAction("resume");
       await resumeDownload(item._id);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoadingAction(null);
     }
   };
 
   const handleRetry = async () => {
     try {
+      setLoadingAction("retry");
       await retryDownload(item._id);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoadingAction(null);
     }
   };
 
   const handleDelete = async () => {
     try {
+      setLoadingAction("delete");
       await deleteDownload(item._id);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoadingAction(null);
     }
   };
+
+  const loadingMessage = {
+    pause: "Pausing download...",
+    resume: "Resuming download...",
+    retry: "Retrying download...",
+    delete: "Deleting download...",
+  };
+
   return (
-    <div className="queue-actions">
-     <button title="Pause" onClick={handlePause}>
-        <Pause size={16} />
-      </button>
+    <>
+      {loadingAction && (
+        <div className="queue-loader-overlay">
+          <div className="queue-loader-card">
+            <div className="queue-loader-spinner"></div>
 
-     <button title="Resume" onClick={handleResume}>
-        <Play size={16} />
-      </button>
+            <h3>Processing...</h3>
 
-     <button title="Retry" onClick={handleRetry}>
-        <RotateCcw size={16} />
-      </button>
+            <p>{loadingMessage[loadingAction]}</p>
+          </div>
+        </div>
+      )}
 
-      <button title="Move Up">
-        <ArrowUp size={16} />
-      </button>
+      <div className="queue-actions">
+        <button
+          title="Pause"
+          onClick={handlePause}
+          disabled={loadingAction !== null}
+        >
+          <Pause size={16} />
+        </button>
 
-      <button title="Move Down">
-        <ArrowDown size={16} />
-      </button>
+        <button
+          title="Resume"
+          onClick={handleResume}
+          disabled={loadingAction !== null}
+        >
+          <Play size={16} />
+        </button>
 
-     <button className="danger" title="Delete"onClick={handleDelete}>
-        <Trash2 size={16} />
-      </button>
-    </div>
+        <button
+          title="Retry"
+          onClick={handleRetry}
+          disabled={loadingAction !== null}
+        >
+          <RotateCcw size={16} />
+        </button>
+
+        <button title="Move Up" disabled={loadingAction !== null}>
+          <ArrowUp size={16} />
+        </button>
+
+        <button title="Move Down" disabled={loadingAction !== null}>
+          <ArrowDown size={16} />
+        </button>
+
+        <button
+          className="danger"
+          title="Delete"
+          onClick={handleDelete}
+          disabled={loadingAction !== null}
+        >
+          <Trash2 size={16} />
+        </button>
+      </div>
+    </>
   );
 };
 

@@ -28,7 +28,6 @@ export default function Dashboard() {
 
   const handleDownload = async ({ quality, type }) => {
     try {
-      
       const response = await startDownload({
         videoId: videoInfo.id ? videoInfo.id : videoInfo.videoId,
         title: videoInfo.title,
@@ -79,60 +78,66 @@ export default function Dashboard() {
     loadDashboard();
   }, []);
 
-  if (dashboardLoading) {
-    return (
-      <PageLoader
-        title="Loading Dashboard..."
-        subtitle="Fetching your latest downloads..."
-      />
-    );
-  }
-
   return (
     <div
       className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
     >
+      {/* Dashboard Loader */}
+      {dashboardLoading && (
+        <PageLoader
+          title="Loading Dashboard..."
+          message="Fetching your latest downloads..."
+        />
+      )}
+
       <Sidebar isCollapsed={collapsed} setCollapsed={setCollapsed} />
 
       <main className="ufm-dashboard-main">
         <Topbar />
 
-        <div className="ufm-dashboard-grid">
-          <div className="ufm-dashboard-left">
-            <HeroDownload
-              setVideoInfo={setVideoInfo}
-              setLoading={setLoading}
-              url={url}
-              setUrl={setUrl}
-              preference={preference}
-            />
+        {!dashboardLoading && (
+          <>
+            <div className="ufm-dashboard-grid">
+              <div className="ufm-dashboard-left">
+                <HeroDownload
+                  setVideoInfo={setVideoInfo}
+                  setLoading={setLoading}
+                  url={url}
+                  setUrl={setUrl}
+                  preference={preference}
+                />
 
-            <Stats stats={dashboard.stats} />
-          </div>
+                <Stats stats={dashboard.stats} />
+              </div>
 
-          <aside className="ufm-dashboard-right">
-            <DashboardAside
-              today={dashboard.today}
-              latestUpdates={dashboard.latestUpdates}
-            />
-          </aside>
-        </div>
+              <aside className="ufm-dashboard-right">
+                <DashboardAside
+                  today={dashboard.today}
+                  latestUpdates={dashboard.latestUpdates}
+                />
+              </aside>
+            </div>
 
-        <Queue queue={dashboard.liveQueue} />
+            <Queue queue={dashboard.liveQueue} />
 
-        <RecentDownloads downloads={dashboard.recentDownloads} />
-        <Footer />
+            <RecentDownloads downloads={dashboard.recentDownloads} />
+
+            <Footer />
+          </>
+        )}
       </main>
 
+      {/* Media Fetch Loader */}
       {loading && (
         <div className="ufm-preview-overlay">
           <PageLoader
             title="Fetching Media..."
-            subtitle="Analyzing URL and preparing download options..."
+            message="Analyzing URL and preparing download options..."
           />
         </div>
       )}
 
+      {/* Preview */}
       {!loading && videoInfo && (
         <div className="ufm-preview-overlay">
           <div className="ufm-dp-overlay">

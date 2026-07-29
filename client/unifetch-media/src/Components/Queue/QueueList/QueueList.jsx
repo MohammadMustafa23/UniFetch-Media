@@ -62,10 +62,6 @@ const QueueList = ({ filter }) => {
     };
 
     const handleCompleted = async ({ downloadId, storageProvider }) => {
-      console.log("🎉 download-completed received");
-      console.log("Download ID:", downloadId);
-      console.log("Storage:", storageProvider);
-
       if (storageProvider !== "device") {
         console.log("⏭ Skipped because storage is not device");
         return;
@@ -90,9 +86,7 @@ const QueueList = ({ filter }) => {
     // Register listeners
     socket.on("download-progress", handleProgress);
     socket.on("download-completed", handleCompleted);
-
-    console.log("🎧 QueueList socket listeners registered");
-
+    
     return () => {
       socket.off("download-progress", handleProgress);
       socket.off("download-completed", handleCompleted);

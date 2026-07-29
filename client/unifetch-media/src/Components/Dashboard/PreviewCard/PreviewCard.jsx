@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "./PreviewCard.css";
+
 import {
   Play,
   Music4,
@@ -7,21 +8,54 @@ import {
   User,
   Eye,
   Calendar,
-  HardDrive,
   Download,
   X,
   Check,
-  FolderOpen,
+  BadgeCheck,
+  MessageCircle,
+  ThumbsUp,
+  HardDrive,
+  Monitor,
+  Cpu,
 } from "lucide-react";
+
+function formatBytes(bytes) {
+  console.log(bytes);
+  
+  if (!bytes) return "Unknown";
+  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
+}
 
 export default function PreviewCard({ videoInfo, onClose, onDownload }) {
   if (!videoInfo) return null;
 
+  const [downloadType, setDownloadType] = useState("video");
+
+  const availableFormats = useMemo(() => {
+    return downloadType === "video"
+      ? videoInfo.downloads?.video || []
+      : videoInfo.downloads?.audio || [];
+  }, [downloadType, videoInfo]);
+
   const [selectedQuality, setSelectedQuality] = useState(
-    videoInfo.qualities?.[0],
+    availableFormats[0] || null,
   );
 
-  const [downloadType, setDownloadType] = useState("video");
+  const handleTypeChange = (type) => {
+    setDownloadType(type);
+
+    const formats =
+      type === "video"
+        ? videoInfo.downloads?.video || []
+        : videoInfo.downloads?.audio || [];
+
+    setSelectedQuality(formats[0] || null);
+  };
+
+  const estimatedSize =
+    selectedQuality?.filesize || selectedQuality?.filesizeApprox;
 
   return (
     <section className="ufm-dp-card">
@@ -30,7 +64,7 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
       <div className="ufm-dp-header">
         <div>
           <h2>Media Preview</h2>
-          <p>Review your download settings before starting.</p>
+          <p>Review your download settings before downloading.</p>
         </div>
 
         <button className="ufm-dp-close" onClick={onClose}>
@@ -56,22 +90,29 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
             <span className="ufm-type-badge">Shorts</span>
           )}
 
-          {videoInfo.type === "live" && (
+          {videoInfo.media?.live && (
             <span className="ufm-type-badge live">LIVE</span>
           )}
         </div>
 
-        {/* Content */}
+        {/* Right Content */}
 
         <div className="ufm-dp-content">
           <h3>{videoInfo.title}</h3>
+
+          
 
           {/* Meta */}
 
           <div className="ufm-dp-meta">
             <span>
               <User size={16} />
+
               {videoInfo.uploader?.name}
+
+              {videoInfo.uploader?.verified && (
+                <BadgeCheck size={15} color="#3ea6ff" />
+              )}
             </span>
 
             <span>
@@ -80,24 +121,41 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
             </span>
 
             <span>
-              <Eye size={16} />
-              {videoInfo.statistics?.views?.toLocaleString()}
+              <Calendar size={16} />
+              {videoInfo.uploadDate}
             </span>
-
-            {videoInfo.uploadDate && (
-              <span>
-                <Calendar size={16} />
-                {videoInfo.uploadDate}
-              </span>
-            )}
           </div>
 
-          {/* Download Info */}
+          {/* Statistics */}
+
+          <div className="ufm-dp-meta">
+            <span>
+              <Eye size={16} />
+              {videoInfo.statistics?.views?.text}
+            </span>
+
+            <span>
+              <ThumbsUp size={16} />
+              {videoInfo.statistics?.likes?.text}
+            </span>
+
+            <span>
+              <MessageCircle size={16} />
+              {videoInfo.statistics?.comments?.text}
+            </span>
+          </div>
+
+          {/* Info Grid */}
 
           <div className="ufm-dp-info-grid">
             <div className="ufm-dp-info">
               <span>Estimated Size</span>
-              <strong>{videoInfo.fileSize || "145 MB"}</strong>
+              <strong>{formatBytes(estimatedSize)}</strong>
+            </div>
+
+            <div className="ufm-dp-info">
+              <span>Platform</span>
+              <strong>{videoInfo.platform}</strong>
             </div>
 
             <div className="ufm-dp-info">
@@ -105,34 +163,20 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
               <strong>{downloadType === "video" ? "MP4" : "MP3"}</strong>
             </div>
 
-            <div className="ufm-dp-info">
-              <span>Platform</span>
-              <strong>{videoInfo.platform || "YouTube"}</strong>
-            </div>
+            {selectedQuality?.vcodec && selectedQuality.vcodec !== "none" && (
+              <div className="ufm-dp-info">
+                <span>Codec</span>
+                <strong>{selectedQuality.vcodec}</strong>
+              </div>
+            )}
+
+            {selectedQuality?.abr && (
+              <div className="ufm-dp-info">
+                <span>Bitrate</span>
+                <strong>{selectedQuality.abr} kbps</strong>
+              </div>
+            )}
           </div>
-
-          {/* Quality */}
-
-          <div className="ufm-dp-group">
-            <label>Video Quality</label>
-
-            <div className="ufm-dp-options">
-              {videoInfo.qualities?.map((quality) => (
-                <button
-                  key={quality}
-                  onClick={() => setSelectedQuality(quality)}
-                  className={`ufm-dp-option ${
-                    selectedQuality === quality ? "ufm-dp-option-active" : ""
-                  }`}
-                >
-                  {selectedQuality === quality && <Check size={15} />}
-
-                  {quality}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Download Type */}
 
           <div className="ufm-dp-group">
@@ -140,7 +184,7 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
 
             <div className="ufm-dp-download-types">
               <button
-                onClick={() => setDownloadType("video")}
+                onClick={() => handleTypeChange("video")}
                 className={`ufm-dp-type ${
                   downloadType === "video" ? "active" : ""
                 }`}
@@ -149,12 +193,12 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
 
                 <div>
                   <h4>Video</h4>
-                  <p>MP4 • High Quality</p>
+                  <p>MP4 • {videoInfo.downloads?.video?.length || 0} Formats</p>
                 </div>
               </button>
 
               <button
-                onClick={() => setDownloadType("audio")}
+                onClick={() => handleTypeChange("audio")}
                 className={`ufm-dp-type ${
                   downloadType === "audio" ? "active" : ""
                 }`}
@@ -163,25 +207,85 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
 
                 <div>
                   <h4>Audio</h4>
-                  <p>MP3 • 320kbps</p>
+                  <p>MP3 • {videoInfo.downloads?.audio?.length || 0} Formats</p>
                 </div>
               </button>
             </div>
           </div>
 
-          {/* Folder */}
+          {/* Quality Selection */}
 
-          <div className="ufm-dp-folder">
-            <div>
-              <FolderOpen size={18} />
-              <span>Downloads Folder</span>
+          <div className="ufm-dp-group">
+            <label>
+              {downloadType === "video" ? "Video Quality" : "Audio Quality"}
+            </label>
+
+            <div className="ufm-dp-options">
+              {availableFormats.map((format) => (
+                <button
+                  key={format.formatId}
+                  onClick={() => setSelectedQuality(format)}
+                  className={`ufm-dp-option ${
+                    selectedQuality?.formatId === format.formatId
+                      ? "ufm-dp-option-active"
+                      : ""
+                  }`}
+                >
+                  {selectedQuality?.formatId === format.formatId && (
+                    <Check size={15} />
+                  )}
+
+                  {downloadType === "video"
+                    ? format.quality ||
+                      format.resolution ||
+                      format.formatNote ||
+                      "Unknown"
+                    : `${format.abr || 128} kbps`}
+                </button>
+              ))}
             </div>
-
-            <button>
-              <HardDrive size={16} />
-              Change
-            </button>
           </div>
+
+          {/* Selected Format Details */}
+
+          {selectedQuality && (
+            <div className="ufm-dp-info-grid">
+              {selectedQuality.ext && (
+                <div className="ufm-dp-info">
+                  <span>Extension</span>
+                  <strong>{selectedQuality.ext.toUpperCase()}</strong>
+                </div>
+              )}
+
+              {selectedQuality.filesize && (
+                <div className="ufm-dp-info">
+                  <span>File Size</span>
+                  <strong>{formatBytes(selectedQuality.filesize)}</strong>
+                </div>
+              )}
+
+              {selectedQuality.tbr && (
+                <div className="ufm-dp-info">
+                  <span>Total Bitrate</span>
+                  <strong>{selectedQuality.tbr} kbps</strong>
+                </div>
+              )}
+
+              {selectedQuality.vcodec && selectedQuality.vcodec !== "none" && (
+                <div className="ufm-dp-info">
+                  <span>Video Codec</span>
+                  <strong>{selectedQuality.vcodec}</strong>
+                </div>
+              )}
+
+              {selectedQuality.acodec && selectedQuality.acodec !== "none" && (
+                <div className="ufm-dp-info">
+                  <span>Audio Codec</span>
+                  <strong>{selectedQuality.acodec}</strong>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Footer */}
 
@@ -194,8 +298,30 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
               className="ufm-dp-download"
               onClick={() =>
                 onDownload({
-                  quality: selectedQuality,
                   type: downloadType,
+
+                  formatId: selectedQuality?.formatId,
+
+                  quality:
+                    selectedQuality?.quality || selectedQuality?.resolution,
+
+                  resolution: selectedQuality?.resolution,
+
+                  fps: selectedQuality?.fps,
+
+                  ext: selectedQuality?.ext,
+
+                  filesize:
+                    selectedQuality?.filesize ||
+                    selectedQuality?.filesizeApprox,
+
+                  abr: selectedQuality?.abr,
+
+                  tbr: selectedQuality?.tbr,
+
+                  vcodec: selectedQuality?.vcodec,
+
+                  acodec: selectedQuality?.acodec,
                 })
               }
             >
@@ -203,8 +329,13 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
 
               <div>
                 <span>Download Now</span>
+
                 <small>
-                  {selectedQuality} • {downloadType === "video" ? "MP4" : "MP3"}
+                  {downloadType === "video"
+                    ? selectedQuality?.quality || selectedQuality?.resolution
+                    : `${selectedQuality?.abr || 128} kbps`}
+                  {" • "}
+                  {selectedQuality?.ext?.toUpperCase()}
                 </small>
               </div>
             </button>

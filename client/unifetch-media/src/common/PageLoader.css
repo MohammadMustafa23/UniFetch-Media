@@ -1,124 +1,216 @@
-/*==========================================
-  OVERLAY
-==========================================*/
+/* ===========================
+   Overlay
+=========================== */
 
-.uf-loader-overlay {
+.uf-page-loader {
   position: fixed;
   inset: 0;
-  z-index: 99999;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: rgba(6, 9, 17, 0.82);
-  backdrop-filter: blur(10px);
+  z-index: 9999;
 
-  animation: ufFadeIn 0.25s ease;
+  /* Don't make background black */
+  background: rgba(8, 10, 20, 0.18);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  animation: fade 0.25s ease;
 }
 
-/*==========================================
-  CARD
-==========================================*/
+/* ===========================
+   Card
+=========================== */
 
 .uf-loader-card {
-  width: min(92vw, 360px);
+  width: 320px;
 
-  padding: 38px 30px;
+  padding: 32px;
 
   border-radius: 24px;
 
-  background: rgba(22, 27, 40, 0.95);
+  background: rgba(20, 24, 36, 0.88);
 
   border: 1px solid rgba(255, 255, 255, 0.08);
 
+  backdrop-filter: blur(30px);
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+
   text-align: center;
 
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  animation: pop 0.35s ease;
 }
 
-/*==========================================
-  TEXT
-==========================================*/
+/* ===========================
+   Logo
+=========================== */
 
-.uf-loader-card h3 {
-  margin-top: 28px;
-  font-size: 1.3rem;
-  color: #fff;
-}
-
-.uf-loader-card p {
-  margin-top: 10px;
-  color: #a7afbe;
-  line-height: 1.6;
-}
-
-/*==========================================
-  SPINNER
-==========================================*/
-
-.uf-loader-spinner {
-  width: 74px;
-  height: 74px;
-
-  margin: auto;
-
+.uf-loader-logo {
   position: relative;
+
+  width: 90px;
+  height: 90px;
+
+  margin: auto auto 24px;
 }
 
-.uf-loader-spinner span {
+.uf-ring {
   position: absolute;
-
-  width: 100%;
-  height: 100%;
+  inset: 0;
 
   border-radius: 50%;
 
-  border: 4px solid transparent;
-  border-top-color: #6366f1;
-
-  animation: ufRotate 1.2s linear infinite;
+  border: 2px solid transparent;
 }
 
-.uf-loader-spinner span:nth-child(2) {
-  width: 58px;
-  height: 58px;
+.ring-one {
+  border-top-color: #3b82f6;
+  border-right-color: #3b82f6;
 
-  top: 8px;
-  left: 8px;
-
-  border-top-color: #22c55e;
-
-  animation-duration: 0.9s;
+  animation: rotate 2s linear infinite;
 }
 
-.uf-loader-spinner span:nth-child(3) {
-  width: 42px;
-  height: 42px;
+.ring-two {
+  inset: 10px;
 
-  top: 16px;
-  left: 16px;
+  border-left-color: #8b5cf6;
+  border-bottom-color: #8b5cf6;
 
-  border-top-color: #38bdf8;
-
-  animation-duration: 0.7s;
+  animation: rotateReverse 2.8s linear infinite;
 }
 
-/*==========================================
-  ANIMATION
-==========================================*/
+.uf-center {
+  position: absolute;
 
-@keyframes ufRotate {
+  inset: 20px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 700;
+
+  color: white;
+
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+
+  animation: pulse 2s infinite;
+}
+
+/* ===========================
+   Text
+=========================== */
+
+.uf-loader-card h3 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 22px;
+}
+
+.uf-loader-card p {
+  margin-top: 12px;
+
+  color: #94a3b8;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+}
+
+/* ===========================
+   Progress
+=========================== */
+
+.uf-progress {
+  margin-top: 24px;
+
+  height: 7px;
+
+  border-radius: 999px;
+
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.uf-progress-bar {
+  width: 35%;
+  height: 100%;
+
+  border-radius: 999px;
+
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+
+  animation: loading 1.5s infinite;
+}
+
+/* ===========================
+   Animations
+=========================== */
+
+@keyframes rotate {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes ufFadeIn {
+@keyframes rotateReverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes loading {
+  from {
+    transform: translateX(-150%);
+  }
+
+  to {
+    transform: translateX(330%);
+  }
+}
+
+@keyframes fade {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+
+    transform: translateY(12px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
   }
 }
