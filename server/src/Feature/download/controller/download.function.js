@@ -1,23 +1,26 @@
-import downloadQueue from "../queue/download.queue.js"; // adjust path if needed
-import Download from '../models/download.model.js'
+import downloadQueue from "../queue/download.queue.js";
+import Download from "../models/download.model.js";
 
+// ==============================
+// Retry Download
+// ==============================
 export const retryDownload = async (req, res) => {
   try {
     const { id } = req.params;
+
     const download = await Download.findById(id);
 
     if (!download) {
       return res.status(404).json({
         success: false,
-        message: "Download not found",
+        message: "Download not found.",
       });
     }
 
-    // Don't allow retry if already downloading
     if (["queued", "downloading"].includes(download.status)) {
       return res.status(400).json({
         success: false,
-        message: "Download is already in queue.",
+        message: "Download is already in progress.",
       });
     }
 
@@ -30,36 +33,50 @@ export const retryDownload = async (req, res) => {
 
     await download.save();
 
-    // Add back to queue
     downloadQueue.add(download._id);
 
     return res.status(200).json({
       success: true,
-      message: "Download queued successfully.",
+      message: "Download added to queue.",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Retry Error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to retry download.",
+      message: error.message || "Failed to retry download.",
     });
   }
 };
 
+// ==============================
+// Pause Download
+// ==============================
 export const pauseDownload = async (req, res) => {
   try {
     const { id } = req.params;
-     console.log(id);
-    
+
+    const download = await Download.findById(id);
+
+    if (!download) {
+      return res.status(404).json({
+        success: false,
+        message: "Download not found.",
+      });
+    }
+
+    console.log("Pause Request:", id);
+    console.log("Current Status:", download.status);
 
     await downloadQueue.pause(id);
 
     return res.status(200).json({
       success: true,
-      message: "Download paused.",
+      message: "Download paused successfully.",
     });
   } catch (error) {
+    console.error("Pause Error:", error);
+
     return res.status(400).json({
       success: false,
       message: error.message,
@@ -67,19 +84,34 @@ export const pauseDownload = async (req, res) => {
   }
 };
 
+// ==============================
+// Resume Download
+// ==============================
 export const resumeDownload = async (req, res) => {
   try {
     const { id } = req.params;
-     console.log(id);
-    
+
+    const download = await Download.findById(id);
+
+    if (!download) {
+      return res.status(404).json({
+        success: false,
+        message: "Download not found.",
+      });
+    }
+
+    console.log("Resume Request:", id);
+    console.log("Current Status:", download.status);
 
     await downloadQueue.resume(id);
 
     return res.status(200).json({
       success: true,
-      message: "Download resumed.",
+      message: "Download resumed successfully.",
     });
   } catch (error) {
+    console.error("Resume Error:", error);
+
     return res.status(400).json({
       success: false,
       message: error.message,
@@ -87,9 +119,22 @@ export const resumeDownload = async (req, res) => {
   }
 };
 
+// ==============================
+// Cancel/Delete Download
+// ==============================
 export const cancelDownload = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const download = await Download.findById(id);
+
+    if (!download) {
+      return res.status(404).json({
+        success: false,
+        message: "Download not found.",
+      });
+    }
+
     await downloadQueue.cancel(id);
 
     return res.status(200).json({
@@ -97,6 +142,8 @@ export const cancelDownload = async (req, res) => {
       message: "Download deleted successfully.",
     });
   } catch (error) {
+    console.error("Delete Error:", error);
+
     return res.status(400).json({
       success: false,
       message: error.message,

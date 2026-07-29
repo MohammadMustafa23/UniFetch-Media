@@ -98,8 +98,9 @@ export function downloadVideo({
     );
   }
 
-  // ✅ Add here
   args.push(
+    "--continue",
+
     "--progress-template",
     "%(progress._percent_str)s|%(progress.speed)s|%(progress.eta)s",
   );

@@ -20,7 +20,7 @@ class DownloadQueue {
   add(downloadId) {
     this.queue.push(downloadId);
     console.log(downloadId);
-    
+
     console.log(`📥 Added to Queue (${this.queue.length})`);
     this.process();
   }
@@ -32,43 +32,51 @@ class DownloadQueue {
     ) {
       throw new Error("This download is not currently running.");
     }
-    this.currentProcess.kill("SIGSTOP");
+
+    this.currentProcess.kill("SIGTERM");
+
+    this.currentProcess = null;
+    this.currentDownloadId = null;
+    this.isDownloading = false;
+
     await Download.findByIdAndUpdate(downloadId, {
       status: "paused",
     });
+
     console.log("⏸ Download Paused");
   }
 
   async resume(downloadId) {
-    if (
-      !this.currentProcess ||
-      this.currentDownloadId !== downloadId.toString()
-    ) {
-      throw new Error("This download is not paused.");
-    }
-
-    this.currentProcess.kill("SIGCONT");
-
-    await Download.findByIdAndUpdate(downloadId, {
-      status: "downloading",
-    });
-
-    console.log("▶️ Download Resumed");
-  }
-
-  async cancel(downloadId) {
-    // Remove from queue if waiting
-    this.queue = this.queue.filter(
-      (id) => id.toString() !== downloadId.toString(),
-    );
-
-    await Download.findByIdAndDelete(downloadId);
+    const download = await Download.findById(downloadId);
 
     if (!download) {
       throw new Error("Download not found.");
     }
 
-    // If this download is currently running
+    if (download.status !== "paused") {
+      throw new Error("Download is not paused.");
+    }
+
+    download.status = "queued";
+    await download.save();
+
+    this.queue.unshift(downloadId);
+
+    this.process();
+
+    console.log("▶️ Download Resumed");
+  }
+  async cancel(downloadId) {
+    this.queue = this.queue.filter(
+      (id) => id.toString() !== downloadId.toString(),
+    );
+
+    const download = await Download.findById(downloadId);
+
+    if (!download) {
+      throw new Error("Download not found.");
+    }
+
     if (
       this.currentProcess &&
       this.currentDownloadId === downloadId.toString()
@@ -80,17 +88,15 @@ class DownloadQueue {
       this.isDownloading = false;
     }
 
-    // Delete downloaded/partial file if it exists
     if (download.filePath && fs.existsSync(download.filePath)) {
       fs.unlinkSync(download.filePath);
     }
 
     await Download.findByIdAndDelete(downloadId);
 
-    // Continue with next queued download
     this.process();
 
-    console.log("🗑 Download deleted");
+    console.log("🗑 Download Deleted");
   }
   async updateProgress(downloadId, line) {
     try {
@@ -155,7 +161,7 @@ class DownloadQueue {
 
     try {
       // Get Latest Download Data
-      const download = await Download.findById(dow);
+      const download = await Download.findById(downloadId);
 
       console.log("Queue Storage:", download.storageProvider);
 
@@ -263,7 +269,7 @@ class DownloadQueue {
     } catch (error) {
       console.error("Queue Error:", error);
 
-      await Download.findByIdAndUpdate(downloadId, {
+      const download = await Download.findByIdAndUpdate(downloadId, {
         status: "failed",
         error: error.message,
       });
