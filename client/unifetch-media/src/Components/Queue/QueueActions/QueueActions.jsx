@@ -21,50 +21,6 @@ import { useState } from "react";
 const QueueActions = ({ item }) => {
   const [loadingAction, setLoadingAction] = useState(null);
 
-  const handlePause = async () => {
-    try {
-      setLoadingAction("pause");
-      await pauseDownload(item._id);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
-  const handleResume = async () => {
-    try {
-      setLoadingAction("resume");
-      await resumeDownload(item._id);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
-  const handleRetry = async () => {
-    try {
-      setLoadingAction("retry");
-      await retryDownload(item._id);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      setLoadingAction("delete");
-      await deleteDownload(item._id);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
   const loadingMessage = {
     pause: "Pausing download...",
     resume: "Resuming download...",
@@ -72,12 +28,28 @@ const QueueActions = ({ item }) => {
     delete: "Deleting download...",
   };
 
+  const handleAction = async (action, apiCall) => {
+    try {
+      setLoadingAction(action);
+
+      await apiCall(item._id);
+
+      // No fetchQueue()
+      // No window.location.reload()
+      // Socket.IO will update the UI automatically.
+    } catch (error) {
+      console.error(`${action} failed:`, error);
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
   return (
     <>
       {loadingAction && (
         <div className="queue-loader-overlay">
           <div className="queue-loader-card">
-            <div className="queue-loader-spinner"></div>
+            <div className="queue-loader-spinner" />
 
             <h3>Processing...</h3>
 
@@ -89,24 +61,24 @@ const QueueActions = ({ item }) => {
       <div className="queue-actions">
         <button
           title="Pause"
-          onClick={handlePause}
           disabled={loadingAction !== null}
+          onClick={() => handleAction("pause", pauseDownload)}
         >
           <Pause size={16} />
         </button>
 
         <button
           title="Resume"
-          onClick={handleResume}
           disabled={loadingAction !== null}
+          onClick={() => handleAction("resume", resumeDownload)}
         >
           <Play size={16} />
         </button>
 
         <button
           title="Retry"
-          onClick={handleRetry}
           disabled={loadingAction !== null}
+          onClick={() => handleAction("retry", retryDownload)}
         >
           <RotateCcw size={16} />
         </button>
@@ -122,8 +94,8 @@ const QueueActions = ({ item }) => {
         <button
           className="danger"
           title="Delete"
-          onClick={handleDelete}
           disabled={loadingAction !== null}
+          onClick={() => handleAction("delete", deleteDownload)}
         >
           <Trash2 size={16} />
         </button>

@@ -83,13 +83,45 @@ const QueueList = ({ filter }) => {
       }
     };
 
+    const handleStatus = (data) => {
+      console.log("📡 download-status:", data);
+
+      setQueue((prev) =>
+        prev.map((item) => {
+          if (item._id !== data.downloadId) return item;
+
+          return {
+            ...item,
+            status: data.status ?? item.status,
+            progress:
+              data.progress !== undefined ? data.progress : item.progress,
+            downloadSpeed:
+              data.downloadSpeed !== undefined
+                ? data.downloadSpeed
+                : item.downloadSpeed,
+            eta: data.eta !== undefined ? data.eta : item.eta,
+          };
+        }),
+      );
+    };
+
+    const handleDelete = ({ downloadId }) => {
+      console.log("🗑 download-deleted:", downloadId);
+
+      setQueue((prev) => prev.filter((item) => item._id !== downloadId));
+    };
+
     // Register listeners
     socket.on("download-progress", handleProgress);
     socket.on("download-completed", handleCompleted);
-    
+    socket.on("download-status", handleStatus);
+    socket.on("download-deleted", handleDelete);
+
     return () => {
       socket.off("download-progress", handleProgress);
       socket.off("download-completed", handleCompleted);
+      socket.off("download-status", handleStatus);
+      socket.off("download-deleted", handleDelete);
 
       console.log("🛑 QueueList socket listeners removed");
     };

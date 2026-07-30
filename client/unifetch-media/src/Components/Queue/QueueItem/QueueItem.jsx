@@ -55,7 +55,7 @@ const QueueItem = ({ item }) => {
           {item.progress || 0}%
         </span>
 
-        <QueueActions item={item} />
+        <QueueActions item={item}/>
       </div>
     </div>
   );
