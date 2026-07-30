@@ -1,44 +1,33 @@
 import "./DownloadsToolbar.css";
+import { Search } from "lucide-react";
 
-import { Search, Grid2X2, List, ArrowUpDown } from "lucide-react";
-import { useState } from "react";
-
-export default function DownloadsToolbar() {
-  const [gridView, setGridView] = useState(true);
-
+export default function DownloadsToolbar({
+  search,
+  setSearch,
+  filter,
+  setFilter,
+}) {
   return (
     <section className="downloads-toolbar">
       {/* Search */}
-
       <div className="downloads-search">
         <Search size={18} />
 
-        <input type="text" placeholder="Search downloads..." />
+        <input
+          type="text"
+          placeholder="Search downloads..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
-      {/* Actions */}
-
+      {/* Filter */}
       <div className="downloads-toolbar-right">
-        <select>
-          <option>All Files</option>
-
-          <option>Videos</option>
-
-          <option>Audio</option>
-
-          <option>Images</option>
+        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+          <option value="all">All Files</option>
+          <option value="mp4">Videos</option>
+          <option value="mp3">Audio</option>
         </select>
-
-        <button
-          className="toolbar-icon-btn"
-          onClick={() => setGridView(!gridView)}
-        >
-          {gridView ? <List size={18} /> : <Grid2X2 size={18} />}
-        </button>
-
-        <button className="toolbar-icon-btn">
-          <ArrowUpDown size={18} />
-        </button>
       </div>
     </section>
   );

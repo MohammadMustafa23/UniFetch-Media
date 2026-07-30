@@ -31,9 +31,9 @@ export default function HeroDownload({
     try {
       setLoading(true);
 
-      // Auto Download Enabled
       if (preference?.autoDownload) {
         const { data } = await autoDownload({ url: mediaUrl });
+
         if (data.success) {
           toast.success(data.message);
           setUrl("");
@@ -41,13 +41,10 @@ export default function HeroDownload({
         }
       }
 
-      // Manual Preview
       const { data } = await getDownloadInfo(mediaUrl);
 
-      console.log(data.data);
-      
       if (data.success) {
-        setVideoInfo(data.data);
+        setVideoInfo(data.data); // Keep preview open
       }
     } catch (error) {
       toast.error(
@@ -110,10 +107,7 @@ export default function HeroDownload({
               setUrl(pastedUrl);
 
               // Auto start download only if enabled
-              if (
-                preference?.autoDownload &&
-                isSupportedUrl(pastedUrl)
-              ) {
+              if (preference?.autoDownload && isSupportedUrl(pastedUrl)) {
                 setTimeout(() => {
                   handleDownloadInfo(pastedUrl);
                 }, 100);

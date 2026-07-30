@@ -1,36 +1,114 @@
-/* ===========================================
-            QUEUE PROGRESS
-=========================================== */
+/*====================================================
+                    QUEUE PROGRESS
+====================================================*/
 
 .queue-progress {
   position: relative;
 
   width: 100%;
+  height: 8px;
 
-  height: 7px;
-
-  border-radius: 999px;
+  margin-top: 10px;
 
   overflow: hidden;
 
-  background: #242938;
+  border-radius: 999px;
 
-  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.06);
+
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .queue-progress-fill {
   position: absolute;
+  inset: 0 auto 0 0;
 
-  left: 0;
-  top: 0;
-
+  width: 0;
   height: 100%;
 
-  border-radius: 999px;
+  border-radius: inherit;
 
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  background: linear-gradient(90deg, #6366f1 0%, #7c5cff 45%, #8b5cf6 100%);
 
-  transition: width 0.6s ease;
+  transition: width 0.45s ease;
 
-  box-shadow: 0 0 18px rgba(99, 102, 241, 0.45);
+  box-shadow:
+    0 0 8px rgba(99, 102, 241, 0.35),
+    0 0 18px rgba(124, 92, 255, 0.18);
+}
+
+/* Premium Shine */
+
+.queue-progress-fill::after {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: -35%;
+
+  width: 25%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+
+  animation: progressShine 2.8s linear infinite;
+}
+
+@keyframes progressShine {
+  from {
+    left: -35%;
+  }
+
+  to {
+    left: 120%;
+  }
+}
+
+/*====================================================
+                    RESPONSIVE
+====================================================*/
+
+@media (max-width: 992px) {
+  .queue-progress {
+    height: 7px;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .queue-progress {
+    height: 6px;
+    margin-top: 7px;
+  }
+
+  .queue-progress-fill {
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.25);
+  }
+}
+
+@media (max-width: 576px) {
+  .queue-progress {
+    height: 6px;
+    margin-top: 6px;
+  }
+
+  .queue-progress-fill::after {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .queue-progress {
+    height: 5px;
+    margin-top: 5px;
+  }
+
+  .queue-progress-fill {
+    box-shadow: none;
+  }
 }

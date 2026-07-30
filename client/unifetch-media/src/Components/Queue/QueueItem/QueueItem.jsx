@@ -1,63 +1,74 @@
 import "./QueueItem.css";
 
-import {
-  Camera,
-  Music2,
-  PlaySquareIcon,
-} from "lucide-react";
+import { Camera, Music2, PlaySquare, HardDrive, Sparkles } from "lucide-react";
 
 import QueueProgress from "../QueueProgress/QueueProgress";
 import QueueActions from "../QueueActions/QueueActions";
 
 const platformIcons = {
-  youtube: <PlaySquareIcon size={18} />,
-  instagram: <Camera size={18} />,
-  spotify: <Music2 size={18} />,
+  youtube: <PlaySquare size={20} />,
+  instagram: <Camera size={20} />,
+  spotify: <Music2 size={20} />,
 };
 
 const QueueItem = ({ item }) => {
   const platform = (item.platform || "").toLowerCase();
+  const progress = item.progress || 0;
+
+  const fileSize =
+    item.fileSize > 0
+      ? `${(item.fileSize / (1024 * 1024)).toFixed(2)} MB`
+      : "--";
 
   return (
-    <div className="queue-item">
-      <div className="queue-item-left">
+    <article className="queue-item">
+      {/* Top */}
+      <div className="queue-top">
         <div className="queue-thumb">
-          {platformIcons[platform] || <PlaySquareIcon size={18} />}
+          {platformIcons[platform] || <PlaySquare size={20} />}
         </div>
 
         <div className="queue-content">
           <h3>{item.title}</h3>
 
-          <p>
-            {item.platform}
+          <div className="queue-meta">
+            <span>{item.platform}</span>
 
-            <span>•</span>
+            <span className="dot" />
 
-            {item.quality || "Best"}
+            <span>{item.quality || "Best"}</span>
 
-            <span>•</span>
+            <span className="dot" />
 
-            {item.fileSize > 0
-              ? `${(item.fileSize / (1024 * 1024)).toFixed(2)} MB`
-              : "--"}
-          </p>
-
-          <QueueProgress progress={item.progress || 0} />
+            <span>
+              <HardDrive size={13} />
+              {fileSize}
+            </span>
+          </div>
         </div>
       </div>
 
+      {/* Progress */}
+      <div className="queue-progress-section">
+        <div className="queue-progress-header">
+          <div className={`queue-status ${(item.status || "").toLowerCase()}`}>
+            {item.status}
+          </div>
+
+          <span className="queue-percent">
+            <Sparkles size={13} />
+            {progress}%
+          </span>
+        </div>
+
+        <QueueProgress progress={progress} />
+      </div>
+
+      {/* Actions */}
       <div className="queue-item-right">
-        <div className={`queue-status ${(item.status || "").toLowerCase()}`}>
-          {item.status}
-        </div>
-
-        <span className="queue-percent">
-          {item.progress || 0}%
-        </span>
-
-        <QueueActions item={item}/>
+        <QueueActions item={item} />
       </div>
-    </div>
+    </article>
   );
 };
 

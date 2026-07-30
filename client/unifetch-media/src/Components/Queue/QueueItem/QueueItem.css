@@ -1,25 +1,25 @@
-/* ============================================
-            QUEUE ITEM
-============================================ */
+/*====================================================
+                    QUEUE ITEM
+====================================================*/
 
 .queue-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
 
-  gap: 30px;
+  gap: 18px;
 
   padding: 22px;
-
-  border-radius: 18px;
 
   background: #131722;
 
   border: 1px solid rgba(255, 255, 255, 0.05);
 
-  transition: 0.35s;
+  border-radius: 18px;
 
-  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .queue-item:hover {
@@ -30,206 +30,325 @@
   box-shadow: 0 18px 35px rgba(0, 0, 0, 0.25);
 }
 
-/* ============================================
-            LEFT
-============================================ */
+/*====================================================
+                    TOP
+====================================================*/
 
-.queue-item-left {
+.queue-top {
   display: flex;
-
   align-items: flex-start;
+  gap: 18px;
 
-  gap: 20px;
-
-  flex: 1;
-
+  width: 100%;
   min-width: 0;
 }
 
-/* ============================================
-            THUMB
-============================================ */
+/*====================================================
+                    THUMB
+====================================================*/
 
 .queue-thumb {
-  width: 62px;
+  width: 60px;
+  height: 60px;
 
-  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
 
   border-radius: 16px;
 
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-
   color: #fff;
 
-  flex-shrink: 0;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
 }
 
-/* ============================================
-            CONTENT
-============================================ */
+/*====================================================
+                    CONTENT
+====================================================*/
 
 .queue-content {
   flex: 1;
-
   min-width: 0;
 }
 
 .queue-content h3 {
-  font-size: 1rem;
-
-  font-weight: 600;
-
   color: #fff;
 
+  font-size: 16px;
+  font-weight: 700;
+
+  line-height: 1.4;
+
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
-
-  margin-bottom: 8px;
 }
 
-.queue-content p {
-  display: flex;
+/*====================================================
+                    META
+====================================================*/
 
+.queue-meta {
+  display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   gap: 10px;
 
+  margin-top: 8px;
+
   color: #8f98aa;
 
-  font-size: 0.9rem;
-
-  margin-bottom: 18px;
-
-  flex-wrap: wrap;
+  font-size: 14px;
 }
 
-.queue-content p span {
-  opacity: 0.5;
-}
-
-/* ============================================
-            RIGHT
-============================================ */
-
-.queue-item-right {
+.queue-meta span {
   display: flex;
-
   align-items: center;
+  gap: 4px;
+}
 
-  gap: 18px;
+.queue-meta .dot {
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.35);
 
   flex-shrink: 0;
 }
 
-/* ============================================
-            STATUS
-============================================ */
+/*====================================================
+                  PROGRESS
+====================================================*/
+
+.queue-progress-section {
+  width: 100%;
+}
+
+.queue-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 10px;
+}
+
+/*====================================================
+                  STATUS
+====================================================*/
 
 .queue-status {
   padding: 7px 14px;
 
   border-radius: 999px;
 
-  font-size: 0.78rem;
-
+  font-size: 12px;
   font-weight: 600;
 }
 
 .queue-status.downloading {
   background: #14311f;
-
   color: #33d17a;
 }
 
 .queue-status.paused {
   background: #322714;
-
   color: #ffb547;
 }
 
 .queue-status.completed {
   background: #1f3d66;
-
   color: #66b6ff;
 }
 
 .queue-status.failed {
   background: #401818;
-
   color: #ff5e5e;
 }
 
-/* ============================================
-            PERCENT
-============================================ */
+/*====================================================
+                  PERCENT
+====================================================*/
 
 .queue-percent {
-  width: 50px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
-  text-align: center;
-
+  font-size: 14px;
   font-weight: 700;
 
   color: #fff;
+
+  white-space: nowrap;
 }
 
-/* ============================================
-            RESPONSIVE
-============================================ */
+/*====================================================
+                  ACTIONS
+====================================================*/
+
+.queue-item-right {
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+
+  padding-top: 18px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/*====================================================
+                LARGE DESKTOP
+====================================================*/
+
+@media (min-width: 1400px) {
+  .queue-item {
+    padding: 24px;
+  }
+
+  .queue-thumb {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+/*====================================================
+                    LAPTOP
+====================================================*/
 
 @media (max-width: 1200px) {
   .queue-item {
-    flex-direction: column;
-
-    align-items: flex-start;
+    padding: 20px;
   }
 
-  .queue-item-right {
-    width: 100%;
-
-    justify-content: space-between;
+  .queue-thumb {
+    width: 56px;
+    height: 56px;
   }
 }
 
-@media (max-width: 768px) {
+/*====================================================
+                    TABLET
+====================================================*/
+
+@media (max-width: 992px) {
   .queue-item {
     padding: 18px;
+    gap: 16px;
+  }
+
+  .queue-top {
+    gap: 16px;
   }
 
   .queue-thumb {
     width: 54px;
-
     height: 54px;
-  }
-
-  .queue-content h3 {
-    font-size: 0.95rem;
-  }
-
-  .queue-content p {
-    font-size: 0.82rem;
   }
 }
 
-@media (max-width: 540px) {
-  .queue-item-left {
-    flex-direction: column;
+/*====================================================
+                    MOBILE
+====================================================*/
 
-    align-items: flex-start;
+@media (max-width: 768px) {
+  .queue-item {
+    padding: 18px;
+    border-radius: 16px;
+    gap: 16px;
+  }
+
+  .queue-top {
+    gap: 14px;
+  }
+
+  .queue-thumb {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 14px;
+  }
+
+  .queue-content h3 {
+    font-size: 15px;
+  }
+
+  .queue-meta {
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .queue-progress-header {
+    margin-bottom: 8px;
   }
 
   .queue-item-right {
-    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
 
-    gap: 12px;
+/*====================================================
+                SMALL MOBILE
+====================================================*/
+
+@media (max-width: 480px) {
+  .queue-item {
+    padding: 16px;
+  }
+
+  .queue-thumb {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 12px;
+  }
+
+  .queue-content h3 {
+    font-size: 14px;
+  }
+
+  .queue-meta {
+    font-size: 12px;
+  }
+
+  .queue-status {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .queue-percent {
+    font-size: 13px;
+  }
+}
+
+/*====================================================
+              EXTRA SMALL MOBILE
+====================================================*/
+
+@media (max-width: 360px) {
+  .queue-top {
+    gap: 10px;
+  }
+
+  .queue-thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .queue-progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .queue-item-right {
+    justify-content: flex-start;
   }
 }

@@ -25,7 +25,6 @@ export default function Dashboard() {
 
   const [dashboard, setDashboard] = useState(null);
   const [dashboardLoading, setDashboardLoading] = useState(true);
-
   const handleDownload = async ({ quality, type }) => {
     try {
       const response = await startDownload({
@@ -38,7 +37,15 @@ export default function Dashboard() {
         quality,
         format: type === "video" ? "mp4" : "mp3",
       });
+
       toast.success(response.data.message);
+
+      // Close Preview
+      setVideoInfo(null);
+
+      // Clear Input
+      setUrl("");
+
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "Download failed");

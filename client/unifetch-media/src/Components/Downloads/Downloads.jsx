@@ -17,6 +17,11 @@ export default function Downloads() {
   const [downloads, setDownloads] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [filteredDownloads, setFilteredDownloads] = useState([]);
+
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+
   useEffect(() => {
     fetchDownloads();
   }, []);
@@ -25,12 +30,31 @@ export default function Downloads() {
     try {
       const response = await getDownloads();
       setDownloads(response.data.data);
+      setFilteredDownloads(response.data.data);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    let data = [...downloads];
+
+    // Search
+    if (search.trim()) {
+      data = data.filter((item) =>
+        item.title?.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
+    // Filter
+    if (filter !== "all") {
+      data = data.filter((item) => item.format === filter);
+    }
+
+    setFilteredDownloads(data);
+  }, [search, filter, downloads]);
 
   return (
     <div className="ufm-dashboard">
@@ -42,10 +66,15 @@ export default function Downloads() {
         <section className="downloads-page">
           <DownloadsHeader />
 
-          <DownloadsToolbar />
+          <DownloadsToolbar
+            search={search}
+            setSearch={setSearch}
+            filter={filter}
+            setFilter={setFilter}
+          />
 
           <DownloadsGrid
-            downloads={downloads}
+            downloads={filteredDownloads}
             setDownloads={setDownloads}
             loading={loading}
             fetchDownloads={fetchDownloads}

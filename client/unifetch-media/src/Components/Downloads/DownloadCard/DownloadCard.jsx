@@ -9,6 +9,7 @@ import {
   Camera,
   Music2,
   PlaySquare,
+  Phone,
 } from "lucide-react";
 
 import { formatFileSize } from "../../../utils/formatFileSize.js";
@@ -86,7 +87,7 @@ export default function DownloadCard({
 
         {/* Save to Mobile */}
         <button className="primary-btn" onClick={() => onSave?.(item)}>
-          <Smartphone size={18} />
+          Save
         </button>
 
         {/* Share */}

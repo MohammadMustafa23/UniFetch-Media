@@ -1,27 +1,126 @@
+/*====================================================
+                    QUEUE LIST
+====================================================*/
+
 .queue-list {
   width: 100%;
 
   display: flex;
-
   flex-direction: column;
 
-  gap: 18px;
+  gap: 16px;
 
-  padding: 26px;
+  padding: 20px;
 
-  border-radius: 22px;
+  background: rgba(18, 22, 34, 0.9);
 
-  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
-  border: 1px solid var(--border-color);
+  border-radius: 20px;
 
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(16px);
 
-  min-height: 520px;
+  box-sizing: border-box;
 
-  transition: 0.3s;
+  overflow: hidden;
+
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .queue-list:hover {
-  border-color: rgba(99, 102, 241, 0.25);
+  border-color: rgba(124, 92, 255, 0.22);
+
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.28),
+    0 0 20px rgba(124, 92, 255, 0.08);
+}
+
+/*====================================================
+                LARGE DESKTOP
+====================================================*/
+
+@media (min-width: 1400px) {
+  .queue-list {
+    padding: 28px;
+
+    gap: 18px;
+
+    border-radius: 24px;
+  }
+}
+
+/*====================================================
+                    LAPTOP
+====================================================*/
+
+@media (max-width: 1200px) {
+  .queue-list {
+    padding: 20px;
+
+    gap: 16px;
+  }
+}
+
+/*====================================================
+                    TABLET
+====================================================*/
+
+@media (max-width: 992px) {
+  .queue-list {
+    padding: 18px;
+
+    gap: 14px;
+
+    border-radius: 18px;
+  }
+}
+
+/*====================================================
+                    MOBILE
+====================================================*/
+
+@media (max-width: 768px) {
+  .queue-list {
+    padding: 14px;
+
+    gap: 12px;
+
+    border-radius: 16px;
+  }
+
+  .queue-list:hover {
+    border-color: rgba(255, 255, 255, 0.06);
+
+    box-shadow: none;
+  }
+}
+
+/*====================================================
+                SMALL MOBILE
+====================================================*/
+
+@media (max-width: 480px) {
+  .queue-list {
+    padding: 12px;
+
+    gap: 10px;
+
+    border-radius: 14px;
+  }
+}
+
+/*====================================================
+              EXTRA SMALL MOBILE
+====================================================*/
+
+@media (max-width: 360px) {
+  .queue-list {
+    padding: 10px;
+
+    gap: 8px;
+
+    border-radius: 12px;
+  }
 }

@@ -19,6 +19,14 @@ export default function ProtectedRoute({ children }) {
           if (!socket.connected) {
             socket.connect();
           }
+
+          socket.on("connect", () => {
+            console.log("✅ Socket Connected:", socket.id);
+          });
+
+          socket.on("connect_error", (err) => {
+            console.log("❌ Socket Error:", err.message);
+          });
         }
       } catch (error) {
         setIsAuthenticated(false);
