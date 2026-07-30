@@ -30,25 +30,25 @@ function getFormatSelector(quality, type) {
 
   switch (quality) {
     case "1080p":
-      return "bestvideo[height<=1080]+bestaudio/best[height<=1080]";
+      return "bestvideo*[height<=1080]+bestaudio/bestvideo*[height<=1080]/best[height<=1080]/best";
 
     case "720p":
-      return "bestvideo[height<=720]+bestaudio/best[height<=720]";
+      return "bestvideo*[height<=720]+bestaudio/bestvideo*[height<=720]/best[height<=720]/best";
 
     case "480p":
-      return "bestvideo[height<=480]+bestaudio/best[height<=480]";
+      return "bestvideo*[height<=480]+bestaudio/bestvideo*[height<=480]/best[height<=480]/best";
 
     case "360p":
-      return "bestvideo[height<=360]+bestaudio/best[height<=360]";
+      return "bestvideo*[height<=360]+bestaudio/bestvideo*[height<=360]/best[height<=360]/best";
 
     case "240p":
-      return "bestvideo[height<=240]+bestaudio/best[height<=240]";
+      return "bestvideo*[height<=240]+bestaudio/bestvideo*[height<=240]/best[height<=240]/best";
 
     case "144p":
-      return "bestvideo[height<=144]+bestaudio/best[height<=144]";
+      return "bestvideo*[height<=144]+bestaudio/bestvideo*[height<=144]/best[height<=144]/best";
 
     default:
-      return "bestvideo+bestaudio/best";
+      return "bv*+ba/b";
   }
 }
 

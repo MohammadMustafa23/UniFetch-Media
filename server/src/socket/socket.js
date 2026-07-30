@@ -4,9 +4,13 @@ import User from "../models/user.model.js";
 let io;
 
 export function initSocket(server) {
+  const allowedOrigins = process.env.FRONTEND_CLIENT_ID.split(",").map(
+    (origin) => origin.trim(),
+  );
+
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_CLIENT_ID,
+      origin: allowedOrigins,
       credentials: true,
     },
   });
@@ -33,7 +37,6 @@ export function initSocket(server) {
       }
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
       const user = await User.findById(decoded.id);
 
       if (!user) {

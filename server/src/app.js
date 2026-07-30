@@ -11,9 +11,10 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 const app = express();
+const allowedOrigins = process.env.FRONTEND_CLIENT_ID.split(",");
 app.use(
   cors({
-    origin: process.env.FRONTEND_CLIENT_ID,
+    origin: allowedOrigins,
     credentials: true,
     exposedHeaders: ["Content-Disposition"],
   }),
