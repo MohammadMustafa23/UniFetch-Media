@@ -14,6 +14,7 @@ class DownloadQueue {
 
     this.currentProcess = null;
     this.currentDownloadId = null;
+    this.stopReason = null;
   }
 
   // Add Download to Queue
@@ -26,6 +27,12 @@ class DownloadQueue {
   }
 
   async pause(downloadId) {
+    console.log("========== PAUSE ==========");
+    console.log("Requested ID:", downloadId);
+    console.log("Current ID:", this.currentDownloadId);
+    console.log("Has Process:", !!this.currentProcess);
+    console.log("Is Downloading:", this.isDownloading);
+
     if (
       !this.currentProcess ||
       this.currentDownloadId !== downloadId.toString()
@@ -33,71 +40,34 @@ class DownloadQueue {
       throw new Error("This download is not currently running.");
     }
 
+    // Tell process() this was intentional
+    this.stopReason = "pause";
+
+    const download = await Download.findByIdAndUpdate(
+      downloadId,
+      {
+        status: "paused",
+      },
+      { new: true },
+    );
+
+    getIO().to(download.userId.toString()).emit("download-status", {
+      downloadId: download._id.toString(),
+      status: "paused",
+      progress: download.progress,
+      downloadSpeed: download.downloadSpeed,
+      eta: download.eta,
+    });
+
+    console.log("🛑 Killing yt-dlp...");
     this.currentProcess.kill("SIGTERM");
 
-    this.currentProcess = null;
-    this.currentDownloadId = null;
-    this.isDownloading = false;
-
-    await Download.findByIdAndUpdate(downloadId, {
-      status: "paused",
-    });
+    // ❌ DON'T clear these here.
+    // process() -> finally will do it safely.
 
     console.log("⏸ Download Paused");
   }
 
-  async resume(downloadId) {
-    const download = await Download.findById(downloadId);
-
-    if (!download) {
-      throw new Error("Download not found.");
-    }
-
-    if (download.status !== "paused") {
-      throw new Error("Download is not paused.");
-    }
-
-    download.status = "queued";
-    await download.save();
-
-    this.queue.unshift(downloadId);
-
-    this.process();
-
-    console.log("▶️ Download Resumed");
-  }
-  async cancel(downloadId) {
-    this.queue = this.queue.filter(
-      (id) => id.toString() !== downloadId.toString(),
-    );
-
-    const download = await Download.findById(downloadId);
-
-    if (!download) {
-      throw new Error("Download not found.");
-    }
-
-    if (
-      this.currentProcess &&
-      this.currentDownloadId === downloadId.toString()
-    ) {
-      this.currentProcess.kill("SIGTERM");
-
-      this.currentProcess = null;
-      this.currentDownloadId = null;
-      this.isDownloading = false;
-    }
-
-    if (download.filePath && fs.existsSync(download.filePath)) {
-      fs.unlinkSync(download.filePath);
-    }
-
-    await Download.findByIdAndDelete(downloadId);
-
-    this.process();
-
-    console.log("🗑 Download Deleted");
-  }
   async updateProgress(downloadId, line) {
     try {
       line = line.trim();
@@ -223,6 +193,17 @@ class DownloadQueue {
       // Wait Until Download Completes
       await new Promise((resolve, reject) => {
         ytProcess.on("close", (code) => {
+          // Pause or Cancel was intentional
+          if (this.stopReason === "pause") {
+            this.stopReason = null;
+            return resolve();
+          }
+
+          if (this.stopReason === "cancel") {
+            this.stopReason = null;
+            return resolve();
+          }
+
           if (code === 0) {
             resolve();
           } else {
@@ -238,6 +219,13 @@ class DownloadQueue {
         safeFileName(download.title),
       );
 
+      const latestDownload = await Download.findById(download._id);
+
+      if (latestDownload.status === "paused") {
+        console.log("⏸ Download paused.");
+        return;
+      }
+
       await Download.findByIdAndUpdate(download._id, {
         status: "completed",
         progress: 100,
@@ -249,10 +237,12 @@ class DownloadQueue {
         "📤 Emitting download-completed to:",
         download.userId.toString(),
       );
-
-      getIO().to(download.userId.toString()).emit("download-completed", {
+      getIO().to(download.userId.toString()).emit("download-status", {
         downloadId: download._id.toString(),
-        storageProvider: download.storageProvider,
+        status: "completed",
+        progress: 100,
+        downloadSpeed: "",
+        eta: "",
       });
 
       await createNotification({
