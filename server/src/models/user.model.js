@@ -22,11 +22,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
     },
+
+    cloudStorage: {
+      used: {
+        type: Number,
+        default: 0,
+      },
+
+      limit: {
+        type: Number,
+        default: 500 * 1024 * 1024, // 500 MB
+      },
+    },
   },
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 const User = mongoose.model("User", userSchema);

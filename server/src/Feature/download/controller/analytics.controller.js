@@ -1,9 +1,20 @@
 import mongoose from "mongoose";
 import Download from "../models/download.model.js";
+import { redisClient } from "../../../config/redis.js";
 
 export const getDashboardAnalytics = async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user._id);
+    const cacheKey = `analytics:${req.user._id}`;
+
+    const cachedAnalytics = await redisClient.get(cacheKey);
+    if (cachedAnalytics) {
+      return res.status(200).json({
+        success: true,
+        data: cachedAnalytics,
+        cached: true,
+      });
+    }
 
     // Counts
     const totalDownloads = await Download.countDocuments({ userId });
@@ -118,26 +129,32 @@ export const getDashboardAnalytics = async (req, res) => {
       .limit(8)
       .select("title status platform progress updatedAt");
 
+    const analyticsData = {
+      totalDownloads,
+      completedDownloads,
+      failedDownloads,
+      queuedDownloads,
+      downloadingDownloads,
+      pausedDownloads,
+
+      successRate,
+
+      platformUsage,
+
+      downloadsThisWeek: last7Days,
+
+      fileTypeDistribution,
+
+      recentActivity,
+    };
+
+    await redisClient.set(cacheKey, analyticsData, {
+      ex: 60 * 5,
+    });
+
     return res.status(200).json({
       success: true,
-      data: {
-        totalDownloads,
-        completedDownloads,
-        failedDownloads,
-        queuedDownloads,
-        downloadingDownloads,
-        pausedDownloads,
-
-        successRate,
-
-        platformUsage,
-
-        downloadsThisWeek: last7Days,
-
-        fileTypeDistribution,
-
-        recentActivity,
-      },
+      data: analyticsData,
     });
   } catch (error) {
     console.error(error);

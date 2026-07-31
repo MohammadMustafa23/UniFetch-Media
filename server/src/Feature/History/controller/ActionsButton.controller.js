@@ -4,6 +4,8 @@ import Download from "../../download/\/models/download.model.js";
 import { getVideoInfo } from "../../Downloader/utils/ytDlp.js";
 import detectPlatform from "../../Downloader/utils/detectPlatform.js";
 import downloadQueue from "../../download/queue/download.queue.js";
+import { redisClient } from "../../../config/redis.js";
+
 
 export const toggleFavorite = async (req, res) => {
   try {
@@ -173,16 +175,45 @@ export async function downloadFromHistory(req, res) {
 
 export async function getFavorites(req, res) {
   try {
+    const userId = req.user._id;
+    const cacheKey = `favorites:${userId}`;
+
+    // ==========================
+    // Check Redis Cache
+    // ==========================
+    const cachedFavorites = await redisClient.get(cacheKey);
+
+    if (cachedFavorites) {
+      return res.status(200).json({
+        success: true,
+        data: cachedFavorites,
+      });
+    }
+
+    // ==========================
+    // Fetch from MongoDB
+    // ==========================
     const favorites = await History.find({
-      userId: req.user._id,
+      userId,
       favorite: true,
-    }).sort({ updatedAt: -1 });
+    })
+      .sort({ updatedAt: -1 })
+      .lean();
+
+    // ==========================
+    // Save to Redis (2 Minutes)
+    // ==========================
+    await redisClient.set(cacheKey, favorites, {
+      ex: 60 * 2, // 2 Minutes
+    });
 
     return res.status(200).json({
       success: true,
       data: favorites,
     });
   } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: "Failed to fetch favorites.",

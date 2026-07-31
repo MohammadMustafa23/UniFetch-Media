@@ -2,19 +2,47 @@ import {
   getUserPreferences,
   updateUserPreferences,
 } from "../service/preferences.service.js";
+import { redisClient } from "../../../config/redis.js";
 
-// GET /api/preferences
 export async function getPreferences(req, res) {
   try {
-    const preferences = await getUserPreferences(req.user._id);
+    const userId = req.user._id;
+    const cacheKey = `preferences:${userId}`;
 
-    res.status(200).json({
+    // ==========================
+    // Check Redis Cache
+    // ==========================
+    const cachedPreferences = await redisClient.get(cacheKey);
+
+    if (cachedPreferences) {
+      return res.status(200).json({
+        success: true,
+        message: "Preferences fetched successfully.",
+        data: cachedPreferences,
+      });
+    }
+
+    // ==========================
+    // Fetch from MongoDB
+    // ==========================
+    const preferences = await getUserPreferences(userId);
+
+    // ==========================
+    // Save to Redis (1 Hour)
+    // ==========================
+    await redisClient.set(cacheKey, preferences, {
+      ex: 60 * 60, // 1 Hour
+    });
+
+    return res.status(200).json({
       success: true,
       message: "Preferences fetched successfully.",
       data: preferences,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Get Preferences Error:", error);
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -31,12 +59,10 @@ export async function updatePreferences(req, res) {
       });
     }
 
-    console.log(req.body);
-    
-
     // Allowed preference sections
     const allowedFields = ["autodownload", "storage", "quality"];
     const requestFields = Object.keys(req.body);
+
     const invalidFields = requestFields.filter(
       (field) => !allowedFields.includes(field.toLowerCase())
     );
@@ -52,6 +78,11 @@ export async function updatePreferences(req, res) {
       req.user._id,
       req.body
     );
+
+    // ==========================
+    // Clear Redis Cache
+    // ==========================
+    await redisClient.del(`preferences:${req.user._id}`);
 
     return res.status(200).json({
       success: true,

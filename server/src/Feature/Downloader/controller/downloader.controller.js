@@ -4,6 +4,7 @@ import { getVideoInfo } from "../utils/ytDlp.js";
 import formatVideoInfo from "../utils/formatVideoInfo.js";
 import { createHistoryService } from "../../History/service/history.service.js";
 import History from "../../History/models/history.model.js";
+import { redisClient } from "../../../config/redis.js";
 import { extractYouTubeVideoId } from "../utils/extractYouTubeVideoId.js";
 
 export async function getDownloadInfo(req, res) {
@@ -36,7 +37,17 @@ export async function getDownloadInfo(req, res) {
     // ==============================
     const videoId = extractYouTubeVideoId(url);
 
-  
+    const cacheKey = `video-info:${platform}:${videoId}`;
+    const cachedVideo = await redisClient.get(cacheKey);
+    if (cachedVideo) {
+      return res.status(200).json({
+        success: true,
+        fromCache: true,
+        message: "Video information fetched successfully.",
+        data: cachedVideo,
+      });
+    }
+
     const history = await History.findOne({
       userId: req.user._id,
       platform: platform,
@@ -59,6 +70,12 @@ export async function getDownloadInfo(req, res) {
 
     const formatted = formatVideoInfo(videoInfo, url);
 
+    
+    await redisClient.set(cacheKey, formatted, {
+      ex: 60 * 60 * 24, // 24 Hours
+    });
+
+    
     // ==============================
     // Save History
     // ==============================

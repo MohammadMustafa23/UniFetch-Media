@@ -1,4 +1,5 @@
 import {createHistoryService,getHistoryService} from "../service/history.service.js";
+import { redisClient } from "../../../config/redis.js";
 
 export async function createHistory(req, res) {
   try {
@@ -32,9 +33,33 @@ export async function getHistory(req, res) {
   try {
     const { status } = req.query;
 
+    const cacheKey = `history:${req.user._id}:${status || "all"}`;
+
+    // ==========================
+    // Check Redis Cache
+    // ==========================
+    const cachedHistory = await redisClient.get(cacheKey);
+
+    if (cachedHistory) {
+      return res.status(200).json({
+        success: true,
+        data: cachedHistory,
+      });
+    }
+
+    // ==========================
+    // Fetch from MongoDB
+    // ==========================
     const history = await getHistoryService(req.user._id, status);
 
-    return res.json({
+    // ==========================
+    // Save to Redis (2 Minutes)
+    // ==========================
+    await redisClient.set(cacheKey, history, {
+      ex: 60 * 2,
+    });
+
+    return res.status(200).json({
       success: true,
       data: history,
     });

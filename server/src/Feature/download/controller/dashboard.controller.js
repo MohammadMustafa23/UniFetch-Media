@@ -1,10 +1,24 @@
 import Download from "../models/download.model.js";
 import fs from "fs";
 import { formatFileSize } from "../utils/formatFileSize.js";
+import { redisClient } from "../../../config/redis.js";
 
 export const getDashboard = async (req, res) => {
   try {
     const userId = req.user._id;
+    const cacheKey = `dashboard:${userId}`;
+
+    // ==========================
+    // Check Redis Cache
+    // ==========================
+    const cachedDashboard = await redisClient.get(cacheKey);
+
+    if (cachedDashboard) {
+      return res.status(200).json({
+        success: true,
+        data: cachedDashboard,
+      });
+    }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -58,7 +72,7 @@ export const getDashboard = async (req, res) => {
       Download.find({
         userId,
         status: "completed",
-      }).select("filePath"),
+      }).select("filePath createdAt"),
     ]);
 
     let totalBytes = 0;
@@ -83,40 +97,46 @@ export const getDashboard = async (req, res) => {
     const successRate =
       totalDownloads === 0
         ? 0
-        : Number(
-            (
-              (completedDownloads / totalDownloads) *
-              100
-            ).toFixed(1)
-          );
+        : Number(((completedDownloads / totalDownloads) * 100).toFixed(1));
 
-    res.status(200).json({
-      success: true,
-      data: {
-        stats: {
-          totalDownloads,
-          todayDownloads,
-          activeDownloads,
-          completedDownloads,
-          successRate,
-          storageUsed: formatFileSize(totalBytes),
-          storageLimit: "2 GB",
-        },
-
-        today: {
-          downloads: todayDownloads,
-          bandwidth: formatFileSize(todayBytes),
-        },
-
-        liveQueue,
-
-        recentDownloads,
-
-        latestUpdates: [],
+    const dashboardData = {
+      stats: {
+        totalDownloads,
+        todayDownloads,
+        activeDownloads,
+        completedDownloads,
+        successRate,
+        storageUsed: formatFileSize(totalBytes),
+        storageLimit: "2 GB",
       },
+
+      today: {
+        downloads: todayDownloads,
+        bandwidth: formatFileSize(todayBytes),
+      },
+
+      liveQueue,
+
+      recentDownloads,
+
+      latestUpdates: [],
+    };
+
+    // ==========================
+    // Save to Redis (2 Minutes)
+    // ==========================
+    await redisClient.set(cacheKey, dashboardData, {
+      ex: 60 * 2,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: dashboardData,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
