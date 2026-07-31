@@ -169,21 +169,7 @@ export default function Sidebar({ isCollapsed, setCollapsed }) {
           ))}
         </nav>
 
-        {/* Storage */}
-        {!isCollapsed && (
-          <div className="ufm-sidebar-storage">
-            <div className="ufm-sidebar-storage-head">
-              <h4>Storage</h4>
-              <span>68%</span>
-            </div>
-
-            <div className="ufm-sidebar-progress">
-              <div className="ufm-sidebar-progress-fill"></div>
-            </div>
-
-            <p>42 GB of 64 GB Used</p>
-          </div>
-        )}
+        
 
         {/* User */}
         <div className="ufm-sidebar-user">

@@ -4,9 +4,9 @@
 
 .ufm-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 
 /*==========================================
@@ -15,81 +15,144 @@
 
 .ufm-stat-card {
   position: relative;
-  overflow: hidden;
+
   display: flex;
   align-items: center;
   gap: 18px;
+
   padding: 24px;
-  border-radius: 22px;
+
+  min-height: 145px;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
   background: #111827;
+
   border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.35s ease;
+
+  transition: 0.3s ease;
 }
 
 .ufm-stat-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  transform: translateY(-6px);
+
+  border-color: rgba(99, 102, 241, 0.3);
+
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
 }
 
 .ufm-stat-card::before {
   content: "";
+
   position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 140px;
-  height: 140px;
+
+  top: -70px;
+  right: -70px;
+
+  width: 170px;
+  height: 170px;
+
   border-radius: 50%;
+
   background: rgba(99, 102, 241, 0.08);
 }
+
+/*==========================================
+  BADGE
+==========================================*/
+
 
 /*==========================================
   ICON
 ==========================================*/
 
 .ufm-stat-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
+  width: 50px;
+  height: 50px;
+
   flex-shrink: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  border-radius: 18px;
+
   color: #fff;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  transition: 0.35s;
+
+  transition: 0.3s;
 }
 
 .ufm-stat-card:hover .ufm-stat-icon {
-  transform: rotate(-10deg) scale(1.08);
+  transform: scale(1.08);
+}
+
+.ufm-stat-card:nth-child(1) .ufm-stat-icon {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+}
+
+.ufm-stat-card:nth-child(2) .ufm-stat-icon {
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+}
+
+.ufm-stat-card:nth-child(3) .ufm-stat-icon {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.ufm-stat-card:nth-child(4) .ufm-stat-icon {
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
 }
 
 /*==========================================
-  CONTENT
+  INFO
 ==========================================*/
 
-.ufm-stat-content {
+.ufm-stat-info {
   flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap:6px;
 }
 
-.ufm-stat-content h2 {
+.ufm-stat-label {
   margin: 0;
-  color: #fff;
-  font-size: 32px;
-  font-weight: 800;
-  line-height: 1;
-}
 
-.ufm-stat-content h4 {
-  margin: 10px 0 6px;
-  color: #e5e7eb;
-  font-size: 16px;
+  font-size: 14px;
+
   font-weight: 600;
+
+  color: #cbd5e1;
+
+  line-height: 1.4;
 }
 
-.ufm-stat-content span {
-  color: #94a3b8;
+.ufm-stat-value {
+  margin: 0;
+
+  font-size: 30px;
+
+  font-weight: 800;
+
+  line-height: 1;
+
+  color: #fff;
+
+}
+
+
+.ufm-stat-subtitle {
+  margin: 0;
+
   font-size: 13px;
+
+  color: #94a3b8;
 }
 
 /*==========================================
@@ -105,14 +168,38 @@
 @media (max-width: 768px) {
   .ufm-stats {
     grid-template-columns: 1fr;
-    gap: 18px;
   }
 
   .ufm-stat-card {
+    min-height: 130px;
+
     padding: 20px;
   }
 
-  .ufm-stat-content h2 {
+  .ufm-stat-value {
+    font-size: 32px;
+  }
+
+  .ufm-stat-icon {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ufm-stat-card {
+    gap: 16px;
+  }
+
+  .ufm-stat-value {
     font-size: 28px;
+  }
+
+  .ufm-stat-label {
+    font-size: 13px;
+  }
+
+  .ufm-stat-subtitle {
+    font-size: 12px;
   }
 }

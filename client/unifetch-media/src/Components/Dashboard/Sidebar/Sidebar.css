@@ -2,51 +2,85 @@
    UFM SIDEBAR
 ========================================================== */
 
+:root {
+  --ufm-bg: #0d111c;
+  --ufm-surface: #141a28;
+  --ufm-surface-hover: #1a2133;
+
+  --ufm-primary: #6366f1;
+  --ufm-primary-light: #8b5cf6;
+
+  --ufm-text: #ffffff;
+  --ufm-text-muted: #9ca3af;
+
+  --ufm-border: rgba(255, 255, 255, 0.06);
+
+  --ufm-radius: 20px;
+
+  --ufm-transition: 0.3s ease;
+}
+
+/* ==========================================================
+   SIDEBAR
+========================================================== */
+
 .ufm-sidebar {
   width: 290px;
-  height: 100vh;
+
+  height: 100dvh;
+
   position: sticky;
+
   top: 0;
+
   left: 0;
 
   display: flex;
+
   flex-direction: column;
 
-  padding: 24px 20px;
+  background: var(--ufm-bg);
 
-  background: #0d111c;
+  border-right: 1px solid var(--ufm-border);
 
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 22px 18px;
 
   overflow: hidden;
 
   transition:
     width 0.35s ease,
-    padding 0.35s ease;
+    padding 0.35s ease,
+    background 0.3s ease;
 }
 
 /* ==========================================================
-   DESKTOP COLLAPSE
+   COLLAPSE
 ========================================================== */
 
 .ufm-sidebar-collapse {
   width: 90px;
 
-  padding: 24px 12px;
+  padding: 22px 12px;
 }
 
-.ufm-sidebar-logo {
-  cursor: pointer;
+/* ==========================================================
+   LOGO
+========================================================== */
 
+.ufm-sidebar-logo {
   display: flex;
 
   align-items: center;
 
   gap: 14px;
 
-  margin-bottom: 40px;
+  margin-bottom: 34px;
 
-  transition: 0.35s;
+  cursor: pointer;
+
+  user-select: none;
+
+  transition: var(--ufm-transition);
 }
 
 .ufm-sidebar-collapse .ufm-sidebar-logo {
@@ -54,13 +88,13 @@
 }
 
 .ufm-sidebar-logo-icon {
-  width: 52px;
+  width: 54px;
 
-  height: 52px;
+  height: 54px;
 
   flex-shrink: 0;
 
-  border-radius: 16px;
+  border-radius: 18px;
 
   display: flex;
 
@@ -68,13 +102,19 @@
 
   justify-content: center;
 
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(
+    135deg,
+    var(--ufm-primary),
+    var(--ufm-primary-light)
+  );
 
   color: #fff;
 
   font-size: 22px;
 
   font-weight: 700;
+
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.35);
 }
 
 .ufm-sidebar-logo-content {
@@ -86,9 +126,9 @@
 .ufm-sidebar-logo-content h2 {
   margin: 0;
 
-  color: #fff;
+  color: var(--ufm-text);
 
-  font-size: 20px;
+  font-size: 22px;
 
   font-weight: 700;
 }
@@ -98,11 +138,11 @@
 
   margin-top: 4px;
 
-  color: #8d96ac;
+  color: var(--ufm-text-muted);
 
   font-size: 11px;
 
-  letter-spacing: 3px;
+  letter-spacing: 4px;
 
   font-weight: 600;
 }
@@ -118,98 +158,176 @@
 }
 
 /* ==========================================================
-   NAVIGATION
+   CONTENT
 ========================================================== */
 
-.ufm-sidebar-nav {
+.ufm-sidebar-content {
   flex: 1;
 
   display: flex;
 
   flex-direction: column;
 
-  gap: 8px;
+  min-height: 0;
 }
 
-.ufm-sidebar-item {
-  width: 100%;
+/* ==========================================================
+   NAVIGATION
+========================================================== */
+
+.ufm-sidebar-nav {
+  flex: 1;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
 
   display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  padding-right: 4px;
+}
+
+/* Scrollbar */
+
+.ufm-sidebar-nav::-webkit-scrollbar {
+  width: 5px;
+}
+
+.ufm-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+
+  border-radius: 20px;
+}
+
+.ufm-sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--ufm-primary);
+}
+
+/* ==========================================================
+   NAVIGATION ITEM
+========================================================== */
+
+.ufm-sidebar-item {
+  position: relative;
+
+  display: flex;
+
   align-items: center;
+
   gap: 14px;
 
-  padding: 14px 16px;
+  width: 100%;
 
-  border: none;
-  outline: none;
+  padding: 13px 14px;
 
   border-radius: 14px;
 
+  text-decoration: none;
+
+  color: var(--ufm-text-muted);
+
   background: transparent;
 
-  color: #8b94a7;
-
-  text-decoration: none;
+  border: 1px solid transparent;
 
   cursor: pointer;
 
   transition: all 0.3s ease;
-
-  box-sizing: border-box;
 }
 
 .ufm-sidebar-item:hover {
-  color: #fff;
+  color: var(--ufm-text);
 
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--ufm-surface);
 
-  transform: translateX(6px);
+  transform: translateX(4px);
 }
+
+/* ==========================================================
+   ACTIVE ITEM
+========================================================== */
 
 .ufm-sidebar-item-active {
   color: #fff;
 
-  border: 1px solid rgba(99, 102, 241, 0.35);
-
   background: linear-gradient(
     90deg,
-    rgba(99, 102, 241, 0.3),
-    rgba(99, 102, 241, 0.08)
+    rgba(99, 102, 241, 0.22),
+    rgba(99, 102, 241, 0.05)
+  );
+
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+.ufm-sidebar-item-active::before {
+  content: "";
+
+  position: absolute;
+
+  left: -18px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 4px;
+
+  height: 60%;
+
+  border-radius: 30px;
+
+  background: var(--ufm-primary);
+
+  box-shadow: 0 0 14px var(--ufm-primary);
+}
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.ufm-sidebar-icon {
+  width: 42px;
+
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  transition: 0.3s;
+}
+
+.ufm-sidebar-item:hover .ufm-sidebar-icon {
+  background: var(--ufm-primary);
+}
+
+.ufm-sidebar-item-active .ufm-sidebar-icon {
+  background: linear-gradient(
+    135deg,
+    var(--ufm-primary),
+    var(--ufm-primary-light)
   );
 }
 
-.ufm-sidebar-item-active:hover {
-  transform: translateX(6px);
-}
-
-.ufm-sidebar-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-}
+/* ==========================================================
+   TITLE
+========================================================== */
 
 .ufm-sidebar-title {
-  font-size: 15px;
-  font-weight: 500;
+  flex: 1;
 
-  white-space: nowrap;
-}
-
-.ufm-sidebar-icon {
-  width: 22px;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  flex-shrink: 0;
-}
-
-.ufm-sidebar-title {
   white-space: nowrap;
 
   font-size: 15px;
@@ -219,10 +337,14 @@
   transition: 0.25s;
 }
 
+/* ==========================================================
+   COLLAPSED
+========================================================== */
+
 .ufm-sidebar-collapse .ufm-sidebar-item {
   justify-content: center;
 
-  padding: 14px;
+  padding: 13px;
 }
 
 .ufm-sidebar-collapse .ufm-sidebar-title {
@@ -235,18 +357,42 @@
   pointer-events: none;
 }
 
+.ufm-sidebar-collapse .ufm-sidebar-item-active::before {
+  left: -12px;
+}
+
+/* ==========================================================
+   BOTTOM SECTION
+========================================================== */
+
+.ufm-sidebar-bottom {
+  flex-shrink: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 /* ==========================================================
    STORAGE
 ========================================================== */
 
 .ufm-sidebar-storage {
-  margin-top: 24px;
-
   padding: 18px;
 
   border-radius: 18px;
 
-  background: rgba(255, 255, 255, 0.04);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.025)
+  );
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 
@@ -256,7 +402,9 @@
 .ufm-sidebar-storage:hover {
   transform: translateY(-3px);
 
-  border-color: rgba(99, 102, 241, 0.4);
+  border-color: rgba(99, 102, 241, 0.35);
+
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
 }
 
 .ufm-sidebar-storage-head {
@@ -275,10 +423,12 @@
   color: #fff;
 
   font-size: 15px;
+
+  font-weight: 600;
 }
 
 .ufm-sidebar-storage-head span {
-  color: #8b5cf6;
+  color: var(--ufm-primary-light);
 
   font-weight: 700;
 }
@@ -288,9 +438,9 @@
 
   height: 8px;
 
-  border-radius: 100px;
-
   overflow: hidden;
+
+  border-radius: 50px;
 
   background: rgba(255, 255, 255, 0.08);
 
@@ -304,29 +454,23 @@
 
   border-radius: inherit;
 
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  background: linear-gradient(
+    90deg,
+    var(--ufm-primary),
+    var(--ufm-primary-light)
+  );
+
+  transition: width 0.4s ease;
 }
 
 .ufm-sidebar-storage p {
   margin: 0;
 
-  color: #9ca3af;
+  color: var(--ufm-text-muted);
 
   font-size: 13px;
-}
 
-.ufm-sidebar-collapse .ufm-sidebar-storage {
-  opacity: 0;
-
-  height: 0;
-
-  margin: 0;
-
-  padding: 0;
-
-  overflow: hidden;
-
-  border: none;
+  line-height: 1.5;
 }
 
 /* ==========================================================
@@ -334,12 +478,6 @@
 ========================================================== */
 
 .ufm-sidebar-user {
-  margin-top: 24px;
-
-  padding-top: 20px;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-
   display: flex;
 
   align-items: center;
@@ -362,21 +500,45 @@
 
   justify-content: center;
 
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(
+    135deg,
+    var(--ufm-primary),
+    var(--ufm-primary-light)
+  );
 
   color: #fff;
 
+  font-size: 18px;
+
   font-weight: 700;
 
-  font-size: 18px;
+  position: relative;
+}
+
+.ufm-sidebar-avatar::after {
+  content: "";
+
+  position: absolute;
+
+  right: 2px;
+
+  bottom: 2px;
+
+  width: 11px;
+
+  height: 11px;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+
+  border: 2px solid var(--ufm-bg);
 }
 
 .ufm-sidebar-user-info {
   flex: 1;
 
-  white-space: nowrap;
-
-  transition: 0.25s;
+  min-width: 0;
 }
 
 .ufm-sidebar-user-info h4 {
@@ -385,6 +547,14 @@
   color: #fff;
 
   font-size: 15px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 }
 
 .ufm-sidebar-user-info span {
@@ -392,19 +562,23 @@
 
   margin-top: 4px;
 
-  color: #9ca3af;
+  color: var(--ufm-text-muted);
 
   font-size: 12px;
 }
 
-.ufm-sidebar-logout {
-  width: 42px;
+/* ==========================================================
+   LOGOUT
+========================================================== */
 
-  height: 42px;
+.ufm-sidebar-logout {
+  width: 44px;
+
+  height: 44px;
+
+  flex-shrink: 0;
 
   border: none;
-
-  cursor: pointer;
 
   border-radius: 12px;
 
@@ -413,6 +587,8 @@
   align-items: center;
 
   justify-content: center;
+
+  cursor: pointer;
 
   color: #fff;
 
@@ -425,6 +601,14 @@
   background: #ef4444;
 
   transform: rotate(-8deg);
+}
+
+/* ==========================================================
+   COLLAPSE
+========================================================== */
+
+.ufm-sidebar-collapse .ufm-sidebar-storage {
+  display: none;
 }
 
 .ufm-sidebar-collapse .ufm-sidebar-user {
@@ -441,7 +625,6 @@
 
   pointer-events: none;
 }
-
 /* ==========================================================
    TABLET
 ========================================================== */
@@ -449,31 +632,33 @@
 @media (max-width: 1200px) {
   .ufm-sidebar {
     width: 260px;
+    padding: 20px 16px;
   }
 
   .ufm-sidebar-collapse {
-    width: 90px;
+    width: 86px;
+    padding: 20px 10px;
+  }
+
+  .ufm-sidebar-logo {
+    margin-bottom: 28px;
   }
 }
 
 /* ==========================================================
-   MOBILE DRAWER
+   OVERLAY
 ========================================================== */
-
-.ufm-sidebar-toggle {
-  display: none;
-}
-
-.ufm-sidebar-close {
-  display: none;
-}
 
 .ufm-sidebar-overlay {
   position: fixed;
 
   inset: 0;
 
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.6);
+
+  backdrop-filter: blur(6px);
+
+  -webkit-backdrop-filter: blur(6px);
 
   opacity: 0;
 
@@ -491,6 +676,18 @@
 }
 
 /* ==========================================================
+   MOBILE BUTTONS
+========================================================== */
+
+.ufm-sidebar-toggle {
+  display: none;
+}
+
+.ufm-sidebar-close {
+  display: none;
+}
+
+/* ==========================================================
    MOBILE
 ========================================================== */
 
@@ -498,31 +695,37 @@
   .ufm-sidebar {
     position: fixed;
 
-    left: -100%;
-
     top: 0;
 
-    width: 290px;
+    left: -100%;
 
-    height: 100vh;
+    width: 300px;
 
-    padding: 24px 20px;
+    max-width: 90vw;
+
+    height: 100dvh;
+
+    padding: 20px 18px;
 
     z-index: 999;
 
     transition: left 0.35s ease;
+
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
   }
 
   .ufm-sidebar-open {
     left: 0;
   }
 
-  /* Disable Desktop Collapse */
+  /* Mobile doesn't use collapse */
 
   .ufm-sidebar-collapse {
-    width: 290px;
+    width: 300px;
 
-    padding: 24px 20px;
+    max-width: 90vw;
+
+    padding: 20px 18px;
   }
 
   .ufm-sidebar-collapse .ufm-sidebar-logo {
@@ -532,7 +735,7 @@
   .ufm-sidebar-collapse .ufm-sidebar-item {
     justify-content: flex-start;
 
-    padding: 14px 16px;
+    padding: 13px 14px;
   }
 
   .ufm-sidebar-collapse .ufm-sidebar-logo-content,
@@ -555,6 +758,12 @@
     justify-content: flex-start;
   }
 
+  /* Navigation */
+
+  .ufm-sidebar-nav {
+    gap: 6px;
+  }
+
   /* Hamburger */
 
   .ufm-sidebar-toggle {
@@ -562,9 +771,9 @@
 
     position: fixed;
 
-    left: 18px;
+    left: 16px;
 
-    top: 18px;
+    top: 16px;
 
     width: 48px;
 
@@ -574,7 +783,7 @@
 
     border-radius: 14px;
 
-    background: #111827;
+    background: #151b2b;
 
     color: #fff;
 
@@ -590,7 +799,7 @@
   }
 
   .ufm-sidebar-toggle:hover {
-    background: #1f2937;
+    background: var(--ufm-primary);
   }
 
   /* Close */
@@ -600,9 +809,9 @@
 
     position: absolute;
 
-    right: 20px;
+    top: 18px;
 
-    top: 20px;
+    right: 18px;
 
     width: 42px;
 
@@ -626,7 +835,7 @@
   }
 
   .ufm-sidebar-close:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: #ef4444;
 
     transform: rotate(90deg);
   }
@@ -638,8 +847,76 @@
 
 @media (max-width: 480px) {
   .ufm-sidebar {
-    width: 270px;
+    width: 280px;
 
-    padding: 20px 16px;
+    max-width: 92vw;
+
+    padding: 18px 14px;
+  }
+
+  .ufm-sidebar-collapse {
+    width: 280px;
+
+    max-width: 92vw;
+
+    padding: 18px 14px;
+  }
+
+  .ufm-sidebar-logo {
+    margin-bottom: 24px;
+  }
+
+  .ufm-sidebar-logo-icon {
+    width: 48px;
+
+    height: 48px;
+
+    font-size: 20px;
+  }
+
+  .ufm-sidebar-logo-content h2 {
+    font-size: 18px;
+  }
+
+  .ufm-sidebar-item {
+    padding: 12px;
+
+    gap: 12px;
+  }
+
+  .ufm-sidebar-icon {
+    width: 38px;
+
+    height: 38px;
+  }
+
+  .ufm-sidebar-title {
+    font-size: 14px;
+  }
+
+  .ufm-sidebar-storage {
+    padding: 14px;
+  }
+
+  .ufm-sidebar-user {
+    gap: 10px;
+  }
+
+  .ufm-sidebar-avatar {
+    width: 44px;
+
+    height: 44px;
+
+    font-size: 16px;
+  }
+}
+
+/* ==========================================================
+   LANDSCAPE
+========================================================== */
+
+@media (max-height: 700px) {
+  .ufm-sidebar-nav {
+    padding-bottom: 10px;
   }
 }

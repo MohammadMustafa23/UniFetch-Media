@@ -10,41 +10,45 @@ export default function Stats({ stats }) {
       value: stats.totalDownloads.toLocaleString(),
       label: "Total Downloads",
       info: `+${stats.todayDownloads} Today`,
+     
     },
     {
       icon: <Activity size={26} />,
       value: stats.activeDownloads.toString().padStart(2, "0"),
       label: "Active Downloads",
       info: "Running",
+      
     },
     {
       icon: <CheckCircle2 size={26} />,
       value: stats.completedDownloads.toLocaleString(),
       label: "Completed",
       info: `${stats.successRate}% Success`,
+      
     },
     {
       icon: <HardDrive size={26} />,
       value: stats.storageUsed,
       label: "Storage Used",
       info: `${stats.storageLimit} Total`,
+     
     },
   ];
 
   return (
     <section className="ufm-stats">
       {cards.map((item, index) => (
-        <div className="ufm-stat-card" key={index}>
+        <article className="ufm-stat-card" key={index}>
           <div className="ufm-stat-icon">{item.icon}</div>
 
-          <div className="ufm-stat-content">
-            <h2>{item.value}</h2>
+          <div className="ufm-stat-info">
+            <p className="ufm-stat-label">{item.label}</p>
 
-            <h4>{item.label}</h4>
+            <h2 className="ufm-stat-value">{item.value}</h2>
 
-            <span>{item.info}</span>
+            <p className="ufm-stat-subtitle">{item.info}</p>
           </div>
-        </div>
+        </article>
       ))}
     </section>
   );
