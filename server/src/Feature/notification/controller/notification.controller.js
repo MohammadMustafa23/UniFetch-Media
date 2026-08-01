@@ -1,16 +1,52 @@
 import Notification from "../models/notification.model.js";
+import { redisClient } from "../../../config/redis.js";
 
 export const getNotifications = async (req, res) => {
-  const notifications = await Notification.find({
-    userId: req.user._id,
-  })
-    .sort({ createdAt: -1 })
-    .limit(50);
+  try {
+    const userId = req.user._id;
+    const cacheKey = `notifications:${userId}`;
 
-  res.status(200).json({
-    success: true,
-    notifications,
-  });
+    // ==========================
+    // Check Redis Cache
+    // ==========================
+    const cachedNotifications = await redisClient.get(cacheKey);
+
+    if (cachedNotifications) {
+      return res.status(200).json({
+        success: true,
+        notifications: cachedNotifications,
+      });
+    }
+
+    // ==========================
+    // Fetch from MongoDB
+    // ==========================
+    const notifications = await Notification.find({
+      userId,
+    })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .lean();
+
+    // ==========================
+    // Save to Redis (1 Minute)
+    // ==========================
+    await redisClient.set(cacheKey, notifications, {
+      ex: 60,
+    });
+
+    return res.status(200).json({
+      success: true,
+      notifications,
+    });
+  } catch (error) {
+    console.error("Get Notifications Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch notifications.",
+    });
+  }
 };
 
 export const markAsRead = async (req, res) => {
@@ -36,6 +72,8 @@ export const markAsRead = async (req, res) => {
     });
   }
 
+  await redisClient.del(`notifications:${req.user._id}`);
+
   res.status(200).json({
     success: true,
     notification,
@@ -53,6 +91,7 @@ export const markAllAsRead = async (req, res) => {
     },
   );
 
+  await redisClient.del(`notifications:${req.user._id}`);
   res.status(200).json({
     success: true,
     message: "All notifications marked as read.",
@@ -74,6 +113,8 @@ export const deleteNotification = async (req, res) => {
     });
   }
 
+  await redisClient.del(`notifications:${req.user._id}`);
+
   res.status(200).json({
     success: true,
     message: "Notification deleted.",
@@ -84,6 +125,8 @@ export const clearNotifications = async (req, res) => {
   await Notification.deleteMany({
     userId: req.user._id,
   });
+
+  await redisClient.del(`notifications:${req.user._id}`);
 
   res.status(200).json({
     success: true,

@@ -34,6 +34,10 @@ const downloadSchema = new mongoose.Schema(
       enum: ["device", "platform"],
       default: "device",
     },
+    publicId: {
+      type: String,
+      default: null,
+    },
 
     thumbnail: {
       type: String,

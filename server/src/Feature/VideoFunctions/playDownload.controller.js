@@ -3,6 +3,8 @@ import { promises as fsPromises } from "fs";
 import mime from "mime-types";
 import Download from "../download/models/download.model.js";
 import path from "path";
+import { deleteFromCloudinary } from "../../cloud/cloudinary.js";
+import { redisClient } from "../../config/redis.js";
 
 export const playDownload = async (req, res) => {
   try {
@@ -20,7 +22,17 @@ export const playDownload = async (req, res) => {
       });
     }
 
-    if (!fs.existsSync(download.filePath)) {
+    // ==========================
+    // Cloud Storage
+    // ==========================
+    if (download.storageProvider === "platform") {
+      return res.redirect(download.filePath);
+    }
+
+    // ==========================
+    // Device Storage
+    // ==========================
+    if (!download.filePath || !fs.existsSync(download.filePath)) {
       return res.status(404).json({
         success: false,
         message: "File not found.",
@@ -35,12 +47,11 @@ export const playDownload = async (req, res) => {
 
     const range = req.headers.range;
 
-    // Partial Content (HTML5 Video Streaming)
+    // Partial Streaming
     if (range) {
       const parts = range.replace(/bytes=/, "").split("-");
 
       const start = parseInt(parts[0], 10);
-
       const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
 
       const chunkSize = end - start + 1;
@@ -71,9 +82,9 @@ export const playDownload = async (req, res) => {
 
     fs.createReadStream(filePath).pipe(res);
   } catch (error) {
-    console.error(error);
+    console.error("Play Download:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Something went wrong.",
     });
@@ -96,6 +107,47 @@ export const saveDownload = async (req, res) => {
       });
     }
 
+    // =========================================
+    // CLOUD STORAGE
+    // =========================================
+    if (download.storageProvider === "platform") {
+      const response = await fetch(download.filePath);
+
+      if (!response.ok) {
+        return res.status(404).json({
+          success: false,
+          message: "Cloud file not found.",
+        });
+      }
+
+      const buffer = Buffer.from(await response.arrayBuffer());
+
+      const extension =
+        path.extname(new URL(download.filePath).pathname) || ".mp4";
+
+      const originalFileName = `${download.title}${extension}`;
+
+      // ASCII fallback (required for compatibility)
+      const fallbackName = "download" + extension;
+
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${fallbackName}"; filename*=UTF-8''${encodeURIComponent(originalFileName)}`,
+      );
+
+      res.setHeader(
+        "Content-Type",
+        response.headers.get("content-type") || "application/octet-stream",
+      );
+
+      res.setHeader("Content-Length", buffer.length);
+
+      return res.end(buffer);
+    }
+
+    // =========================================
+    // DEVICE STORAGE
+    // =========================================
     if (!download.filePath || !fs.existsSync(download.filePath)) {
       return res.status(404).json({
         success: false,
@@ -104,7 +156,9 @@ export const saveDownload = async (req, res) => {
     }
 
     const extension = path.extname(download.filePath);
+
     const safeTitle = download.title.replace(/[<>:"/\\|?*]+/g, "").trim();
+
     const fileName = `${safeTitle}${extension}`;
 
     res.download(download.filePath, fileName, async (err) => {
@@ -114,30 +168,29 @@ export const saveDownload = async (req, res) => {
         if (!res.headersSent) {
           return res.status(500).json({
             success: false,
-            message: "Failed to download file.",
+            message: "Download failed.",
           });
         }
 
         return;
       }
 
-      // Delete temporary file only for device storage
-      if (download.storageProvider === "device") {
-        try {
-          if (fs.existsSync(download.filePath)) {
-            await fs.promises.unlink(download.filePath);
-          }
-
-          await Download.findByIdAndDelete(download._id);
-
-          console.log("🗑 Temporary file deleted:", fileName);
-        } catch (cleanupError) {
-          console.error("Cleanup Error:", cleanupError);
+      // Delete only local temporary files
+      try {
+        if (
+          download.storageProvider === "device" &&
+          fs.existsSync(download.filePath)
+        ) {
+          await fs.promises.unlink(download.filePath);
         }
+
+        await Download.findByIdAndDelete(download._id);
+      } catch (cleanupError) {
+        console.error(cleanupError);
       }
     });
   } catch (error) {
-    console.error("Save Download:", error);
+    console.error("Save Download Error:", error);
 
     return res.status(500).json({
       success: false,
@@ -146,17 +199,15 @@ export const saveDownload = async (req, res) => {
   }
 };
 
-
 export const deleteDownload = async (req, res) => {
-  console.log("DELETE DOWNLOAD API HIT");
   try {
     const { id } = req.params;
-    console.log(id);
-
     const download = await Download.findOne({
       _id: id,
       userId: req.user._id,
     });
+
+    const cacheKey = `downloads:${req.user._id}`;
 
     if (!download) {
       return res.status(404).json({
@@ -165,26 +216,60 @@ export const deleteDownload = async (req, res) => {
       });
     }
 
-    console.log(download);
+    // ==========================
+    // Cloud Storage
+    // ==========================
+    if (download.storageProvider === "platform") {
+      try {
+        // Delete from Cloudinary
+        await deleteFromCloudinary(download.publicId);
 
-    // Delete local file (if it exists)
-    fs.unlink(download.filePath, async (err) => {
-      if (err) {
-        return res.status(404).json({
+        await download.deleteOne();
+
+        // Clear Redis Cache
+        await redisClient.del(cacheKey);
+
+        return res.status(200).json({
+          success: true,
+          message: "Cloud download deleted successfully.",
+        });
+
+        return res.status(200).json({
+          success: true,
+          message: "Cloud download deleted successfully.",
+        });
+      } catch (error) {
+        return res.status(500).json({
           success: false,
-          message: "File Delete Error",
+          message: "Failed to delete cloud file.",
         });
       }
+    }
 
-      await download.deleteOne();
+    // ==========================
+    // Device Storage
+    // ==========================
+    if (download.filePath && fs.existsSync(download.filePath)) {
+      await fs.promises.unlink(download.filePath);
+    }
 
-      return res.status(200).json({
-        success: true,
-        message: "Download deleted successfully.",
-      });
+    await download.deleteOne();
+
+    // Clear Redis Cache
+    await redisClient.del(cacheKey);
+
+    return res.status(200).json({
+      success: true,
+      message: "Cloud download deleted successfully.",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Download deleted successfully.",
     });
   } catch (error) {
     console.error("Delete Download:", error);
+
     return res.status(500).json({
       success: false,
       message: "Failed to delete download.",

@@ -6,6 +6,8 @@ import { safeFileName } from "../utils/fileName.js";
 import { getIO } from "../../../socket/socket.js";
 import { findDownloadedFile } from "../utils/findDownloadedFile.js";
 import { createNotification } from "../../notification/service/notification.service.js";
+import { uploadToCloudinary } from "../../../cloud/cloudinary.js";
+import { redisClient } from "../../../config/redis.js";
 import fs from "fs";
 class DownloadQueue {
   constructor() {
@@ -221,6 +223,28 @@ class DownloadQueue {
 
       const latestDownload = await Download.findById(download._id);
 
+      let cloudFile = null;
+      if (download.storageProvider === "platform") {
+        console.log("☁ Uploading to Cloudinary...");
+        cloudFile = await uploadToCloudinary(actualFile, "downloads");
+        console.log("✅ Uploaded:", cloudFile.secure_url);
+        // Delete local temporary file
+        await fs.promises.unlink(actualFile);
+        console.log("🗑 Local file deleted.");
+      }
+
+      await Download.findByIdAndUpdate(download._id, {
+        status: "completed",
+        progress: 100,
+        eta: "",
+        filePath:
+          download.storageProvider === "platform"
+            ? cloudFile.secure_url
+            : actualFile,
+        publicId:
+          download.storageProvider === "platform" ? cloudFile.public_id : null,
+      });
+
       if (latestDownload.status === "paused") {
         console.log("⏸ Download paused.");
         return;
@@ -230,13 +254,24 @@ class DownloadQueue {
         status: "completed",
         progress: 100,
         eta: "",
-        filePath: actualFile || "",
+
+        filePath:
+          download.storageProvider === "platform"
+            ? cloudFile.secure_url
+            : actualFile,
+
+        publicId:
+          download.storageProvider === "platform" ? cloudFile.public_id : null,
       });
+
+      // ✅ Clear Downloads Cache
+      await redisClient.del(`downloads:${download.userId}`);
 
       console.log(
         "📤 Emitting download-completed to:",
         download.userId.toString(),
       );
+
       getIO().to(download.userId.toString()).emit("download-status", {
         downloadId: download._id.toString(),
         status: "completed",
