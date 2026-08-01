@@ -2,14 +2,12 @@ import "./DownloadCard.css";
 
 import {
   Play,
-  Smartphone,
   Share2,
   Trash2,
-  Link2,
   Camera,
   Music2,
   PlaySquare,
-  Phone,
+  LoaderCircle,
 } from "lucide-react";
 
 import { formatFileSize } from "../../../utils/formatFileSize.js";
@@ -29,43 +27,37 @@ export default function DownloadCard({
   onSave,
   onShare,
   onDelete,
+  saving,
 }) {
   return (
     <article className="download-card">
       {/* Thumbnail */}
-
       <div className="download-thumb">
         <img src={item.thumbnail} alt={item.title} />
 
         <button
           className="download-play"
           aria-label="Play video"
-          onClick={() => onPlay?.(item)}
+          onClick={() => onPlay(item)}
         >
           <Play size={18} />
         </button>
 
         <span className="download-platform">
           {icons[item.platform?.toLowerCase()]}
-
           {item.platform}
         </span>
       </div>
 
       {/* Content */}
-
       <div className="download-body">
         <h3>{item.title}</h3>
 
         <p>
           {item.quality}
-
           <span> • </span>
-
           {item.format?.toUpperCase()}
-
           <span> • </span>
-
           {formatFileSize(item.fileSize)}
         </p>
 
@@ -73,32 +65,39 @@ export default function DownloadCard({
       </div>
 
       {/* Actions */}
-
       <div className="download-actions">
         {/* Play */}
-        <button
-          type="button"
-          title="Play"
-          aria-label="Play video"
-          onClick={() => onPlay?.(item)}
-        >
+        <button type="button" title="Play" onClick={() => onPlay(item)}>
           <Play size={18} />
         </button>
 
-        {/* Save to Mobile */}
-        <button className="primary-btn" onClick={() => onSave?.(item)}>
-          Save
+        {/* Save */}
+        <button
+          className="primary-btn"
+          disabled={saving}
+          onClick={() => onSave(item)}
+        >
+          {saving ? (
+            <>
+              <LoaderCircle size={18} className="download-spinner-icon" />
+              Saving...
+            </>
+          ) : (
+            <>Save</>
+          )}
         </button>
 
         {/* Share */}
-        <button title="Share" onClick={() => onShare?.(item)}>
+        <button title="Share" onClick={() => onShare(item)} disabled={saving}>
           <Share2 size={18} />
         </button>
+
         {/* Delete */}
         <button
           className="delete-btn"
           title="Delete"
-          onClick={() => onDelete?.(item)}
+          onClick={() => onDelete(item)}
+          disabled={saving}
         >
           <Trash2 size={18} />
         </button>

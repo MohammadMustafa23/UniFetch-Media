@@ -51,6 +51,30 @@ export const saveDownload = async (id) => {
 
 export const shareDownload = async (item) => {
   try {
+    // ==========================
+    // Cloud Storage
+    // ==========================
+    if (item.storageProvider === "platform") {
+      if (navigator.share) {
+        await navigator.share({
+          title: item.title,
+          text: "Shared from UniFetch",
+          url: item.filePath,
+        });
+
+        return;
+      }
+
+      await navigator.clipboard.writeText(item.filePath);
+
+      toast.success("Cloud link copied.");
+
+      return;
+    }
+
+    // ==========================
+    // Device Storage
+    // ==========================
     const response = await api.get(`/download/save/${item._id}`, {
       responseType: "blob",
     });
@@ -61,7 +85,6 @@ export const shareDownload = async (item) => {
       type: response.data.type,
     });
 
-    // Native File Share
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
         title: item.title,
@@ -72,7 +95,6 @@ export const shareDownload = async (item) => {
       return;
     }
 
-    // Fallback
     const url = URL.createObjectURL(file);
 
     await navigator.clipboard.writeText(url);

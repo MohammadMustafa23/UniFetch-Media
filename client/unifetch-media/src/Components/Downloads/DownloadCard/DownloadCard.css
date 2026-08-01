@@ -1,166 +1,364 @@
-/*==========================================
+/*==================================================
 DOWNLOAD CARD
-==========================================*/
+==================================================*/
 
 .download-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #111722;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 22px;
-  transition: 0.3s;
+
+  background: linear-gradient(180deg, #161d2c 0%, #101722 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+
+  transition: all 0.35s ease;
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.22),
+    inset 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.download-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.12),
+    transparent 40%,
+    transparent 60%,
+    rgba(99, 102, 241, 0.08)
+  );
+  opacity: 0;
+  transition: 0.35s;
+  pointer-events: none;
 }
 
 .download-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  transform: translateY(-8px);
+  border-color: rgba(99, 102, 241, 0.45);
+
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.35),
+    0 0 40px rgba(99, 102, 241, 0.12);
 }
 
-/*==========================================
+.download-card:hover::before {
+  opacity: 1;
+}
+
+/*==================================================
 THUMBNAIL
-==========================================*/
+==================================================*/
 
 .download-thumb {
   position: relative;
-  height: 210px;
+  height: 220px;
   overflow: hidden;
+  background: #0c1018;
 }
 
 .download-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: 0.4s;
+  transition:
+    transform 0.5s ease,
+    filter 0.35s ease;
 }
 
-.download-card:hover img {
-  transform: scale(1.05);
+.download-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0.15),
+    transparent
+  );
+
+  pointer-events: none;
 }
 
-/*==========================================
-PLAY
-==========================================*/
+.download-card:hover .download-thumb img {
+  transform: scale(1.08);
+  filter: brightness(1.05);
+}
+
+/*==================================================
+PLAY BUTTON
+==================================================*/
 
 .download-play {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: 58px;
-  height: 58px;
+  z-index: 5;
+
+  transform: translate(-50%, -50%) scale(0.9);
+
+  width: 64px;
+  height: 64px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
+
   background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
-  color: #fff;
+  backdrop-filter: blur(14px);
+
+  color: white;
   cursor: pointer;
-  transition: 0.25s;
+
+  transition: 0.3s;
+}
+
+.download-card:hover .download-play {
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .download-play:hover {
   background: #6366f1;
+  box-shadow:
+    0 0 0 8px rgba(99, 102, 241, 0.15),
+    0 10px 25px rgba(99, 102, 241, 0.45);
 }
 
-/*==========================================
-PLATFORM
-==========================================*/
+/*==================================================
+PLATFORM BADGE
+==================================================*/
 
 .download-platform {
   position: absolute;
-  left: 16px;
-  top: 16px;
-  display: flex;
+  top: 18px;
+  left: 18px;
+  z-index: 5;
+
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(10px);
+
+  padding: 9px 15px;
+
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(15px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
+
+  color: white;
   font-size: 13px;
   font-weight: 600;
-  color: #fff;
+
+  letter-spacing: 0.3px;
 }
 
-/*==========================================
+/*==================================================
 BODY
-==========================================*/
+==================================================*/
 
 .download-body {
-  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  padding: 24px;
 }
 
 .download-body h3 {
+  margin: 0;
+
   font-size: 18px;
   font-weight: 700;
-  color: #fff;
-  margin-bottom: 10px;
-  line-height: 1.4;
+  color: #ffffff;
+
+  line-height: 1.45;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  overflow: hidden;
 }
 
 .download-body p {
+  margin: 0;
+
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
+
   font-size: 14px;
-  color: #8f98aa;
-  margin-bottom: 10px;
+  color: #a6afc2;
+  line-height: 1.6;
 }
 
 .download-body p span {
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 .download-body small {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #79839b;
   font-size: 13px;
-  color: #6f7789;
+  line-height: 1.5;
 }
 
-/*==========================================
+/*==================================================
+INFO BADGES
+==================================================*/
+
+.download-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.download-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 8px 12px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+
+  color: #cdd5e3;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/*==================================================
 ACTIONS
-==========================================*/
+==================================================*/
 
 .download-actions {
   display: flex;
   justify-content: space-between;
-  padding: 18px 22px;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 20px 22px;
+
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  background: rgba(255, 255, 255, 0.015);
 }
 
 .download-actions button {
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border: none;
-  border-radius: 12px;
-  background: #1a2130;
-  color: #c4cad8;
+  border-radius: 14px;
+
+  background: #1d2534;
+
+  color: #d3d8e5;
   cursor: pointer;
-  transition: 0.25s;
+
+  transition: 0.28s;
 }
 
 .download-actions button:hover {
+  transform: translateY(-3px);
+
   background: #6366f1;
-  color: #fff;
+  color: white;
+
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.35);
 }
+
+.download-actions button:active {
+  transform: scale(0.94);
+}
+
+/*==================================================
+DELETE
+==================================================*/
 
 .delete-btn:hover {
   background: #ef4444 !important;
+
+  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.35);
 }
 
-/*==========================================
+/*==================================================
+DOWNLOAD BUTTON STATES
+==================================================*/
+
+.download-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/*==================================================
+SCROLL TITLE TOOLTIP
+==================================================*/
+
+.download-body h3:hover {
+  color: #dfe7ff;
+}
+
+/*==================================================
 RESPONSIVE
-==========================================*/
+==================================================*/
+
+@media (max-width: 992px) {
+  .download-thumb {
+    height: 200px;
+  }
+}
 
 @media (max-width: 768px) {
+  .download-card {
+    border-radius: 20px;
+  }
+
   .download-thumb {
     height: 180px;
+  }
+
+  .download-body {
+    padding: 20px;
+    gap: 12px;
+  }
+
+  .download-body h3 {
+    font-size: 17px;
+  }
+
+  .download-actions {
+    padding: 18px;
+  }
+
+  .download-actions button {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 480px) {
+  .download-thumb {
+    height: 170px;
   }
 
   .download-body {
@@ -169,5 +367,30 @@ RESPONSIVE
 
   .download-body h3 {
     font-size: 16px;
+  }
+
+  .download-body p,
+  .download-body small {
+    font-size: 13px;
+  }
+
+  .download-platform {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .download-play {
+    width: 56px;
+    height: 56px;
+  }
+
+  .download-actions {
+    gap: 8px;
+  }
+
+  .download-actions button {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
   }
 }

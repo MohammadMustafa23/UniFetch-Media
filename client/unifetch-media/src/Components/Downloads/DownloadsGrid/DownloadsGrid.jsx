@@ -30,13 +30,25 @@ export default function DownloadsGrid({
 
   const [deleting, setDeleting] = useState(false);
 
+  const [savingId, setSavingId] = useState(null);
+
   const handlePlay = (item) => {
     setSelectedVideo(item);
     setIsPlayerOpen(true);
   };
 
-  const handleSave = (item) => {
-    saveDownload(item._id);
+  const handleSave = async (item) => {
+    try {
+      setSavingId(item._id);
+
+      await saveDownload(item._id);
+
+      toast.success("Download started.");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Download failed.");
+    } finally {
+      setSavingId(null);
+    }
   };
 
   const handleShare = async (item) => {
@@ -105,6 +117,7 @@ export default function DownloadsGrid({
           <DownloadCard
             key={download._id}
             item={download}
+            saving={savingId === download._id}
             onPlay={handlePlay}
             onSave={handleSave}
             onShare={handleShare}
