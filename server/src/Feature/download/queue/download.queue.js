@@ -119,6 +119,7 @@ class DownloadQueue {
       console.error("Progress Error:", err);
     }
   }
+
   // Process Queue
   async process() {
     // Already downloading
@@ -221,8 +222,6 @@ class DownloadQueue {
         safeFileName(download.title),
       );
 
-      const latestDownload = await Download.findById(download._id);
-
       let cloudFile = null;
       if (download.storageProvider === "platform") {
         console.log("☁ Uploading to Cloudinary...");
@@ -233,17 +232,7 @@ class DownloadQueue {
         console.log("🗑 Local file deleted.");
       }
 
-      await Download.findByIdAndUpdate(download._id, {
-        status: "completed",
-        progress: 100,
-        eta: "",
-        filePath:
-          download.storageProvider === "platform"
-            ? cloudFile.secure_url
-            : actualFile,
-        publicId:
-          download.storageProvider === "platform" ? cloudFile.public_id : null,
-      });
+      const latestDownload = await Download.findById(download._id);
 
       if (latestDownload.status === "paused") {
         console.log("⏸ Download paused.");
@@ -254,12 +243,10 @@ class DownloadQueue {
         status: "completed",
         progress: 100,
         eta: "",
-
         filePath:
           download.storageProvider === "platform"
             ? cloudFile.secure_url
             : actualFile,
-
         publicId:
           download.storageProvider === "platform" ? cloudFile.public_id : null,
       });
@@ -267,19 +254,16 @@ class DownloadQueue {
       // ✅ Clear Downloads Cache
       await redisClient.del(`downloads:${download.userId}`);
 
-      console.log(
-        "📤 Emitting download-completed to:",
-        download.userId.toString(),
-      );
+      console.log("📤 Emitting download-status:", download.userId.toString());
 
       getIO().to(download.userId.toString()).emit("download-status", {
         downloadId: download._id.toString(),
+        storageProvider: download.storageProvider, // ⭐ IMPORTANT
         status: "completed",
         progress: 100,
         downloadSpeed: "",
         eta: "",
       });
-
       await createNotification({
         userId: download.userId,
         title: "Download Complete",

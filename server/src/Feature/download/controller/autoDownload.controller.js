@@ -38,7 +38,6 @@ export async function autoDownload(req, res) {
       });
     }
 
-    console.log("Storage Provider:", preference.storage.provider);
     const downloadData = {
       videoId: video.id,
       userId,
@@ -76,7 +75,8 @@ export async function autoDownload(req, res) {
       progress: 0,
     });
 
-    console.log("Saved Storage:", download.storageProvider);
+    
+    
     // Add to queue
     downloadQueue.add(download);
     

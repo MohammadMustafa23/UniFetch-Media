@@ -125,19 +125,20 @@ export const saveDownload = async (req, res) => {
       const extension =
         path.extname(new URL(download.filePath).pathname) || ".mp4";
 
-      const originalFileName = `${download.title}${extension}`;
+      const safeTitle = (download.title || "video")
+        .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+        .trim();
 
-      // ASCII fallback (required for compatibility)
-      const fallbackName = "download" + extension;
+      const fileName = `${safeTitle}${extension}`;
 
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename="${fallbackName}"; filename*=UTF-8''${encodeURIComponent(originalFileName)}`,
+        `attachment; filename*=UTF-8''${encodeURIComponent(fileName)}`
       );
 
       res.setHeader(
         "Content-Type",
-        response.headers.get("content-type") || "application/octet-stream",
+        response.headers.get("content-type") || "application/octet-stream"
       );
 
       res.setHeader("Content-Length", buffer.length);
@@ -157,7 +158,9 @@ export const saveDownload = async (req, res) => {
 
     const extension = path.extname(download.filePath);
 
-    const safeTitle = download.title.replace(/[<>:"/\\|?*]+/g, "").trim();
+    const safeTitle = (download.title || "video")
+      .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+      .trim();
 
     const fileName = `${safeTitle}${extension}`;
 
@@ -175,7 +178,6 @@ export const saveDownload = async (req, res) => {
         return;
       }
 
-      // Delete only local temporary files
       try {
         if (
           download.storageProvider === "device" &&
