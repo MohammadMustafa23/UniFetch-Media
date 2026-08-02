@@ -83,7 +83,7 @@ const QueueList = ({ filter }) => {
       }
     };
 
-    const handleStatus = (data) => {
+    const handleStatus = async (data) => {
       console.log("📡 download-status:", data);
 
       setQueue((prev) =>
@@ -103,6 +103,16 @@ const QueueList = ({ filter }) => {
           };
         }),
       );
+
+      // ⭐ Auto browser download only for device
+      if (data.status === "completed" && data.storageProvider === "device") {
+        try {
+          await saveDownload(data.downloadId);
+          console.log("📥 Browser download started");
+        } catch (error) {
+          console.error(error);
+        }
+      }
     };
 
     const handleDelete = ({ downloadId }) => {

@@ -13,14 +13,12 @@ export const deleteDownload = async (id) => {
   const { data } = await api.delete(`/download/delete/${id}`);
   return data;
 };
-
 export const saveDownload = async (id) => {
   const response = await api.get(`/download/save/${id}`, {
     responseType: "blob",
   });
 
   const blob = new Blob([response.data]);
-
   const url = window.URL.createObjectURL(blob);
 
   const disposition = response.headers["content-disposition"];
@@ -28,24 +26,29 @@ export const saveDownload = async (id) => {
   let fileName = "download.mp4";
 
   if (disposition) {
-    const match = disposition.match(/filename="?([^"]+)"?/);
+    // RFC 5987 (filename*=UTF-8'')
+    const utf8Match = disposition.match(/filename\*\s*=\s*UTF-8''([^;]+)/i);
 
-    if (match) {
-      fileName = match[1];
+    if (utf8Match) {
+      fileName = decodeURIComponent(utf8Match[1]);
+    } else {
+      // Normal filename=""
+      const normalMatch = disposition.match(/filename\s*=\s*"([^"]+)"/i);
+
+      if (normalMatch) {
+        fileName = normalMatch[1];
+      }
     }
   }
 
   const link = document.createElement("a");
-
   link.href = url;
   link.download = fileName;
 
   document.body.appendChild(link);
-
   link.click();
 
-  link.remove();
-
+  document.body.removeChild(link);
   window.URL.revokeObjectURL(url);
 };
 
