@@ -73,17 +73,17 @@ export default function DownloadCard({
 
         {/* Save */}
         <button
-          className="primary-btn"
+          className={`primary-btn ${saving ? "loading" : ""}`}
           disabled={saving}
           onClick={() => onSave(item)}
         >
           {saving ? (
             <>
-              <LoaderCircle size={18} className="download-spinner-icon" />
-              Saving...
+              <LoaderCircle size={18} className="btn-spinner" />
+              <span>Saving...</span>
             </>
           ) : (
-            <>Save</>
+            <span>Save</span>
           )}
         </button>
 
