@@ -1,6 +1,7 @@
 import Download from "../models/download.model.js";
 import downloadQueue from "../queue/download.queue.js";
 import Preference from "../../Preferences/models/preferences.model.js";
+import { redisClient } from "../../../config/redis.js";
 
 export async function createDownload(req, res) {
   try {
@@ -54,9 +55,12 @@ export async function createDownload(req, res) {
       progress: 0,
     });
 
-    // Add to download queue
-    downloadQueue.add(download);
+    // ✅ Clear Downloads Cache
+    await redisClient.del(`downloads:${userId}`);
 
+    // Add to download queue
+    downloadQueue.add(download._id);
+    
     return res.status(201).json({
       success: true,
       message: "Download added to queue successfully.",

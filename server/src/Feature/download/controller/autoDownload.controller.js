@@ -5,6 +5,8 @@ import detectPlatform from "../../Downloader/utils/detectPlatform.js";
 import Download from "../models/download.model.js";
 import downloadQueue from "../queue/download.queue.js";
 
+import { redisClient } from "../../../config/redis.js";
+
 export async function autoDownload(req, res) {
   try {
     const { url } = req.body;
@@ -75,8 +77,10 @@ export async function autoDownload(req, res) {
       progress: 0,
     });
 
-    
-    
+    // ✅ Clear Downloads Cache
+    await redisClient.del(`downloads:${userId}`);
+
+
     // Add to queue
     downloadQueue.add(download);
     
@@ -85,6 +89,7 @@ export async function autoDownload(req, res) {
       message: "Download added to queue successfully.",
       data: download,
     });
+    
   } catch (error) {
     console.error("Auto Download Error:", error);
 

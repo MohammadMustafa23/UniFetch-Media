@@ -179,16 +179,23 @@ export const saveDownload = async (req, res) => {
       }
 
       try {
-        if (
-          download.storageProvider === "device" &&
-          fs.existsSync(download.filePath)
-        ) {
-          await fs.promises.unlink(download.filePath);
-        }
+        // Device storage cleanup only
+        if (download.storageProvider === "device") {
+          // Delete temporary file
+          if (fs.existsSync(download.filePath)) {
+            await fs.promises.unlink(download.filePath);
+            console.log("🗑 Local file deleted.");
+          }
 
-        await Download.findByIdAndDelete(download._id);
+          // Delete MongoDB record
+          await Download.findByIdAndDelete(download._id);
+          console.log("🗑 Download record deleted.");
+
+          // Clear Redis cache
+          await redisClient.del(`downloads:${download.userId}`);
+        }
       } catch (cleanupError) {
-        console.error(cleanupError);
+        console.error("Cleanup Error:", cleanupError);
       }
     });
   } catch (error) {
