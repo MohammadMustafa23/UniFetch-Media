@@ -33,7 +33,6 @@ export async function getDownloadInfo(req, res) {
 
     // ==============================
     // Check History First
-
     // ==============================
     const videoId = extractYouTubeVideoId(url);
 
@@ -67,15 +66,18 @@ export async function getDownloadInfo(req, res) {
     // Fetch Video Info
     // ==============================
     const videoInfo = await getVideoInfo(url);
-
+    
     const formatted = formatVideoInfo(videoInfo, url);
 
-    
     await redisClient.set(cacheKey, formatted, {
       ex: 60 * 60 * 24, // 24 Hours
     });
 
-    
+    // ==========================
+    // Clear Redis Cache
+    // ==========================
+    await redisClient.del(`history:${req.user._id}`);
+
     // ==============================
     // Save History
     // ==============================

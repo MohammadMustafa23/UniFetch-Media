@@ -2,6 +2,7 @@ import Download from "../models/download.model.js";
 import downloadQueue from "../queue/download.queue.js";
 import Preference from "../../Preferences/models/preferences.model.js";
 import { redisClient } from "../../../config/redis.js";
+import User from "../../../models/user.model.js";
 
 export async function createDownload(req, res) {
   try {
@@ -17,7 +18,6 @@ export async function createDownload(req, res) {
 
     const {
       videoId,
-      id,
       url,
       title,
       thumbnail,
@@ -25,6 +25,7 @@ export async function createDownload(req, res) {
       duration,
       quality = "best",
       format = "mp4",
+      fileSize = 0,
     } = req.body;
 
     const existingDownload = await Download.findOne({
@@ -40,6 +41,27 @@ export async function createDownload(req, res) {
       });
     }
 
+    // =====================================
+    // Cloud Storage Limit Check
+    // =====================================
+    if (preference.storage.provider === "platform") {
+      const user = await User.findById(userId).select("cloudStorage");
+      const remaining = user.cloudStorage.limit - user.cloudStorage.used;
+
+      if (fileSize && fileSize > remaining) {
+        return res.status(403).json({
+          success: false,
+          message: "Cloud storage limit exceeded.",
+          storage: {
+            used: user.cloudStorage.used,
+            limit: user.cloudStorage.limit,
+            remaining,
+            required: fileSize,
+          },
+        });
+      }
+    }
+
     const download = await Download.create({
       videoId,
       userId,
@@ -50,6 +72,8 @@ export async function createDownload(req, res) {
       duration,
       quality,
       format,
+      fileSize,
+      downloadedSize: 0,
       storageProvider: preference.storage.provider,
       status: "queued",
       progress: 0,
@@ -60,7 +84,7 @@ export async function createDownload(req, res) {
 
     // Add to download queue
     downloadQueue.add(download._id);
-    
+
     return res.status(201).json({
       success: true,
       message: "Download added to queue successfully.",

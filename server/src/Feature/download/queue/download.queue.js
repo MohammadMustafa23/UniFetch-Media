@@ -8,6 +8,8 @@ import { findDownloadedFile } from "../utils/findDownloadedFile.js";
 import { createNotification } from "../../notification/service/notification.service.js";
 import { uploadToCloudinary } from "../../../cloud/cloudinary.js";
 import { redisClient } from "../../../config/redis.js";
+import User from "../../../models/user.model.js";
+
 import fs from "fs";
 class DownloadQueue {
   constructor() {
@@ -223,10 +225,32 @@ class DownloadQueue {
       );
 
       let cloudFile = null;
+
       if (download.storageProvider === "platform") {
         console.log("☁ Uploading to Cloudinary...");
         cloudFile = await uploadToCloudinary(actualFile, "downloads");
         console.log("✅ Uploaded:", cloudFile.secure_url);
+
+        // ===============================
+        // Get actual file size
+        // ===============================
+        const stats = await fs.promises.stat(actualFile);
+
+        // Save actual size in Download document
+        download.fileSize = stats.size;
+        download.downloadedSize = stats.size;
+
+        // Increase user's used cloud storage
+        await User.findByIdAndUpdate(download.userId, {
+          $inc: {
+            "cloudStorage.used": stats.size,
+          },
+        });
+        await redisClient.del(`storage:${download.userId}`);
+
+        // Save updated download
+        await download.save();
+
         // Delete local temporary file
         await fs.promises.unlink(actualFile);
         console.log("🗑 Local file deleted.");

@@ -19,7 +19,10 @@ function extractAudioFormats(formats) {
 
       codec: format.acodec,
 
-      size: formatSize(format.filesize || format.filesize_approx),
+      fileSize: {
+        bytes: format.filesize ?? format.filesize_approx ?? 0,
+        text: formatSize(format.filesize ?? format.filesize_approx),
+      },
     });
   }
   return result.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
@@ -130,7 +133,7 @@ function getQualityLabel(height) {
   return map[height] || `${height}p`;
 }
 
-export default function formatVideoInfo(video,url) {
+export default function formatVideoInfo(video, url) {
   const videoFormats = extractVideoFormats(video.formats);
 
   return {
@@ -139,9 +142,12 @@ export default function formatVideoInfo(video,url) {
     =========================== */
 
     id: video.id,
-    url : url,
+    url: url,
     platform: video.extractor_key?.toLowerCase(),
-
+    fileSize: {
+      bytes: video.filesize ?? video.filesize_approx ?? 0,
+      text: formatSize(video.filesize ?? video.filesize_approx),
+    },
     type:
       video.live_status === "is_live"
         ? "live"

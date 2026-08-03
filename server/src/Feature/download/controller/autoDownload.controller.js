@@ -6,6 +6,10 @@ import Download from "../models/download.model.js";
 import downloadQueue from "../queue/download.queue.js";
 
 import { redisClient } from "../../../config/redis.js";
+import History from "../../History/models/history.model.js";
+import User from "../../../models/user.model.js";
+
+import { createHistoryService } from "../../History/service/history.service.js";
 
 export async function autoDownload(req, res) {
   try {
@@ -38,6 +42,29 @@ export async function autoDownload(req, res) {
         success: false,
         message: "Unable to fetch video information.",
       });
+    }
+
+    // =====================================
+    // Cloud Storage Limit Check
+    // =====================================
+    const fileSize = video.filesize ?? video.filesize_approx;
+
+    if (preference.storage.provider === "platform") {
+      const user = await User.findById(userId).select("cloudStorage");
+      const remaining = user.cloudStorage.limit - user.cloudStorage.used;
+
+      if (fileSize && fileSize > remaining) {
+        return res.status(403).json({
+          success: false,
+          message: "Cloud storage limit exceeded.",
+          storage: {
+            used: user.cloudStorage.used,
+            limit: user.cloudStorage.limit,
+            remaining,
+            required: fileSize,
+          },
+        });
+      }
     }
 
     const downloadData = {
@@ -75,21 +102,42 @@ export async function autoDownload(req, res) {
       ...downloadData,
       status: "queued",
       progress: 0,
+
+      // Save estimated size from yt-dlp
+      fileSize: fileSize || 0,
+      downloadedSize: 0,
     });
+
+    const history = await History.findOne({
+      userId: req.user._id,
+      platform: downloadData.platform,
+      videoId: downloadData.videoId,
+    }).lean();
+
+    if (!history) {
+      // ==============================
+      // Save History
+      // ==============================
+      await createHistoryService({
+        userId: req.user._id,
+        url,
+        platform: downloadData.platform,
+        videoInfo: downloadData,
+      });
+    }
 
     // ✅ Clear Downloads Cache
     await redisClient.del(`downloads:${userId}`);
-
+    await redisClient.del(`history:${req.user._id}`);
 
     // Add to queue
     downloadQueue.add(download);
-    
+
     return res.status(201).json({
       success: true,
       message: "Download added to queue successfully.",
       data: download,
     });
-    
   } catch (error) {
     console.error("Auto Download Error:", error);
 

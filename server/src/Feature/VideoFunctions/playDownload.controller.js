@@ -232,21 +232,17 @@ export const deleteDownload = async (req, res) => {
       try {
         // Delete from Cloudinary
         await deleteFromCloudinary(download.publicId);
-
         await download.deleteOne();
 
         // Clear Redis Cache
         await redisClient.del(cacheKey);
+        await redisClient.del(`storage:${download.userId}`);
 
         return res.status(200).json({
           success: true,
           message: "Cloud download deleted successfully.",
         });
 
-        return res.status(200).json({
-          success: true,
-          message: "Cloud download deleted successfully.",
-        });
       } catch (error) {
         return res.status(500).json({
           success: false,

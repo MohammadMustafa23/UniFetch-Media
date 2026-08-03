@@ -6,14 +6,14 @@ import detectPlatform from "../../Downloader/utils/detectPlatform.js";
 import downloadQueue from "../../download/queue/download.queue.js";
 import { redisClient } from "../../../config/redis.js";
 
-
 export const toggleFavorite = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user._id;
 
     const history = await History.findOne({
       _id: id,
-      userId: req.user._id,
+      userId,
     });
 
     if (!history) {
@@ -25,8 +25,15 @@ export const toggleFavorite = async (req, res) => {
 
     // Toggle favorite
     history.favorite = !history.favorite;
-
     await history.save();
+
+    // ==========================
+    // Clear Redis Cache
+    // ==========================
+    await Promise.all([
+      redisClient.del(`history:${userId}`),
+      redisClient.del(`favorites:${userId}`),
+    ]);
 
     return res.status(200).json({
       success: true,
@@ -48,9 +55,11 @@ export const toggleFavorite = async (req, res) => {
 export async function deleteHistory(req, res) {
   try {
     const { id } = req.params;
+
     if (!id) {
       return res.status(400).json({
-        message: "Error To Delete History",
+        success: false,
+        message: "History ID is required.",
       });
     }
 
@@ -60,19 +69,30 @@ export async function deleteHistory(req, res) {
     });
 
     if (!history) {
-      return res.status(404).status({
-        message: "History Not Found",
+      return res.status(404).json({
+        success: false,
+        message: "History not found.",
       });
     }
 
     await history.deleteOne();
 
+    // ==========================
+    // Clear Redis Cache
+    // ==========================
+    await redisClient.del(`history:${req.user._id}`);
+    await redisClient.del(`favorites:${req.user._id}`);
+
     res.status(200).json({
-      message: "History Deleted Sucessfully",
+      success: true,
+      message: "History deleted successfully.",
     });
   } catch (err) {
-    res.status(400).jsom({
-      message: "Failed To Delete History",
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete history.",
     });
   }
 }
@@ -157,6 +177,12 @@ export async function downloadFromHistory(req, res) {
     history.downloadCount += 1;
     history.lastDownloadedAt = new Date();
     await history.save();
+
+    // ==========================
+    // Clear History Cache
+    // ==========================
+    await redisClient.del(`history:${userId}`);
+    await redisClient.del(`favorites:${userId}`);
 
     return res.status(201).json({
       success: true,
