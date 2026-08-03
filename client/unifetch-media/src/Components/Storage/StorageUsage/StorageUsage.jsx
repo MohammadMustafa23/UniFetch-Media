@@ -7,11 +7,12 @@ export default function StorageUsage({ storage }) {
     const units = ["B", "KB", "MB", "GB", "TB"];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
-    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${units[i]}`;
+    return `${(bytes / Math.pow(1024, i)).toFixed(0)} ${units[i]}`;
   };
 
-  const totalDisk = storage?.totalDisk || 50 * 1024 * 1024 * 1024;
-  const usedStorage = storage?.usedStorage || 0;
+
+  const totalDisk = storage?.cloudStorage.limit || 500* 1024 * 1024;
+  const usedStorage = storage?.cloudStorage.used || 0;
 
   const totalPercentage = Math.min((usedStorage / totalDisk) * 100, 100);
 

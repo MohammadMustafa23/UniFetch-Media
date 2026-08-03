@@ -33,7 +33,6 @@ export default function HeroDownload({
 
       if (preference?.autoDownload) {
         const { data } = await autoDownload({ url: mediaUrl });
-
         if (data.success) {
           toast.success(data.message);
           setUrl("");
@@ -42,6 +41,8 @@ export default function HeroDownload({
       }
 
       const { data } = await getDownloadInfo(mediaUrl);
+      console.log(data.data);
+      
 
       if (data.success) {
         setVideoInfo(data.data); // Keep preview open

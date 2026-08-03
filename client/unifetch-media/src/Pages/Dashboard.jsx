@@ -27,8 +27,14 @@ export default function Dashboard() {
   const [dashboardLoading, setDashboardLoading] = useState(true);
   const handleDownload = async ({ quality, type }) => {
     try {
+      const selectedVideo = videoInfo.downloads?.video?.find(
+        (item) => item.quality === quality,
+      );
+
+      const selectedAudio = videoInfo.downloads?.audio?.[0];
+
       const response = await startDownload({
-        videoId: videoInfo.id ? videoInfo.id : videoInfo.videoId,
+        videoId: videoInfo.id ?? videoInfo.videoId,
         title: videoInfo.title,
         thumbnail: videoInfo.thumbnail,
         platform: videoInfo.platform,
@@ -36,6 +42,11 @@ export default function Dashboard() {
         url: videoInfo.url,
         quality,
         format: type === "video" ? "mp4" : "mp3",
+
+        fileSize:
+          type === "video"
+            ? selectedVideo?.fileSize?.bytes || videoInfo.fileSize?.bytes || 0
+            : selectedAudio?.fileSize?.bytes || 0,
       });
 
       toast.success(response.data.message);
@@ -45,7 +56,6 @@ export default function Dashboard() {
 
       // Clear Input
       setUrl("");
-
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "Download failed");

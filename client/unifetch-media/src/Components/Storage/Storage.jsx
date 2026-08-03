@@ -31,7 +31,8 @@ export default function Storage() {
   const fetchStorage = async () => {
     try {
       const { data } = await getStorage();
-
+      console.log(data.data);
+      
       setStorage(data.data);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to load storage.");

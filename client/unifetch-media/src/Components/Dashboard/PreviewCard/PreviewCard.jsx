@@ -54,8 +54,7 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
     setSelectedQuality(formats[0] || null);
   };
 
-  const estimatedSize =
-    selectedQuality?.filesize || selectedQuality?.filesizeApprox;
+  const estimatedSize = videoInfo?.fileSize.text;
 
   return (
     <section className="ufm-dp-card">
@@ -150,7 +149,7 @@ export default function PreviewCard({ videoInfo, onClose, onDownload }) {
           <div className="ufm-dp-info-grid">
             <div className="ufm-dp-info">
               <span>Estimated Size</span>
-              <strong>{formatBytes(estimatedSize)}</strong>
+              <strong>{estimatedSize}</strong>
             </div>
 
             <div className="ufm-dp-info">
