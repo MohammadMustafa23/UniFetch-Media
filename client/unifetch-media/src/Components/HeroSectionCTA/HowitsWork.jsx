@@ -5,23 +5,24 @@ import { ArrowRight, Link2, Eye, Download } from "lucide-react";
 const steps = [
   {
     number: "01",
-    title: "Paste Link",
+    title: "Paste a Media Link",
     icon: <Link2 size={22} />,
-    description: "Paste any supported YouTube or Instagram link into UniFetch.",
+    description:
+      "Paste a supported YouTube or Instagram URL. UniFetch instantly detects the media and retrieves its information.",
   },
   {
     number: "02",
-    title: "Preview",
+    title: "Preview & Choose",
     icon: <Eye size={22} />,
     description:
-      "Instantly preview title, thumbnail and available download formats.",
+      "Preview the thumbnail, title, duration, and available formats, then choose your preferred quality and settings.",
   },
   {
     number: "03",
-    title: "Download",
+    title: "Add to Queue",
     icon: <Download size={22} />,
     description:
-      "Choose your preferred quality and download your media in seconds.",
+      "Start the download instantly or add it to the smart download queue with live progress, pause, and resume support.",
   },
 ];
 
@@ -30,23 +31,24 @@ export default function HowitsWork() {
     <section className="howItsWork">
       <div className="howItsWork__container">
         <div className="howItsWork__header">
-           <div className="platformSection__label">
+          <div className="platformSection__label">
             <span className="uf-section-line"></span>
             <p>HOW IT WORKS</p>
           </div>
 
           <h2 className="howItsWork__title">
-            From link to file in three steps
+            Download media in three simple steps
           </h2>
         </div>
 
         <div className="howItsWork__steps">
           {steps.map((step, index) => (
-            <>
-              <div className="howItsWork__card" key={step.number}>
-                <div className="howItsWork-combine" >
-                   <div className="howItsWork__number">{step.number}</div>
-                   <div className="howItsWork__icon">{step.icon}</div>
+            <div key={step.number} style={{ display: "contents" }}>
+              <div className="howItsWork__card">
+                <div className="howItsWork-combine">
+                  <div className="howItsWork__number">{step.number}</div>
+
+                  <div className="howItsWork__icon">{step.icon}</div>
                 </div>
 
                 <h3>{step.title}</h3>
@@ -59,7 +61,7 @@ export default function HowitsWork() {
                   <ArrowRight size={30} />
                 </div>
               )}
-            </>
+            </div>
           ))}
         </div>
       </div>

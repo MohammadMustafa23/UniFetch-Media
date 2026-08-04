@@ -25,9 +25,9 @@ export default function NavBar({
 
   const navItems = [
     { label: "Features", ref: featuresRef },
-    { label: "How it works", ref: howItWorksRef },
-    { label: "Product", ref: dashboardRef },
-    { label: "Analytics", ref: analyticsRef },
+    { label: "How It Works", ref: howItWorksRef },
+    { label: "Dashboard", ref: dashboardRef },
+    { label: "Insights", ref: analyticsRef },
     { label: "Security", ref: securityRef },
   ];
 
@@ -67,14 +67,14 @@ export default function NavBar({
             className="uf-signin-btn"
             onClick={() => navigate("/authantication-page")}
           >
-            Sign in
+            Sign In
           </button>
 
           <button
             className="uf-download-btn"
             onClick={() => navigate("/authantication-page")}
           >
-            Get Start
+            Get Started
           </button>
 
           <button
@@ -98,6 +98,7 @@ export default function NavBar({
             {item.label}
           </button>
         ))}
+
         <button
           className="uf-mobile-download"
           onClick={() => {
@@ -105,7 +106,7 @@ export default function NavBar({
             navigate("/authantication-page");
           }}
         >
-          Get Start
+          Get Started
         </button>
       </div>
     </header>

@@ -2,28 +2,28 @@ import { Search, Calendar, Download, Eye, CheckCircle2 } from "lucide-react";
 
 const history = [
   {
-    title: "Travel_Vlog_4K.mp4",
+    title: "React Crash Course.mp4",
     type: "Video",
     size: "248 MB",
     date: "Today • 10:42 AM",
     status: "Completed",
   },
   {
-    title: "Podcast_Episode_45.mp3",
+    title: "Node.js Podcast.mp3",
     type: "Audio",
     size: "64 MB",
     date: "Yesterday",
     status: "Completed",
   },
   {
-    title: "Instagram_Reel.mp4",
+    title: "Instagram Reel.mp4",
     type: "Video",
     size: "18 MB",
     date: "2 days ago",
     status: "Completed",
   },
   {
-    title: "YouTube_Shorts.mp4",
+    title: "JavaScript Tutorial.mp4",
     type: "Video",
     size: "36 MB",
     date: "Last Week",
@@ -39,13 +39,13 @@ export default function HistoryContent() {
       <div className="historyHeader">
         <div>
           <h2>Download History</h2>
-          <p>Everything you've downloaded recently.</p>
+          <p>View and manage your recent downloads.</p>
         </div>
 
         <div className="historySearch">
           <Search size={18} />
 
-          <input type="text" placeholder="Search downloads..." />
+          <input type="text" placeholder="Search history..." />
         </div>
       </div>
 
@@ -79,11 +79,11 @@ export default function HistoryContent() {
             </div>
 
             <div className="historyActions">
-              <button>
+              <button title="Preview">
                 <Eye size={17} />
               </button>
 
-              <button>
+              <button title="Download Again">
                 <Download size={17} />
               </button>
             </div>

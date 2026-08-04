@@ -31,11 +31,11 @@ export default function HeroSection() {
         <div className="hero-left">
           <div className="hero-badge">
             <span className="dot"></span>
-            Now with Auto Download
+            Smart Multi-Platform Media Downloader
           </div>
 
           <h1>
-            Fetch, preview,
+            Download, organize,
             <br />
             and <span>manage</span>
             <br />
@@ -43,16 +43,14 @@ export default function HeroSection() {
           </h1>
 
           <p>
-            Download, organize, and manage your favorite media with a faster,
-            smarter, more intuitive experience — one platform for fetching
-            links, previewing content, and running your queue on autopilot.
+            UniFetch is a modern media downloader that lets you download videos, audio from multiple platforms with smart queue management, cloud storage, download history, pause & resume, real-time progress tracking, and secure account management.
           </p>
 
           <div className="hero-buttons">
-            <button className="primary-btn">Get started free</button>
+            <button className="primary-btn">Get Started</button>
 
             <button className="secondary-btn">
-              See it in action
+              View Dashboard
               <ArrowRight size={18} />
             </button>
           </div>
@@ -60,17 +58,17 @@ export default function HeroSection() {
           <div className="hero-features">
             <div className="feature-chip">
               <Zap size={15} />
-              10x faster queue
+              Smart Queue
             </div>
 
             <div className="feature-chip">
               <Shield size={15} />
-              End-to-end secure
+              Cloud Storage
             </div>
 
             <div className="feature-chip">
               <Download size={15} />
-              Resume anytime
+              Real time Progress
             </div>
           </div>
         </div>

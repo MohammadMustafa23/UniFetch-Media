@@ -81,18 +81,38 @@ export default function RecentDownloads({ downloads = [] }) {
               </div>
 
               <div className="ufm-recent-actions">
-                <button title="Download Again">
-                  <Download size={18} />
-                </button>
+                <div className="ufm-recent-actions">
+                  <button
+                    title="Open Downloads"
+                    onClick={() =>
+                      navigate("/downloads", {
+                        state: {
+                          selectedDownload: item._id,
+                        },
+                      })
+                    }
+                  >
+                    <Download size={18} />
+                  </button>
 
-                <button title="More">
-                  <MoreVertical size={18} />
-                </button>
+                  <button
+                    title="Open Downloads"
+                    onClick={() =>
+                      navigate("/downloads", {
+                        state: {
+                          selectedDownload: item._id,
+                        },
+                      })
+                    }
+                  >
+                    <MoreVertical size={18} />
+                  </button>
+                </div>
               </div>
             </div>
           ))
         ) : (
-          <DownloadsEmpty/>
+          <DownloadsEmpty />
         )}
       </div>
     </section>

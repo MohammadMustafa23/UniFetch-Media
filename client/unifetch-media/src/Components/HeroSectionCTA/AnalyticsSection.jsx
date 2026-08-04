@@ -1,9 +1,9 @@
 import "./style/AnalyticsSection.css";
 
 const weekStats = [
-  { value: "128", label: "Files this week" },
-  { value: "99.8", label: "% completed" },
-  { value: "3", label: "Active devices" },
+  { value: "128", label: "Downloads" },
+  { value: "99.8%", label: "Success Rate" },
+  { value: "248 GB", label: "Storage Used" },
 ];
 
 const chartData = [35, 58, 46, 72, 90, 62, 76];
@@ -21,8 +21,9 @@ export default function AnalyticsSection() {
             <span className="uf-section-line"></span>
             <p>ANALYTICS</p>
           </div>
+
           <h2 className="analyticsSection__title">
-            Know what you've downloaded, and when
+            Track your download activity
           </h2>
         </div>
 
@@ -32,11 +33,10 @@ export default function AnalyticsSection() {
           {/* Left Card */}
 
           <div className="analyticsCard analyticsCard--large">
-            <h3>Your week in downloads</h3>
+            <h3>Weekly Overview</h3>
 
             <p className="analyticsCard__desc">
-              A weekly view of your queue — what came in, how much landed
-              successfully, and where your habits cluster.
+              View your downloads, success rate, and storage usage.
             </p>
 
             <div className="analyticsStats">
@@ -69,7 +69,7 @@ export default function AnalyticsSection() {
           {/* Right Card */}
 
           <div className="analyticsCard analyticsCard--small">
-            <h3>Format breakdown</h3>
+            <h3>Download Formats</h3>
 
             <div className="analyticsDonut">
               <div className="analyticsDonut__inner">

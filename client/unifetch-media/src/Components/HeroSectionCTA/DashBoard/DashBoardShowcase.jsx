@@ -63,16 +63,16 @@ export default function DashboardShowcase() {
         <div className="dashboardShowcase__header">
           <div className="platformSection__label">
             <span className="uf-section-line"></span>
-            <p>PRODUCT</p>
+            <p>DASHBOARD</p>
           </div>
 
           <h2 className="dashboardShowcase__title">
-            One dashboard, every workflow
+            Everything in one dashboard
           </h2>
 
           <p className="dashboardShowcase__subtitle">
-            Explore the screens that make up UniFetch Media — from your live
-            download queue to analytics and history.
+            Manage downloads, queue, history, analytics, and settings from one
+            place.
           </p>
         </div>
 

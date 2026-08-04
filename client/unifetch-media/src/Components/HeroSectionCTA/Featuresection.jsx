@@ -11,43 +11,43 @@ import {
 const features = [
   {
     icon: <Search size={22} />,
-    title: "Fetch any link",
+    title: "Instant Link Detection",
     description:
-      "Paste a supported media link and UniFetch resolves the source in seconds — no guessing which formats it holds.",
+      "Paste a supported YouTube or Instagram link to instantly fetch media information, available formats, quality options, and file details.",
   },
   {
     icon: <Play size={22} />,
-    title: "Preview before you commit",
+    title: "Preview Before Download",
     description:
-      "See the title, duration, and every available format before a single byte downloads.",
+      "Preview thumbnails, titles, duration, uploader information, and available download formats before adding media to your queue.",
   },
   {
     icon: <Clipboard size={22} />,
     title: "Auto Paste",
     badge: "NEW",
     description:
-      "Copy a supported link anywhere and UniFetch catches it from your clipboard before you switch tabs.",
+      "Automatically detect supported links copied to your clipboard and prepare them for download without manually pasting.",
   },
   {
     icon: <Download size={22} />,
-    title: "Auto Download",
+    title: "Smart Downloads",
     badge: "POPULAR",
     description:
-      "Set your defaults once — matching formats and sources download automatically.",
+      "Automatically apply your preferred quality, format, and download settings to every supported download.",
   },
   {
     icon: <LayoutGrid size={22} />,
-    title: "Queue & History",
+    title: "Queue & Download History",
     featured: true,
     description:
-      "Manage active downloads in one queue and revisit everything you've fetched anytime.",
+      "Manage active downloads with pause, resume, retry, progress tracking, and access your complete download history anytime.",
   },
   {
     icon: <Shield size={22} />,
-    title: "Secure by design",
-    badge: "RECOMMENDED",
+    title: "Secure Cloud Storage",
+    badge: "SECURE",
     description:
-      "Optional account security and complete history management keep everything private.",
+      "Keep your downloads protected with secure authentication, cloud storage support, and personalized user preferences.",
   },
 ];
 
@@ -61,11 +61,12 @@ export default function FeatureSection() {
             <p>FEATURES</p>
           </div>
 
-          <h2>Everything your queue needs</h2>
+          <h2>Everything You Need to Download Smarter</h2>
 
           <p className="featureSection__subtitle">
-            Built with speed, security, and simplicity in mind — a seamless
-            experience across desktop, tablet, and mobile.
+            UniFetch combines fast media downloads, intelligent queue
+            management, cloud storage, real-time progress tracking, and a modern
+            dashboard into one seamless experience.
           </p>
         </div>
 

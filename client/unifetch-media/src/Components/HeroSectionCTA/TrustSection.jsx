@@ -1,32 +1,32 @@
 import "./style/TrustSection.css";
 
-import { Shield, Lock, Zap, Smartphone, Globe } from "lucide-react";
+import { Shield, Lock, Zap, Smartphone, Download } from "lucide-react";
 
 const trustItems = [
   {
     icon: <Shield size={28} />,
-    title: "Encrypted transfers",
-    subtitle: "Every download, end to end",
+    title: "Secure Authentication",
+    subtitle: "Protected user accounts with JWT.",
   },
   {
     icon: <Lock size={28} />,
-    title: "Two-factor auth",
-    subtitle: "Optional, in under a minute",
+    title: "Google Sign-In",
+    subtitle: "Quick and secure account access.",
   },
   {
     icon: <Zap size={28} />,
-    title: "99.9% uptime",
-    subtitle: "Queue that keeps running",
+    title: "Smart Queue",
+    subtitle: "Pause, resume, and manage downloads.",
   },
   {
     icon: <Smartphone size={28} />,
-    title: "Cross-device",
-    subtitle: "Desktop, tablet, mobile",
+    title: "Responsive Design",
+    subtitle: "Works on desktop, tablet, and mobile.",
   },
   {
-    icon: <Globe size={28} />,
-    title: "40+ platforms",
-    subtitle: "And growing every month",
+    icon: <Download size={28} />,
+    title: "Cloud Storage",
+    subtitle: "Save and manage downloads easily.",
   },
 ];
 
@@ -39,13 +39,11 @@ export default function TrustSection() {
         <div className="trustSection__header">
           <div className="platformSection__label">
             <span className="uf-section-line"></span>
-            <p>TRUST & PERFORMANCE</p>
+            <p>WHY UNIFETCH</p>
           </div>
 
-          
-
           <h2 className="trustSection__title">
-            Fast, secure, and built to last
+            Built for fast and reliable downloads
           </h2>
         </div>
 

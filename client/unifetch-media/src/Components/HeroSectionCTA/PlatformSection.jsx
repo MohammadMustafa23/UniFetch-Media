@@ -19,11 +19,11 @@ export default function PlatformSection() {
         <div className="platformSection__header">
           <div className="platformSection__label">
             <span className="uf-section-line"></span>
-            <p>SUPPORTED SOURCES</p>
+            <p>SUPPORTED PLATFORMS</p>
           </div>
 
           <h2 className="platformSection__title">
-            Works with the platforms you already use
+            Download content from your favorite platforms
           </h2>
         </div>
 

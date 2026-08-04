@@ -1,4 +1,11 @@
-import { Bell, Moon, Download, Shield, FolderOpen, Check } from "lucide-react";
+import {
+  Bell,
+  Download,
+  FolderOpen,
+  Check,
+  Clipboard,
+  Cloud,
+} from "lucide-react";
 
 export default function SettingsContent() {
   return (
@@ -11,7 +18,7 @@ export default function SettingsContent() {
             <Bell size={20} />
             <div>
               <h4>Notifications</h4>
-              <p>Notify when downloads complete.</p>
+              <p>Get notified when downloads finish.</p>
             </div>
           </div>
 
@@ -23,10 +30,10 @@ export default function SettingsContent() {
 
         <div className="settingCard">
           <div className="settingInfo">
-            <Moon size={20} />
+            <Clipboard size={20} />
             <div>
-              <h4>Dark Theme</h4>
-              <p>Always use dark appearance.</p>
+              <h4>Auto Paste</h4>
+              <p>Detect copied links automatically.</p>
             </div>
           </div>
 
@@ -38,10 +45,10 @@ export default function SettingsContent() {
 
         <div className="settingCard">
           <div className="settingInfo">
-            <Shield size={20} />
+            <Download size={20} />
             <div>
-              <h4>Safe Downloads</h4>
-              <p>Verify downloaded files automatically.</p>
+              <h4>Auto Download</h4>
+              <p>Start downloads automatically.</p>
             </div>
           </div>
 
@@ -61,10 +68,21 @@ export default function SettingsContent() {
           <div className="preferenceItem">
             <div>
               <h5>Default Quality</h5>
-              <p>Highest Available</p>
+              <p>Best Available</p>
             </div>
 
             <button>Change</button>
+          </div>
+
+          <div className="preferenceItem">
+            <div>
+              <h5>Storage</h5>
+              <p>Cloud Storage</p>
+            </div>
+
+            <button>
+              <Cloud size={16} />
+            </button>
           </div>
 
           <div className="preferenceItem">
@@ -80,13 +98,13 @@ export default function SettingsContent() {
 
           <div className="preferenceItem">
             <div>
-              <h5>Auto Download</h5>
-              <p>Enabled</p>
+              <h5>Status</h5>
+              <p>Ready to Download</p>
             </div>
 
             <span className="enabledBadge">
               <Check size={15} />
-              Enabled
+              Active
             </span>
           </div>
         </div>

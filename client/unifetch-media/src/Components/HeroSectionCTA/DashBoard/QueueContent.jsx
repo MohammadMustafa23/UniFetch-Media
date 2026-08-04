@@ -2,21 +2,21 @@ import { Pause, Play, CheckCircle2, Clock3 } from "lucide-react";
 
 const downloads = [
   {
-    name: "Travel_Vlog_4K.mp4",
+    name: "React Crash Course.mp4",
     progress: 82,
     speed: "18.2 MB/s",
     eta: "12s",
     status: "Downloading",
   },
   {
-    name: "Podcast_Episode_45.mp3",
+    name: "Node.js Podcast.mp3",
     progress: 56,
     speed: "7.6 MB/s",
     eta: "34s",
     status: "Downloading",
   },
   {
-    name: "Gaming_Highlights.mp4",
+    name: "JavaScript Tutorial.mp4",
     progress: 100,
     speed: "--",
     eta: "Completed",
@@ -32,7 +32,7 @@ export default function QueueContent() {
       <div className="queueHeader">
         <div>
           <h2>Download Queue</h2>
-          <p>3 Active Downloads</p>
+          <p>Manage your active downloads</p>
         </div>
 
         <button className="queueAction">
@@ -78,13 +78,11 @@ export default function QueueContent() {
             <div className="queueBottom">
               <strong>{item.progress}%</strong>
 
-              {item.status !== "Done" && (
+              {item.status !== "Done" ? (
                 <button className="miniButton">
                   <Pause size={15} />
                 </button>
-              )}
-
-              {item.status === "Done" && (
+              ) : (
                 <button className="miniButton">
                   <Play size={15} />
                 </button>

@@ -3,46 +3,46 @@ import { Star } from "lucide-react";
 
 const reviews = [
   {
-    name: "Rhea K.",
-    role: "Video Editor",
-    avatar: "RK",
-    review:
-      "Auto Paste alone saved me hours every week. The queue handles everything while I keep working.",
-  },
-  {
-    name: "Daniel M.",
-    role: "Podcast Producer",
-    avatar: "DM",
-    review:
-      "Resume support is the feature I didn't know I needed. Downloads never fail anymore.",
-  },
-  {
-    name: "Ana S.",
-    role: "Content Researcher",
-    avatar: "AS",
-    review:
-      "Clean interface, blazing fast downloads and the history panel is incredibly useful.",
-  },
-  {
-    name: "Rahul P.",
+    name: "Beta User",
     role: "Student",
-    avatar: "RP",
+    avatar: "BU",
     review:
-      "Downloading YouTube lectures has never been easier. Everything feels instant.",
+      "The download queue is simple to use and pause & resume works smoothly.",
   },
   {
-    name: "Sarah W.",
-    role: "Creator",
-    avatar: "SW",
+    name: "Beta User",
+    role: "Content Creator",
+    avatar: "BU",
     review:
-      "The UI is beautiful and the download queue feels like a real desktop application.",
+      "Previewing media before downloading saves time and avoids unnecessary downloads.",
   },
   {
-    name: "James L.",
-    role: "Filmmaker",
-    avatar: "JL",
+    name: "Beta User",
+    role: "Developer",
+    avatar: "BU",
     review:
-      "Batch downloading and resume support are game changers for large media projects.",
+      "The dashboard is clean, responsive, and makes managing downloads very easy.",
+  },
+  {
+    name: "Beta User",
+    role: "Video Editor",
+    avatar: "BU",
+    review:
+      "Cloud storage support and download history make organizing files much easier.",
+  },
+  {
+    name: "Beta User",
+    role: "YouTube User",
+    avatar: "BU",
+    review:
+      "Auto Paste detects copied links instantly and speeds up my workflow.",
+  },
+  {
+    name: "Beta User",
+    role: "Daily User",
+    avatar: "BU",
+    review:
+      "A modern interface with fast downloads and an easy-to-use queue manager.",
   },
 ];
 
@@ -55,12 +55,11 @@ export default function Review() {
         <div className="reviewSection__header">
           <div className="platformSection__label">
             <span className="uf-section-line"></span>
-            <p>WHAT PEOPLE SAY</p>
+            <p>USER FEEDBACK</p>
           </div>
-        
 
           <h2 className="reviewSection__title">
-            Built for people who fetch media often
+            Designed for a better download experience
           </h2>
         </div>
 

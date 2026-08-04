@@ -10,26 +10,26 @@ export default function DashboardContent() {
 
         <div className="activityList">
           <div className="activityItem">
-            <span>Launch_Trailer.mp4</span>
+            <span>React Crash Course.mp4</span>
 
             <span className="status success">
               <Check size={14} />
-              Done
+              Completed
             </span>
           </div>
 
           <div className="activityItem">
-            <span>Podcast_Ep42.mp3</span>
+            <span>Node.js Podcast.mp3</span>
 
             <span className="status progress">62%</span>
           </div>
 
           <div className="activityItem">
-            <span>Studio_Session.mp4</span>
+            <span>Instagram Reel.mp4</span>
 
             <span className="status success">
               <Check size={14} />
-              Done
+              Completed
             </span>
           </div>
         </div>
@@ -46,9 +46,9 @@ export default function DashboardContent() {
           </button>
         </div>
 
-        <h4>Behind the Scenes — Studio Cut</h4>
+        <h4>React Crash Course</h4>
 
-        <p>Creator Studio • 06:48</p>
+        <p>YouTube • 14:32 • 1080p</p>
       </div>
 
       {/* Right */}
@@ -59,17 +59,17 @@ export default function DashboardContent() {
         <div className="statsColumn">
           <div className="statBox">
             <h2>128</h2>
-            <span>Files fetched</span>
+            <span>Downloads</span>
           </div>
 
           <div className="statBox">
             <h2>99.8%</h2>
-            <span>Success rate</span>
+            <span>Success Rate</span>
           </div>
 
           <div className="statBox">
-            <h2>3</h2>
-            <span>Devices active</span>
+            <h2>248 GB</h2>
+            <span>Storage Used</span>
           </div>
         </div>
       </div>
