@@ -83,14 +83,6 @@ const QueueActions = ({ item }) => {
           <RotateCcw size={16} />
         </button>
 
-        <button title="Move Up" disabled={loadingAction !== null}>
-          <ArrowUp size={16} />
-        </button>
-
-        <button title="Move Down" disabled={loadingAction !== null}>
-          <ArrowDown size={16} />
-        </button>
-
         <button
           className="danger"
           title="Delete"

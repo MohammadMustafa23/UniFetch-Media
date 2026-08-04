@@ -34,5 +34,5 @@ export const resumeDownload = (id) => {
 };
 
 export const deleteDownload = (id) => {
-  return api.delete(`/download/delete/${id}`);
+  return api.delete(`/download/queue/delete/${id}`);
 };

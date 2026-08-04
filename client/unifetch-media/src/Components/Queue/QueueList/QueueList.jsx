@@ -36,8 +36,6 @@ const QueueList = ({ filter }) => {
   // Live Progress Updates
   useEffect(() => {
     const handleProgress = (data) => {
-      console.log("📤 Progress Event:", data);
-
       setQueue((prev) =>
         prev.map((item) =>
           item._id === data.downloadId
@@ -46,41 +44,10 @@ const QueueList = ({ filter }) => {
                 progress: data.progress,
                 downloadSpeed: data.downloadSpeed,
                 eta: data.eta,
-                status: data.progress >= 100 ? "completed" : "downloading",
               }
             : item,
         ),
       );
-
-      if (data.progress >= 100) {
-        setTimeout(() => {
-          setQueue((prev) =>
-            prev.filter((item) => item._id !== data.downloadId),
-          );
-        }, 1000);
-      }
-    };
-
-    const handleCompleted = async ({ downloadId, storageProvider }) => {
-      if (storageProvider !== "device") {
-        console.log("⏭ Skipped because storage is not device");
-        return;
-      }
-
-      try {
-        console.log("📥 Calling saveDownload()...");
-
-        await saveDownload(downloadId);
-
-        console.log("✅ Browser download started");
-      } catch (error) {
-        console.error("❌ saveDownload failed:", error);
-
-        if (error.response) {
-          console.error("Status:", error.response.status);
-          console.error("Data:", error.response.data);
-        }
-      }
     };
 
     const handleStatus = async (data) => {
@@ -104,7 +71,6 @@ const QueueList = ({ filter }) => {
         }),
       );
 
-      // ⭐ Auto browser download only for device
       if (data.status === "completed" && data.storageProvider === "device") {
         try {
           await saveDownload(data.downloadId);
@@ -113,23 +79,29 @@ const QueueList = ({ filter }) => {
           console.error(error);
         }
       }
+
+      if (
+        ["paused", "failed", "cancelled", "completed"].includes(data.status)
+      ) {
+        fetchQueue();
+      }
     };
 
     const handleDelete = ({ downloadId }) => {
       console.log("🗑 download-deleted:", downloadId);
-
       setQueue((prev) => prev.filter((item) => item._id !== downloadId));
+      // Sync with backend
+      fetchQueue();
     };
 
     // Register listeners
     socket.on("download-progress", handleProgress);
-    socket.on("download-completed", handleCompleted);
+
     socket.on("download-status", handleStatus);
     socket.on("download-deleted", handleDelete);
 
     return () => {
       socket.off("download-progress", handleProgress);
-      socket.off("download-completed", handleCompleted);
       socket.off("download-status", handleStatus);
       socket.off("download-deleted", handleDelete);
 
