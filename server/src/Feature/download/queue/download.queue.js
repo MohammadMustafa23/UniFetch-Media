@@ -9,6 +9,7 @@ import { createNotification } from "../../notification/service/notification.serv
 import { uploadToCloudinary } from "../../../cloud/cloudinary.js";
 import { redisClient } from "../../../config/redis.js";
 import User from "../../../models/user.model.js";
+import { spawn } from "child_process";
 
 import fs from "fs";
 class DownloadQueue {
@@ -16,9 +17,10 @@ class DownloadQueue {
     this.queue = [];
     this.isDownloading = false;
 
-    this.currentProcess = null;
-    this.currentDownloadId = null;
-    this.stopReason = null;
+    this.processes = new Map();
+
+    // Cancelled downloads
+    this.cancelled = new Set();
   }
 
   // Add Download to Queue
@@ -31,45 +33,128 @@ class DownloadQueue {
   }
 
   async pause(downloadId) {
-    console.log("========== PAUSE ==========");
-    console.log("Requested ID:", downloadId);
-    console.log("Current ID:", this.currentDownloadId);
-    console.log("Has Process:", !!this.currentProcess);
-    console.log("Is Downloading:", this.isDownloading);
+    const running = this.processes.get(downloadId.toString());
 
-    if (
-      !this.currentProcess ||
-      this.currentDownloadId !== downloadId.toString()
-    ) {
-      throw new Error("This download is not currently running.");
+    if (!running) {
+      throw new Error("Download is not currently running.");
     }
 
-    // Tell process() this was intentional
-    this.stopReason = "pause";
+    // Get latest download
+    const download = await Download.findById(downloadId);
 
-    const download = await Download.findByIdAndUpdate(
-      downloadId,
-      {
-        status: "paused",
-      },
-      { new: true },
-    );
+    if (!download) {
+      throw new Error("Download not found.");
+    }
 
+    // Allow pause only while downloading
+    if (download.status !== "downloading") {
+      throw new Error("Only downloading files can be paused.");
+    }
+    await new Promise((resolve) => {
+      const killer = spawn("taskkill", [
+        "/PID",
+        running.process.pid.toString(),
+        "/T",
+        "/F",
+      ]);
+      killer.on("close", resolve);
+    });
+
+    // Update status
+    download.status = "paused";
+    await download.save();
+
+    // Remove process from memory
+    this.processes.delete(downloadId.toString());
+
+    // Notify frontend
     getIO().to(download.userId.toString()).emit("download-status", {
       downloadId: download._id.toString(),
       status: "paused",
       progress: download.progress,
-      downloadSpeed: download.downloadSpeed,
-      eta: download.eta,
+      downloadSpeed: "",
+      eta: "",
     });
 
-    console.log("🛑 Killing yt-dlp...");
-    this.currentProcess.kill("SIGTERM");
+    console.log("⏸ Download paused.");
+  }
 
-    // ❌ DON'T clear these here.
-    // process() -> finally will do it safely.
+  // Cancel/Delete Download
+  async cancel(downloadId) {
+    const running = this.processes.get(downloadId.toString());
 
-    console.log("⏸ Download Paused");
+    // Mark as cancelled
+    this.cancelled.add(downloadId.toString());
+
+    if (running) {
+      // Kill entire process tree (yt-dlp + ffmpeg)
+      await new Promise((resolve) => {
+        const killer = spawn("taskkill", [
+          "/PID",
+          running.process.pid.toString(),
+          "/T",
+          "/F",
+        ]);
+
+        killer.on("close", resolve);
+      });
+
+      this.processes.delete(downloadId.toString());
+    }
+
+    // Remove from waiting queue
+    this.queue = this.queue.filter(
+      (id) => id.toString() !== downloadId.toString(),
+    );
+
+    // Update database
+    await Download.findByIdAndUpdate(downloadId, {
+      status: "cancelled",
+      eta: "",
+      downloadSpeed: "",
+    });
+
+    console.log(`🗑 Download cancelled: ${downloadId}`);
+  }
+  async resume(downloadId) {
+    const download = await Download.findById(downloadId);
+
+    if (!download) {
+      throw new Error("Download not found.");
+    }
+
+    if (download.status !== "paused") {
+      throw new Error("Only paused downloads can be resumed.");
+    }
+
+    // Update status before adding to queue
+    download.status = "queued";
+    download.downloadSpeed = "";
+    download.eta = "";
+    await download.save();
+
+    // Prevent duplicate queue entries
+    const exists = this.queue.some(
+      (id) => id.toString() === downloadId.toString(),
+    );
+
+    if (!exists) {
+      this.queue.push(downloadId);
+    }
+
+    // Notify frontend
+    getIO().to(download.userId.toString()).emit("download-status", {
+      downloadId: download._id.toString(),
+      status: "queued",
+      progress: download.progress,
+      downloadSpeed: "",
+      eta: "",
+    });
+
+    console.log(`▶ Resumed: ${download.title}`);
+
+    // Start processing if idle
+    this.process();
   }
 
   async updateProgress(downloadId, line) {
@@ -132,7 +217,13 @@ class DownloadQueue {
 
     this.isDownloading = true;
 
+    console.log("================================");
+    console.log("QUEUE BEFORE SHIFT:", this.queue);
+
     const downloadId = this.queue.shift();
+
+    console.log("PROCESSING:", downloadId);
+    console.log("================================");
 
     try {
       // Get Latest Download Data
@@ -170,9 +261,11 @@ class DownloadQueue {
         format: download.format,
       });
 
-      // Save Running Process
-      this.currentProcess = ytProcess;
-      this.currentDownloadId = download._id.toString();
+      this.processes.set(download._id.toString(), {
+        process: ytProcess,
+        folder,
+        outputPath,
+      });
 
       // Read Progress
       let buffer = "";
@@ -195,34 +288,41 @@ class DownloadQueue {
         console.log(data.toString());
       });
 
-      // Wait Until Download Completes
       await new Promise((resolve, reject) => {
-        ytProcess.on("close", (code) => {
-          // Pause or Cancel was intentional
-          if (this.stopReason === "pause") {
-            this.stopReason = null;
+        ytProcess.on("close", async (code, signal) => {
+          // Download intentionally paused
+          const latest = await Download.findById(download._id);
+          if (latest?.status === "paused") {
+            console.log("⏸ Download paused.");
             return resolve();
           }
-
-          if (this.stopReason === "cancel") {
-            this.stopReason = null;
+          // Download intentionally cancelled
+          if (this.cancelled.has(download._id.toString())) {
+            console.log("🗑 Download cancelled.");
             return resolve();
           }
-
           if (code === 0) {
-            resolve();
-          } else {
-            reject(new Error(`yt-dlp exited with code ${code}`));
+            return resolve();
           }
+          reject(
+            new Error(`yt-dlp exited with code ${code}, signal ${signal}`),
+          );
         });
 
         ytProcess.on("error", reject);
       });
-
       const actualFile = findDownloadedFile(
         folder,
         safeFileName(download.title),
       );
+      const latest = await Download.findById(download._id);
+      if (latest?.status === "paused") {
+        return;
+      }
+
+      if (this.cancelled.has(download._id.toString())) {
+        return;
+      }
 
       let cloudFile = null;
 
@@ -254,13 +354,6 @@ class DownloadQueue {
         // Delete local temporary file
         await fs.promises.unlink(actualFile);
         console.log("🗑 Local file deleted.");
-      }
-
-      const latestDownload = await Download.findById(download._id);
-
-      if (latestDownload.status === "paused") {
-        console.log("⏸ Download paused.");
-        return;
       }
 
       await Download.findByIdAndUpdate(download._id, {
@@ -302,10 +395,27 @@ class DownloadQueue {
     } catch (error) {
       console.error("Queue Error:", error);
 
+      if (this.cancelled.has(downloadId.toString())) {
+        console.log("🗑 Download cancelled.");
+        this.cancelled.delete(downloadId.toString());
+        return;
+      }
+
+      const existingDownload = await Download.findById(downloadId);
+      if (existingDownload?.status === "paused") {
+        console.log("⏸ Download paused intentionally.");
+        return;
+      }
+
       const download = await Download.findByIdAndUpdate(downloadId, {
         status: "failed",
         error: error.message,
       });
+
+      if (!download) {
+        console.log("Download was deleted, skipping failure handling.");
+        return;
+      }
 
       await createNotification({
         userId: download.userId,
@@ -317,11 +427,17 @@ class DownloadQueue {
         },
       });
     } finally {
-      this.currentProcess = null;
-      this.currentDownloadId = null;
+      this.processes.delete(downloadId.toString());
+      const latest = await Download.findById(downloadId);
       this.isDownloading = false;
-      // Start Next Download
-      this.process();
+
+      if (
+        latest &&
+        latest.status !== "paused" &&
+        latest.status !== "cancelled"
+      ) {
+        this.process();
+      }
     }
   }
 }

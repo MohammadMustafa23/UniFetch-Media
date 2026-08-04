@@ -61,7 +61,14 @@ const downloadSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["queued", "downloading", "completed", "failed", "cancelled"],
+      enum: [
+        "queued",
+        "downloading",
+        "paused",
+        "completed",
+        "failed",
+        "cancelled",
+      ],
       default: "queued",
     },
 

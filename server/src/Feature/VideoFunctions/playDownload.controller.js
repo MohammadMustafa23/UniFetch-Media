@@ -5,6 +5,7 @@ import Download from "../download/models/download.model.js";
 import path from "path";
 import { deleteFromCloudinary } from "../../cloud/cloudinary.js";
 import { redisClient } from "../../config/redis.js";
+import User from "../../models/user.model.js";
 
 export const playDownload = async (req, res) => {
   try {
@@ -133,12 +134,12 @@ export const saveDownload = async (req, res) => {
 
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename*=UTF-8''${encodeURIComponent(fileName)}`
+        `attachment; filename*=UTF-8''${encodeURIComponent(fileName)}`,
       );
 
       res.setHeader(
         "Content-Type",
-        response.headers.get("content-type") || "application/octet-stream"
+        response.headers.get("content-type") || "application/octet-stream",
       );
 
       res.setHeader("Content-Length", buffer.length);
@@ -232,6 +233,14 @@ export const deleteDownload = async (req, res) => {
       try {
         // Delete from Cloudinary
         await deleteFromCloudinary(download.publicId);
+
+        // Reduce user's cloud storage
+        await User.findByIdAndUpdate(download.userId, {
+          $inc: {
+            "cloudStorage.used": -download.fileSize,
+          },
+        });
+        
         await download.deleteOne();
 
         // Clear Redis Cache
@@ -242,7 +251,6 @@ export const deleteDownload = async (req, res) => {
           success: true,
           message: "Cloud download deleted successfully.",
         });
-
       } catch (error) {
         return res.status(500).json({
           success: false,

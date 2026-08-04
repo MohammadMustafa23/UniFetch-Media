@@ -1,5 +1,6 @@
 import downloadQueue from "../queue/download.queue.js";
 import Download from "../models/download.model.js";
+import { getIO } from "../../../socket/socket.js";
 
 // ==============================
 // Retry Download
@@ -119,9 +120,7 @@ export const resumeDownload = async (req, res) => {
   }
 };
 
-// ==============================
-// Cancel/Delete Download
-// ==============================
+
 export const cancelDownload = async (req, res) => {
   try {
     const { id } = req.params;
@@ -135,11 +134,17 @@ export const cancelDownload = async (req, res) => {
       });
     }
 
+    // Stop download & remove from queue
     await downloadQueue.cancel(id);
+
+    // Notify frontend immediately
+    getIO().to(download.userId.toString()).emit("download-deleted", {
+      downloadId: id,
+    });
 
     return res.status(200).json({
       success: true,
-      message: "Download deleted successfully.",
+      message: "Download cancelled successfully.",
     });
   } catch (error) {
     console.error("Delete Error:", error);

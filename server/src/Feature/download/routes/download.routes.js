@@ -14,6 +14,8 @@ const DownloadRoute = Router();
 DownloadRoute.post("/download/start",verifyJWT,downloadLimiter,createDownload);
 DownloadRoute.get("/download/downloads",verifyJWT, getDownloads);
 DownloadRoute.get("/download/queue",verifyJWT, getQueue);
+DownloadRoute.delete("/download/queue/delete/:id",verifyJWT,queueActionLimiter,cancelDownload);
+
 DownloadRoute.post("/download/autoDownload",verifyJWT,downloadLimiter,autoDownload);
 DownloadRoute.post("/download/retry/:id",verifyJWT,queueActionLimiter,retryDownload);
 DownloadRoute.post("/download/pause/:id",verifyJWT,queueActionLimiter,pauseDownload);
@@ -23,13 +25,6 @@ DownloadRoute.post(
   verifyJWT,
   queueActionLimiter,
   resumeDownload
-);
-
-DownloadRoute.delete(
-  "/download/delete/:id",
-  verifyJWT,
-  queueActionLimiter,
-  cancelDownload
 );
 
 DownloadRoute.get("/analytics/dashboard", verifyJWT, getDashboardAnalytics);
