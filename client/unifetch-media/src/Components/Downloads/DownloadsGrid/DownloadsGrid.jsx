@@ -32,10 +32,12 @@ export default function DownloadsGrid({
 
   const [savingId, setSavingId] = useState(null);
 
-  const handlePlay = (item) => {
-    setSelectedVideo(item);
-    setIsPlayerOpen(true);
-  };
+ const handlePlay = (item) => {
+  console.log(item);
+
+  setSelectedVideo(item);
+  setIsPlayerOpen(true);
+};
 
   const handleSave = async (item) => {
     try {
@@ -131,7 +133,9 @@ export default function DownloadsGrid({
         title={selectedVideo?.title}
         videoUrl={
           selectedVideo
-            ? `http://localhost:3000/api/download/play/${selectedVideo._id}`
+            ? selectedVideo.storageProvider === "platform"
+              ? selectedVideo.filePath
+              : `${import.meta.env.VITE_BACKEND_URL}/download/play/${selectedVideo._id}`
             : ""
         }
         onClose={() => {
@@ -139,7 +143,6 @@ export default function DownloadsGrid({
           setSelectedVideo(null);
         }}
       />
-
       <ConfirmModal
         isOpen={showDeleteModal}
         title="Delete Download?"

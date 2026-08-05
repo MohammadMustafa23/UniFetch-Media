@@ -1,11 +1,23 @@
 import api from "./axios.js";
+export const playDownload = async (id) => {
+  try {
+    const { data } = await api.get(`/download/play/${id}`);
+    console.log(data);
+    
+    // Cloudinary / Platform Storage
+    if (data.success && data.type === "cloud") {
+      window.open(data.url, "_blank");
+      return;
+    }
 
-export const playDownload = (id) => {
-  window.open(
-    `http://localhost:3000/api/download/play/${id}`,
-    "_blank",
-    "noopener,noreferrer",
-  );
+    // Local Storage
+    window.open(
+      `${import.meta.env.VITE_BACKEND_URL}/download/play/${id}`,
+      "_blank"
+    );
+  } catch (error) {
+    console.error("Play Error:", error);
+  }
 };
 
 export const deleteDownload = async (id) => {
