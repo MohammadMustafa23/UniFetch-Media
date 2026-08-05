@@ -22,6 +22,6 @@ const server = http.createServer(app);
 initSocket(server);
 
 
-server.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, () => {
   console.log("🚀 Server Running on Port", PORT);
 });

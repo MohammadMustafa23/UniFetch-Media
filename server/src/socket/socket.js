@@ -17,6 +17,10 @@ export function initSocket(server) {
 
   io.on("connection", async (socket) => {
     try {
+     
+  console.log("Socket connected:", socket.id);
+  console.log("Origin:", socket.handshake.headers.origin);
+  console.log("Cookie:", socket.handshake.headers.cookie);
       const cookieHeader = socket.handshake.headers.cookie || "";
 
       const cookies = Object.fromEntries(
