@@ -26,9 +26,6 @@ class DownloadQueue {
   // Add Download to Queue
   add(downloadId) {
     this.queue.push(downloadId);
-    console.log(downloadId);
-
-    console.log(`📥 Added to Queue (${this.queue.length})`);
     this.process();
   }
 
@@ -75,8 +72,6 @@ class DownloadQueue {
       downloadSpeed: "",
       eta: "",
     });
-
-    console.log("⏸ Download paused.");
   }
 
   // Cancel/Delete Download
@@ -113,8 +108,6 @@ class DownloadQueue {
       eta: "",
       downloadSpeed: "",
     });
-
-    console.log(`🗑 Download cancelled: ${downloadId}`);
   }
   async resume(downloadId) {
     const download = await Download.findById(downloadId);
@@ -150,9 +143,6 @@ class DownloadQueue {
       downloadSpeed: "",
       eta: "",
     });
-
-    console.log(`▶ Resumed: ${download.title}`);
-
     // Start processing if idle
     this.process();
   }
@@ -193,9 +183,6 @@ class DownloadQueue {
       await Download.findByIdAndUpdate(downloadId, update);
 
       const room = download.userId.toString();
-
-      console.log("📤 Progress:", update);
-
       getIO()
         .to(room)
         .emit("download-progress", {
@@ -227,8 +214,6 @@ class DownloadQueue {
         this.isDownloading = false;
         return this.process();
       }
-
-      console.log(`🚀 Starting Download: ${download.title}`);
 
       // Update Status
       await Download.findByIdAndUpdate(download._id, {
@@ -270,27 +255,22 @@ class DownloadQueue {
         buffer = lines.pop();
 
         for (const line of lines) {
-          console.log(line);
           await this.updateProgress(download._id, line);
         }
       });
 
       // Show yt-dlp errors
-      ytProcess.stderr.on("data", (data) => {
-        console.log(data.toString());
-      });
+      ytProcess.stderr.on("data", (data) => {});
 
       await new Promise((resolve, reject) => {
         ytProcess.on("close", async (code, signal) => {
           // Download intentionally paused
           const latest = await Download.findById(download._id);
           if (latest?.status === "paused") {
-            console.log("⏸ Download paused.");
             return resolve();
           }
           // Download intentionally cancelled
           if (this.cancelled.has(download._id.toString())) {
-            console.log("🗑 Download cancelled.");
             return resolve();
           }
           if (code === 0) {
@@ -321,10 +301,7 @@ class DownloadQueue {
       let cloudFile = null;
 
       if (download.storageProvider === "platform") {
-        console.log("☁ Uploading to Cloudinary...");
         cloudFile = await uploadToCloudinary(actualFile, "downloads");
-        console.log("✅ Uploaded:", cloudFile.secure_url);
-
         // ===============================
         // Get actual file size
         // ===============================
@@ -348,7 +325,6 @@ class DownloadQueue {
 
         // Delete local temporary file
         await fs.promises.unlink(actualFile);
-        console.log("🗑 Local file deleted.");
       }
 
       await Download.findByIdAndUpdate(download._id, {
@@ -365,9 +341,6 @@ class DownloadQueue {
 
       // ✅ Clear Downloads Cache
       await redisClient.del(`downloads:${download.userId}`);
-
-      console.log("📤 Emitting download-status:", download.userId.toString());
-
       getIO().to(download.userId.toString()).emit("download-status", {
         downloadId: download._id.toString(),
         storageProvider: download.storageProvider, // ⭐ IMPORTANT
@@ -386,20 +359,16 @@ class DownloadQueue {
           downloadId: download._id,
         },
       });
-
-      console.log(`✅ Completed: ${download.title}`);
     } catch (error) {
       console.error("Queue Error:", error);
 
       if (this.cancelled.has(downloadId.toString())) {
-        console.log("🗑 Download cancelled.");
         this.cancelled.delete(downloadId.toString());
         return;
       }
 
       const existingDownload = await Download.findById(downloadId);
       if (existingDownload?.status === "paused") {
-        console.log("⏸ Download paused intentionally.");
         return;
       }
 
@@ -409,7 +378,6 @@ class DownloadQueue {
       });
 
       if (!download) {
-        console.log("Download was deleted, skipping failure handling.");
         return;
       }
 

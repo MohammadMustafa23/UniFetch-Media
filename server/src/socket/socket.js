@@ -27,11 +27,7 @@ export function initSocket(server) {
       );
 
       const token = cookies.token;
-
-      console.log("Token:", token);
-
       if (!token) {
-        console.log("❌ No token found");
         socket.disconnect(true);
         return;
       }
@@ -40,25 +36,17 @@ export function initSocket(server) {
       const user = await User.findById(decoded.id);
 
       if (!user) {
-        console.log("❌ User not found");
         socket.disconnect(true);
         return;
       }
 
       socket.join(user._id.toString());
 
-      socket.emit("welcome", {
-        message: "Welcome to UniFetch Socket!",
-      });
-
       socket.on("join-room", (room) => {
         socket.join(room);
-        console.log(`${socket.id} joined ${room}`);
       });
 
-      socket.on("disconnect", () => {
-        console.log("🔴 Socket Disconnected:", socket.id);
-      });
+      socket.on("disconnect", () => {});
     } catch (error) {
       console.error("Socket Auth Error:", error.message);
       socket.disconnect(true);

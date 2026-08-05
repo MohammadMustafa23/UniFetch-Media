@@ -16,6 +16,4 @@ export const recoverDownloads = async () => {
       },
     },
   );
-
-  console.log(`⚠️ Recovered ${result.modifiedCount} interrupted download(s).`);
 };

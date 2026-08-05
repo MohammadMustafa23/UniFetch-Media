@@ -10,11 +10,8 @@ export const connectRedis = async () => {
   try {
     // Test the connection
     await redisClient.ping();
-
-    console.log("✅ Upstash Redis Connected");
     return true;
   } catch (error) {
-    console.error("❌ Upstash Redis Connection Failed");
     console.error(error.message);
     process.exit(1);
   }

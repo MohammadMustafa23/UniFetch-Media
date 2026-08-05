@@ -192,8 +192,6 @@ async function ForgotPassword(req, res) {
 
     const otp = generateOTP();
 
-    console.log(otp);
-
     await redisClient.set(
       `forget:${email}`,
       {
@@ -242,9 +240,6 @@ async function VerifyResetOTP(req, res) {
     }
 
     const { otp: storedOTP } = cachedData;
-
-    console.log(otp,storedOTP);
-    
     if (storedOTP !== otp) {
       return res.status(400).json({
         success: false,
@@ -339,7 +334,6 @@ async function ResetPassword(req, res) {
     });
   } catch (error) {
     console.error("ResetPassword Error:", error);
-
     return res.status(500).json({
       success: false,
       message: "Internal server error.",

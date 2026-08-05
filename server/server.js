@@ -24,5 +24,4 @@ initSocket(server);
 
 server.listen(PORT, "0.0.0.0", () => {
   console.log("🚀 Server Running on Port", PORT);
-  console.log("📡 Socket.IO Initialized");
 });

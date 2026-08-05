@@ -5,9 +5,6 @@ import sendOTP from "../utils/sendOTPEmail.js";
 async function ResendOTP(req, res) {
   try {
     const { email } = req.body;
-
-    console.log(email);
-    
     if (!email) {
       return res.status(400).json({
         success: false,

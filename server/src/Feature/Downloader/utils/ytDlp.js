@@ -107,8 +107,5 @@ export function downloadVideo({
 
   // URL should always be last
   args.push(url);
-
-  console.log("yt-dlp args:", args);
-
   return spawn(YT_DLP_PATH, args);
 }

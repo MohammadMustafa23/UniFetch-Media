@@ -65,10 +65,6 @@ export const pauseDownload = async (req, res) => {
         message: "Download not found.",
       });
     }
-
-    console.log("Pause Request:", id);
-    console.log("Current Status:", download.status);
-
     await downloadQueue.pause(id);
 
     return res.status(200).json({
@@ -101,9 +97,7 @@ export const resumeDownload = async (req, res) => {
       });
     }
 
-    console.log("Resume Request:", id);
-    console.log("Current Status:", download.status);
-
+    
     await downloadQueue.resume(id);
 
     return res.status(200).json({

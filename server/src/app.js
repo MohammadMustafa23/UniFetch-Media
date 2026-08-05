@@ -8,10 +8,20 @@ import storageRoute from "../src/Feature/storage/storage.routes.js";
 import VideoFuncRoute from "../src/Feature/VideoFunctions/playDownload.route.js";
 import NotificationRoute from "./Feature/notification/routes/notification.route.js";
 import cookieParser from "cookie-parser";
+import helmet from 'helmet'
 import cors from "cors";
 
 const app = express();
 const allowedOrigins = process.env.FRONTEND_CLIENT_ID.split(",");
+
+// Security headers
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
 app.use(
   cors({
     origin: allowedOrigins,

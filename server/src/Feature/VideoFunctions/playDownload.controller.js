@@ -185,13 +185,11 @@ export const saveDownload = async (req, res) => {
           // Delete temporary file
           if (fs.existsSync(download.filePath)) {
             await fs.promises.unlink(download.filePath);
-            console.log("🗑 Local file deleted.");
           }
 
           // Delete MongoDB record
           await Download.findByIdAndDelete(download._id);
-          console.log("🗑 Download record deleted.");
-
+          
           // Clear Redis cache
           await redisClient.del(`downloads:${download.userId}`);
         }
