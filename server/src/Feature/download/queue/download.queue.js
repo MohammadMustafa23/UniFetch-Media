@@ -216,21 +216,13 @@ class DownloadQueue {
     if (this.queue.length === 0) return;
 
     this.isDownloading = true;
-
-    console.log("================================");
-    console.log("QUEUE BEFORE SHIFT:", this.queue);
-
     const downloadId = this.queue.shift();
-
-    console.log("PROCESSING:", downloadId);
-    console.log("================================");
 
     try {
       // Get Latest Download Data
       const download = await Download.findById(downloadId);
 
-      console.log("Queue Storage:", download.storageProvider);
-
+      
       if (!download) {
         this.isDownloading = false;
         return this.process();
@@ -311,10 +303,12 @@ class DownloadQueue {
 
         ytProcess.on("error", reject);
       });
+
       const actualFile = findDownloadedFile(
         folder,
         safeFileName(download.title),
       );
+
       const latest = await Download.findById(download._id);
       if (latest?.status === "paused") {
         return;
@@ -346,6 +340,7 @@ class DownloadQueue {
             "cloudStorage.used": stats.size,
           },
         });
+
         await redisClient.del(`storage:${download.userId}`);
 
         // Save updated download
@@ -381,6 +376,7 @@ class DownloadQueue {
         downloadSpeed: "",
         eta: "",
       });
+      
       await createNotification({
         userId: download.userId,
         title: "Download Complete",

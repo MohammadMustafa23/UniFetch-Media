@@ -49,6 +49,18 @@ export async function createDownload(req, res) {
       const remaining = user.cloudStorage.limit - user.cloudStorage.used;
 
       if (fileSize && fileSize > remaining) {
+         await createNotification({
+          userId: user._id,
+          title: "Storage Limit Reached",
+          message:
+            "Your cloud storage is full. Delete some files or upgrade your storage plan to continue downloading.",
+          type: "warning",
+          metadata: {
+            storageUsed: user.cloudStorage.used,
+            storageLimit: user.cloudStorage.limit,
+          },
+        });
+        
         return res.status(403).json({
           success: false,
           message: "Cloud storage limit exceeded.",
@@ -80,7 +92,8 @@ export async function createDownload(req, res) {
     });
 
     // ✅ Clear Downloads Cache
-    await redisClient.del(`downloads:${userId}`);
+     await redisClient.del(`downloads:${userId}`);
+     await redisClient.del(`history:${req.user._id}`);
 
     // Add to download queue
     downloadQueue.add(download._id);

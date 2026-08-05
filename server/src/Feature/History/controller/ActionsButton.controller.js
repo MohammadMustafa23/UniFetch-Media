@@ -81,8 +81,7 @@ export async function deleteHistory(req, res) {
     // Clear Redis Cache
     // ==========================
     await redisClient.del(`history:${req.user._id}`);
-    await redisClient.del(`favorites:${req.user._id}`);
-
+    
     res.status(200).json({
       success: true,
       message: "History deleted successfully.",

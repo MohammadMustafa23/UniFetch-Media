@@ -54,6 +54,18 @@ export async function autoDownload(req, res) {
       const remaining = user.cloudStorage.limit - user.cloudStorage.used;
 
       if (fileSize && fileSize > remaining) {
+        await createNotification({
+          userId: user._id,
+          title: "Storage Limit Reached",
+          message:
+            "Your cloud storage is full. Delete some files or upgrade your storage plan to continue downloading.",
+          type: "warning",
+          metadata: {
+            storageUsed: user.cloudStorage.used,
+            storageLimit: user.cloudStorage.limit,
+          },
+        });
+        
         return res.status(403).json({
           success: false,
           message: "Cloud storage limit exceeded.",
@@ -131,7 +143,7 @@ export async function autoDownload(req, res) {
     await redisClient.del(`history:${req.user._id}`);
 
     // Add to queue
-    downloadQueue.add(download);
+    downloadQueue.add(download._id);
 
     return res.status(201).json({
       success: true,

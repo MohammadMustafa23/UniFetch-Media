@@ -1,43 +1,73 @@
+import mongoose from "mongoose";
 import Notification from "../models/notification.model.js";
 import { redisClient } from "../../../config/redis.js";
+
+/* ==========================================================
+   GET NOTIFICATIONS
+========================================================== */
 
 export const getNotifications = async (req, res) => {
   try {
     const userId = req.user._id;
-    const cacheKey = `notifications:${userId}`;
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const cacheKey = `notifications:${userId}:${page}:${limit}`;
 
     // ==========================
-    // Check Redis Cache
+    // Redis Cache
     // ==========================
-    const cachedNotifications = await redisClient.get(cacheKey);
 
-    if (cachedNotifications) {
+    const cached = await redisClient.get(cacheKey);
+
+    if (cached) {
       return res.status(200).json({
         success: true,
-        notifications: cachedNotifications,
+        ...cached,
       });
     }
 
     // ==========================
-    // Fetch from MongoDB
+    // Mongo Queries
     // ==========================
-    const notifications = await Notification.find({
-      userId,
-    })
-      .sort({ createdAt: -1 })
-      .limit(10)
-      .lean();
 
-    // ==========================
-    // Save to Redis (1 Minute)
-    // ==========================
-    await redisClient.set(cacheKey, notifications, {
+    const [notifications, unread, total] = await Promise.all([
+      Notification.find({ userId })
+        .sort({
+          isRead: 1, // Unread (false) first
+          createdAt: -1, // Latest first
+        })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+
+      Notification.countDocuments({
+        userId,
+        isRead: false,
+      }),
+
+      Notification.countDocuments({
+        userId,
+      }),
+    ]);
+
+    const payload = {
+      notifications,
+      unread,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    };
+
+    await redisClient.set(cacheKey, payload, {
       ex: 60,
     });
 
     return res.status(200).json({
       success: true,
-      notifications,
+      ...payload,
     });
   } catch (error) {
     console.error("Get Notifications Error:", error);
@@ -49,87 +79,176 @@ export const getNotifications = async (req, res) => {
   }
 };
 
+/* ==========================================================
+   MARK AS READ
+========================================================== */
+
 export const markAsRead = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const notification = await Notification.findOneAndUpdate(
-    {
-      _id: id,
-      userId: req.user._id,
-    },
-    {
-      isRead: true,
-    },
-    {
-      new: true,
-    },
-  );
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid notification id.",
+      });
+    }
 
-  if (!notification) {
-    return res.status(404).json({
+    const notification = await Notification.findOneAndUpdate(
+      {
+        _id: id,
+        userId: req.user._id,
+        isRead: false,
+      },
+      {
+        isRead: true,
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!notification) {
+      return res.status(404).json({
+        success: false,
+        message: "Notification not found.",
+      });
+    }
+
+    // Clear all cached pages
+    const keys = await redisClient.keys(`notifications:${req.user._id}:*`);
+
+    if (keys.length) {
+      await redisClient.del(keys);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Notification marked as read.",
+      notification,
+    });
+  } catch (error) {
+    console.error("Mark As Read Error:", error);
+
+    return res.status(500).json({
       success: false,
-      message: "Notification not found.",
+      message: "Failed to update notification.",
     });
   }
-
-  await redisClient.del(`notifications:${req.user._id}`);
-
-  res.status(200).json({
-    success: true,
-    notification,
-  });
 };
+
+/* ==========================================================
+   MARK ALL AS READ
+========================================================== */
 
 export const markAllAsRead = async (req, res) => {
-  await Notification.updateMany(
-    {
-      userId: req.user._id,
-      isRead: false,
-    },
-    {
-      isRead: true,
-    },
-  );
+  try {
+    const result = await Notification.updateMany(
+      {
+        userId: req.user._id,
+        isRead: false,
+      },
+      {
+        isRead: true,
+      },
+    );
 
-  await redisClient.del(`notifications:${req.user._id}`);
-  res.status(200).json({
-    success: true,
-    message: "All notifications marked as read.",
-  });
-};
+    const keys = await redisClient.keys(`notifications:${req.user._id}:*`);
 
-export const deleteNotification = async (req, res) => {
-  const { id } = req.params;
+    if (keys.length) {
+      await redisClient.del(keys);
+    }
 
-  const notification = await Notification.findOneAndDelete({
-    _id: id,
-    userId: req.user._id,
-  });
+    return res.status(200).json({
+      success: true,
+      message: "All notifications marked as read.",
+      modifiedCount: result.modifiedCount,
+    });
+  } catch (error) {
+    console.error("Mark All Read Error:", error);
 
-  if (!notification) {
-    return res.status(404).json({
+    return res.status(500).json({
       success: false,
-      message: "Notification not found.",
+      message: "Failed to update notifications.",
     });
   }
-
-  await redisClient.del(`notifications:${req.user._id}`);
-
-  res.status(200).json({
-    success: true,
-    message: "Notification deleted.",
-  });
 };
 
+/* ==========================================================
+   DELETE NOTIFICATION
+========================================================== */
+
+export const deleteNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid notification id.",
+      });
+    }
+
+    const notification = await Notification.findOneAndDelete({
+      _id: id,
+      userId: req.user._id,
+    });
+
+    if (!notification) {
+      return res.status(404).json({
+        success: false,
+        message: "Notification not found.",
+      });
+    }
+
+    const keys = await redisClient.keys(`notifications:${req.user._id}:*`);
+
+    if (keys.length) {
+      await redisClient.del(keys);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Notification deleted successfully.",
+      notification,
+    });
+  } catch (error) {
+    console.error("Delete Notification Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete notification.",
+    });
+  }
+};
+
+/* ==========================================================
+   CLEAR ALL NOTIFICATIONS
+========================================================== */
+
 export const clearNotifications = async (req, res) => {
-  await Notification.deleteMany({
-    userId: req.user._id,
-  });
+  try {
+    const result = await Notification.deleteMany({
+      userId: req.user._id,
+    });
 
-  await redisClient.del(`notifications:${req.user._id}`);
+    const keys = await redisClient.keys(`notifications:${req.user._id}:*`);
 
-  res.status(200).json({
-    success: true,
-    message: "All notifications cleared.",
-  });
+    if (keys.length) {
+      await redisClient.del(keys);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "All notifications cleared successfully.",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error("Clear Notifications Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to clear notifications.",
+    });
+  }
 };
