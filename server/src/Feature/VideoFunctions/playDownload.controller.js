@@ -6,6 +6,9 @@ import path from "path";
 import { deleteFromCloudinary } from "../../cloud/cloudinary.js";
 import { redisClient } from "../../config/redis.js";
 import User from "../../models/user.model.js";
+import fs from "fs";
+import mime from "mime-types";
+import Download from "../models/download.model.js";
 
 export const playDownload = async (req, res) => {
   try {
@@ -27,11 +30,15 @@ export const playDownload = async (req, res) => {
     // Cloud Storage
     // ==========================
     if (download.storageProvider === "platform") {
-      return res.redirect(download.filePath);
+      return res.status(200).json({
+        success: true,
+        type: "cloud",
+        url: download.filePath,
+      });
     }
 
     // ==========================
-    // Device Storage
+    // Local Storage
     // ==========================
     if (!download.filePath || !fs.existsSync(download.filePath)) {
       return res.status(404).json({
@@ -43,47 +50,41 @@ export const playDownload = async (req, res) => {
     const filePath = download.filePath;
     const stat = fs.statSync(filePath);
     const fileSize = stat.size;
-
-    const contentType = mime.lookup(filePath) || "application/octet-stream";
+    const contentType =
+      mime.lookup(filePath) || "application/octet-stream";
 
     const range = req.headers.range;
 
-    // Partial Streaming
     if (range) {
       const parts = range.replace(/bytes=/, "").split("-");
 
-      const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-
-      const chunkSize = end - start + 1;
+      const start = Number(parts[0]);
+      const end = parts[1] ? Number(parts[1]) : fileSize - 1;
 
       res.writeHead(206, {
         "Content-Range": `bytes ${start}-${end}/${fileSize}`,
         "Accept-Ranges": "bytes",
-        "Content-Length": chunkSize,
+        "Content-Length": end - start + 1,
         "Content-Type": contentType,
         "Content-Disposition": "inline",
       });
 
-      fs.createReadStream(filePath, {
+      return fs.createReadStream(filePath, {
         start,
         end,
       }).pipe(res);
-
-      return;
     }
 
-    // Full File
     res.writeHead(200, {
       "Content-Length": fileSize,
-      "Content-Type": contentType,
       "Accept-Ranges": "bytes",
+      "Content-Type": contentType,
       "Content-Disposition": "inline",
     });
 
-    fs.createReadStream(filePath).pipe(res);
+    return fs.createReadStream(filePath).pipe(res);
   } catch (error) {
-    console.error("Play Download:", error);
+    console.error(error);
 
     return res.status(500).json({
       success: false,
