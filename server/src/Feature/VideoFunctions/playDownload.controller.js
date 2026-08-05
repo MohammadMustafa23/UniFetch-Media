@@ -6,9 +6,6 @@ import path from "path";
 import { deleteFromCloudinary } from "../../cloud/cloudinary.js";
 import { redisClient } from "../../config/redis.js";
 import User from "../../models/user.model.js";
-import fs from "fs";
-import mime from "mime-types";
-import Download from "../models/download.model.js";
 
 export const playDownload = async (req, res) => {
   try {
