@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import "../style/DashboardShowcase.css";
+import "../style/DashBoardShowCase.css";
 
 import BrowserWindow from "./BrowserWindow";
 
