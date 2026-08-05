@@ -17,10 +17,13 @@ const allowedOrigins = process.env.FRONTEND_CLIENT_ID.split(",");
 // Security headers
 app.use(
   helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false,
-  }),
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: {
+      policy: "cross-origin",
+    },
+  })
 );
+
 
 app.use(
   cors({
