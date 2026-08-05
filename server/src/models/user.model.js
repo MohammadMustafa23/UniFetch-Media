@@ -34,6 +34,18 @@ const userSchema = new mongoose.Schema(
         default: 500 * 1024 * 1024, // 500 MB
       },
     },
+
+    downloadLimit: {
+      max: {
+        type: Number,
+        default: 3, // Free users can download 3 videos
+      },
+
+      used: {
+        type: Number,
+        default: 0,
+      },
+    },
   },
   {
     timestamps: true,

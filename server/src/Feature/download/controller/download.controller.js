@@ -7,7 +7,15 @@ import User from "../../../models/user.model.js";
 export async function createDownload(req, res) {
   try {
     const userId = req.user._id;
-
+    const user = await User.findById(userId).select(
+      "downloadLimit.max downloadLimit.used",
+    );
+    if (user.downloadLimit.used >= user.downloadLimit.max) {
+      return res.status(403).json({
+        success: false,
+        message: "Download limit reached. Upgrade your plan.",
+      });
+    }
     const preference = await Preference.findOne({ userId });
     if (!preference) {
       return res.status(404).json({
@@ -49,7 +57,7 @@ export async function createDownload(req, res) {
       const remaining = user.cloudStorage.limit - user.cloudStorage.used;
 
       if (fileSize && fileSize > remaining) {
-         await createNotification({
+        await createNotification({
           userId: user._id,
           title: "Storage Limit Reached",
           message:
@@ -60,7 +68,7 @@ export async function createDownload(req, res) {
             storageLimit: user.cloudStorage.limit,
           },
         });
-        
+
         return res.status(403).json({
           success: false,
           message: "Cloud storage limit exceeded.",
@@ -92,8 +100,8 @@ export async function createDownload(req, res) {
     });
 
     // ✅ Clear Downloads Cache
-     await redisClient.del(`downloads:${userId}`);
-     await redisClient.del(`history:${req.user._id}`);
+    await redisClient.del(`downloads:${userId}`);
+    await redisClient.del(`history:${req.user._id}`);
 
     // Add to download queue
     downloadQueue.add(download._id);

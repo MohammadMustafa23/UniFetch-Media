@@ -23,6 +23,13 @@ export async function autoDownload(req, res) {
     }
 
     const userId = req.user._id;
+    const user = await User.findById(userId).select("downloadLimit.max downloadLimit.used");
+    if (user.downloadLimit.used >= user.downloadLimit.max) {
+      return res.status(403).json({
+        success: false,
+        message: "Download limit reached. Upgrade your plan.",
+      });
+    }
 
     // Get user preferences
     const preference = await Preference.findOne({ userId });
@@ -65,7 +72,7 @@ export async function autoDownload(req, res) {
             storageLimit: user.cloudStorage.limit,
           },
         });
-        
+
         return res.status(403).json({
           success: false,
           message: "Cloud storage limit exceeded.",

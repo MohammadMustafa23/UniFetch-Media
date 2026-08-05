@@ -8,7 +8,7 @@ import storageRoute from "../src/Feature/storage/storage.routes.js";
 import VideoFuncRoute from "../src/Feature/VideoFunctions/playDownload.route.js";
 import NotificationRoute from "./Feature/notification/routes/notification.route.js";
 import cookieParser from "cookie-parser";
-import helmet from 'helmet'
+import helmet from "helmet";
 import cors from "cors";
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(
   helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
-  })
+  }),
 );
 
 app.use(
@@ -31,6 +31,16 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "OK",
+    message: "UniFetch API is healthy",
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
 
 app.use("/api", AuthRouter);
 app.use("/api", PreferencesRouter);

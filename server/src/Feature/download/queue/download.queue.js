@@ -209,7 +209,6 @@ class DownloadQueue {
       // Get Latest Download Data
       const download = await Download.findById(downloadId);
 
-      
       if (!download) {
         this.isDownloading = false;
         return this.process();
@@ -339,17 +338,24 @@ class DownloadQueue {
           download.storageProvider === "platform" ? cloudFile.public_id : null,
       });
 
+      await User.findByIdAndUpdate(download.userId, {
+        $inc: {
+          "downloadLimit.used": 1,
+        },
+      });
+
       // ✅ Clear Downloads Cache
       await redisClient.del(`downloads:${download.userId}`);
+
       getIO().to(download.userId.toString()).emit("download-status", {
         downloadId: download._id.toString(),
-        storageProvider: download.storageProvider, // ⭐ IMPORTANT
+        storageProvider: download.storageProvider,
         status: "completed",
         progress: 100,
         downloadSpeed: "",
         eta: "",
       });
-      
+
       await createNotification({
         userId: download.userId,
         title: "Download Complete",
@@ -361,7 +367,6 @@ class DownloadQueue {
       });
     } catch (error) {
       console.error("Queue Error:", error);
-
       if (this.cancelled.has(downloadId.toString())) {
         this.cancelled.delete(downloadId.toString());
         return;
