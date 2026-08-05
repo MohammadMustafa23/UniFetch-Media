@@ -27,16 +27,6 @@ export default function StorageUsage({ storage }) {
       value: storage?.audioSize || 0,
       color: "#A78BFA",
     },
-    {
-      name: "Image files",
-      value: storage?.imageSize || 0,
-      color: "#F59E0B",
-    },
-    {
-      name: "Cache",
-      value: storage?.cacheSize || 0,
-      color: "#34D399",
-    },
   ];
 
   return (

@@ -94,7 +94,7 @@ export default function DownloadCard({
 
         {/* Delete */}
         <button
-          className="delete-btn"
+          className=""
           title="Delete"
           onClick={() => onDelete(item)}
           disabled={saving}

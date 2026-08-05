@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Download, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./HeroSectionCTA.css";
+import logo from "../../assets/unifetch_logo.png";
 
 export default function NavBar({
   heroRef,
@@ -40,11 +41,7 @@ export default function NavBar({
           className="uf-logo"
           onClick={() => scrollTo(heroRef)}
         >
-          <div className="uf-logo-icon">
-            <Download size={15} />
-          </div>
-
-          <span>UniFetch</span>
+          <img src={logo} alt="UniFetch" className="uf-logo-image" />
         </button>
 
         {/* Desktop Navigation */}

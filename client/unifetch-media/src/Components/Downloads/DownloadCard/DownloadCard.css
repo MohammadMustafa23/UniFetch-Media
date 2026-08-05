@@ -294,9 +294,8 @@ DELETE
 ==================================================*/
 
 .delete-btn:hover {
-  background: #ef4444 !important;
-
-  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.35);
+  background: #6366f1;
+  color: white;
 }
 
 /*==================================================

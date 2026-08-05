@@ -1,8 +1,8 @@
 import "./Topbar.css";
 import { useEffect, useState, useMemo } from "react";
-import { Search, Bell, ChevronDown } from "lucide-react";
+import { Search, Bell, ChevronDown,ChevronRight } from "lucide-react";
 import debounce from "lodash.debounce";
-
+import { replace, useNavigate } from "react-router-dom";
 import { globalSearch } from "../../../service/history.service.js";
 import { getNotifications } from "../../../service/notification.service.js";
 
@@ -12,6 +12,8 @@ import SearchDropdown from "../../../common/SearchDropdown.jsx";
 export default function Topbar() {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+
+  const navigate = useNavigate();
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState({
@@ -125,15 +127,18 @@ export default function Topbar() {
           )}
         </div>
 
-        <button className="ufm-topbar-profile">
+        <button
+          className="ufm-topbar-profile"
+          onClick={() => navigate("/settings",{replace : true})}
+        >
           <div className="ufm-topbar-avatar">M</div>
 
           <div className="ufm-topbar-user">
             <h4>Mohammad</h4>
-            <span>Premium</span>
+            <span>Manage Profile</span>
           </div>
 
-          <ChevronDown size={18} />
+          <ChevronRight size={18} />
         </button>
       </div>
     </header>

@@ -136,8 +136,6 @@ export default function VerifyEmailForm({ setScreen, verifyType, email }) {
       let data;
 
       if (verifyType === "forgot-password") {
-        console.log(email,code);
-        
         const response = await verifyResetOTP({
           email,
           otp: code,

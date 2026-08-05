@@ -128,7 +128,6 @@ export default function NotificationDropdown() {
 
     try {
       await deleteNotification(id);
-
       setNotifications((prev) => prev.filter((item) => item._id !== id));
     } catch (err) {
       console.error(err);
@@ -233,14 +232,6 @@ export default function NotificationDropdown() {
         <div className="ufm-notification-footer">
           <button className="clear-btn" onClick={handleClear}>
             Clear All
-          </button>
-
-          <button
-            className="view-btn"
-            onClick={() => navigate("/notifications")}
-          >
-            View All
-            <ArrowRight size={16} />
           </button>
         </div>
       )}

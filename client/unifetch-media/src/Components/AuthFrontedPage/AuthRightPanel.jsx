@@ -1,5 +1,5 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+const AUTH_STORAGE_KEY = "unifetch-auth";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 import VerifyEmailForm from "./VerifyEmailForm";
@@ -8,9 +8,54 @@ import ResetPasswordSuccess from "./ResetPasswordSuccess.jsx";
 import ResetPasswordForm from "./ResetPasswordForm";
 import VerifyEmailSuccess from "./VerifyEmailSuccess.jsx";
 export default function AuthRightPanel() {
-  const [screen, setScreen] = useState("signin");
-  const [verifyType, setVerifyType] = useState("");
-  const [otpEmail, setOtpEmail] = useState("");
+  const getInitialAuthState = () => {
+    try {
+      const saved = sessionStorage.getItem(AUTH_STORAGE_KEY);
+
+      if (!saved) {
+        return {
+          screen: "signin",
+          verifyType: "",
+          otpEmail: "",
+        };
+      }
+      return JSON.parse(saved);
+    } catch (error) {
+      return {
+        screen: "signin",
+        verifyType: "",
+        otpEmail: "",
+      };
+    }
+  };
+
+  const [authState, setAuthState] = useState(getInitialAuthState);
+  const { screen, verifyType, otpEmail } = authState;
+
+  const setScreen = (screen) => {
+    setAuthState((prev) => ({
+      ...prev,
+      screen,
+    }));
+  };
+
+  const setVerifyType = (verifyType) => {
+    setAuthState((prev) => ({
+      ...prev,
+      verifyType,
+    }));
+  };
+
+  const setOtpEmail = (otpEmail) => {
+    setAuthState((prev) => ({
+      ...prev,
+      otpEmail,
+    }));
+  };
+
+  useEffect(() => {
+    sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authState));
+  }, [authState]);
 
   return (
     <section className="auth-right">
@@ -85,11 +130,19 @@ export default function AuthRightPanel() {
         {screen === "signin" && <SignInForm setScreen={setScreen} />}
 
         {screen === "signup" && (
-          <SignUpForm setScreen={setScreen} setVerifyType={setVerifyType}  setOtpEmail={setOtpEmail} />
+          <SignUpForm
+            setScreen={setScreen}
+            setVerifyType={setVerifyType}
+            setOtpEmail={setOtpEmail}
+          />
         )}
 
         {screen === "verify-email" && (
-          <VerifyEmailForm setScreen={setScreen} verifyType={verifyType} email={otpEmail} />
+          <VerifyEmailForm
+            setScreen={setScreen}
+            verifyType={verifyType}
+            email={otpEmail}
+          />
         )}
 
         {screen === "verify-success" && (
@@ -104,7 +157,7 @@ export default function AuthRightPanel() {
           />
         )}
         {screen === "reset-password" && (
-          <ResetPasswordForm setScreen={setScreen} email={otpEmail}/>
+          <ResetPasswordForm setScreen={setScreen} email={otpEmail} />
         )}
         {screen === "reset-success" && (
           <ResetPasswordSuccess setScreen={setScreen} />

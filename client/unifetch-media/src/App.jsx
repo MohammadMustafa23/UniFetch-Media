@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense,useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 
@@ -38,6 +38,7 @@ const TermsOfService = lazy(() => import("./security/TermsOfService"));
 ========================================== */
 
 function App() {
+   const [collapsed, setCollapsed] = useState(false);
   return (
     <>
       <Toaster
@@ -79,7 +80,7 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Dashboard collapsed={collapsed} setCollapsed={setCollapsed} />
               </ProtectedRoute>
             }
           />
@@ -88,7 +89,7 @@ function App() {
             path="/downloads"
             element={
               <ProtectedRoute>
-                <Downloads />
+                <Downloads collapsed={collapsed} setCollapsed={setCollapsed} />
               </ProtectedRoute>
             }
           />
@@ -97,7 +98,7 @@ function App() {
             path="/queue"
             element={
               <ProtectedRoute>
-                <Queue />
+                <Queue collapsed={collapsed} setCollapsed={setCollapsed} />
               </ProtectedRoute>
             }
           />
@@ -106,7 +107,7 @@ function App() {
             path="/history"
             element={
               <ProtectedRoute>
-                <History />
+                <History  collapsed={collapsed} setCollapsed={setCollapsed} />
               </ProtectedRoute>
             }
           />
@@ -115,7 +116,7 @@ function App() {
             path="/favorites"
             element={
               <ProtectedRoute>
-                <Favorites />
+                <Favorites collapsed={collapsed} setCollapsed={setCollapsed} />
               </ProtectedRoute>
             }
           />
@@ -124,7 +125,7 @@ function App() {
             path="/analytics"
             element={
               <ProtectedRoute>
-                <Analytics />
+                <Analytics collapsed={collapsed} setCollapsed={setCollapsed} />
               </ProtectedRoute>
             }
           />
@@ -133,7 +134,7 @@ function App() {
             path="/storage"
             element={
               <ProtectedRoute>
-                <Storage />
+                <Storage collapsed={collapsed} setCollapsed={setCollapsed} />
               </ProtectedRoute>
             }
           />

@@ -16,8 +16,7 @@ import { toast } from "sonner";
 import { getPreferences } from "../service/preferences.service.js";
 import { getDashboard } from "../service/analytics.service.js";
 
-export default function Dashboard() {
-  const [collapsed, setCollapsed] = useState(false);
+export default function Dashboard({collapsed,setCollapsed}) {
   const [videoInfo, setVideoInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");

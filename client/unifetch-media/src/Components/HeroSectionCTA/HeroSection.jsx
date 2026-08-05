@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "./style/HeroSection.css";
 import {
   ArrowRight,
@@ -14,7 +15,15 @@ import {
   BarChart3,
   PlusSquare,
 } from "lucide-react";
-export default function HeroSection() {
+export default function HeroSection({dashboardRef}) {
+  const scrollTo = (ref) => {
+    ref.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
+  };
+  const navigate = useNavigate();
   return (
     <section className="hero">
       {/* Background */}
@@ -47,9 +56,9 @@ export default function HeroSection() {
           </p>
 
           <div className="hero-buttons">
-            <button className="primary-btn">Get Started</button>
+            <button className="primary-btn" onClick={()=>{navigate('/authantication-page')}} >Get Started</button>
 
-            <button className="secondary-btn">
+            <button className="secondary-btn"  onClick={() => scrollTo(dashboardRef)}>
               View Dashboard
               <ArrowRight size={18} />
             </button>

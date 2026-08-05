@@ -40,7 +40,7 @@ export default function HeroPageCTA() {
       <main className="homepage">
 
         <section ref={heroRef}>
-          <HeroSection />
+          <HeroSection  dashboardRef={dashboardRef} />
         </section>
 
         <section className="platform-section">
