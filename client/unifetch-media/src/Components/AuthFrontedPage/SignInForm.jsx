@@ -73,13 +73,11 @@ export default function SignInForm({ setScreen }) {
       const { data } = await loginUser(formData);
 
       if (data.success) {
-        console.log("Login Successful");
+        
         toast.success(`Welcome ${data.userName}!`);
         navigate("/dashboard", { replace: true });
       }
     } catch (error) {
-      console.error(error);
-
       const message =
         error.response?.data?.message ||
         "Something went wrong. Please try again.";

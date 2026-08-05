@@ -4,6 +4,7 @@ import "./style/SignForm.css";
 import SocialLogin from "./SocialLogin";
 import { registerUser } from "../../service/auth.service";
 import Loader from '../../common/Loader'
+import { toast } from "sonner";
 
 export default function SignUpForm({ setScreen, setVerifyType,setOtpEmail }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -100,8 +101,7 @@ export default function SignUpForm({ setScreen, setVerifyType,setOtpEmail }) {
         setScreen("verify-email");
       }
     } catch (error) {
-      console.error(error);
-      alert(error.response?.data?.message || "Something went wrong.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

@@ -41,9 +41,6 @@ export default function HeroDownload({
       }
 
       const { data } = await getDownloadInfo(mediaUrl);
-      console.log(data.data);
-      
-
       if (data.success) {
         setVideoInfo(data.data); // Keep preview open
       }
@@ -122,7 +119,6 @@ export default function HeroDownload({
         <button
           className="ufm-hero-download-btn"
           onClick={() => {
-            console.log("Button Clicked");
             handleDownloadInfo();
           }}
         >

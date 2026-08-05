@@ -148,7 +148,6 @@ export default function VerifyEmailForm({ setScreen, verifyType, email }) {
           setScreen("reset-password");
         }
       } else {
-        console.log(code);
         const response = await verifyOTP({
           email,
           otp: code,

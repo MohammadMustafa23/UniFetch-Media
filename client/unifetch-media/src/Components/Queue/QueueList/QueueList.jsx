@@ -9,6 +9,7 @@ import QueueItem from "../QueueItem/QueueItem";
 import EmptyQueue from "../EmptyQueue/EmptyQueue";
 import { getQueue } from "../../../service/download.service";
 import { saveDownload } from "../../../service/videoFunction.service.js";
+import { toast } from "sonner";
 
 const QueueList = ({ filter }) => {
   const [queue, setQueue] = useState([]);
@@ -21,7 +22,7 @@ const QueueList = ({ filter }) => {
         setQueue(res.data.data || []);
       }
     } catch (error) {
-      console.error("Queue Error:", error);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -51,8 +52,6 @@ const QueueList = ({ filter }) => {
     };
 
     const handleStatus = async (data) => {
-      console.log("📡 download-status:", data);
-
       setQueue((prev) =>
         prev.map((item) => {
           if (item._id !== data.downloadId) return item;
@@ -74,9 +73,8 @@ const QueueList = ({ filter }) => {
       if (data.status === "completed" && data.storageProvider === "device") {
         try {
           await saveDownload(data.downloadId);
-          console.log("📥 Browser download started");
         } catch (error) {
-          console.error(error);
+          toast.error("Something went wrong. Please try again.");
         }
       }
 
@@ -88,7 +86,7 @@ const QueueList = ({ filter }) => {
     };
 
     const handleDelete = ({ downloadId }) => {
-      console.log("🗑 download-deleted:", downloadId);
+    
       setQueue((prev) => prev.filter((item) => item._id !== downloadId));
       // Sync with backend
       fetchQueue();
@@ -104,8 +102,6 @@ const QueueList = ({ filter }) => {
       socket.off("download-progress", handleProgress);
       socket.off("download-status", handleStatus);
       socket.off("download-deleted", handleDelete);
-
-      console.log("🛑 QueueList socket listeners removed");
     };
   }, []);
 

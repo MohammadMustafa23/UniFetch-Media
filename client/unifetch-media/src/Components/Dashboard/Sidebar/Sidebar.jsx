@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../../../common/ConfirmModal";
 import PageLoader from "../../../common/PageLoader.jsx";
 import socket from "../../../socket/socket.js";
+import { toast } from "sonner";
 import {
   LayoutDashboard,
   Download,
@@ -77,7 +78,6 @@ export default function Sidebar({ isCollapsed, setCollapsed }) {
       // Disconnect Socket.IO
       if (socket.connected) {
         socket.disconnect();
-        console.log("🔴 Socket Disconnected");
       }
 
       setShowLogoutModal(false);
@@ -86,7 +86,7 @@ export default function Sidebar({ isCollapsed, setCollapsed }) {
         replace: true,
       });
     } catch (error) {
-      console.error(error);
+       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

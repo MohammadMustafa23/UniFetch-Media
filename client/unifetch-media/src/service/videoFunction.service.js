@@ -9,7 +9,6 @@ export const playDownload = (id) => {
 };
 
 export const deleteDownload = async (id) => {
-  console.log(id);
   const { data } = await api.delete(`/download/delete/${id}`);
   return data;
 };
@@ -106,7 +105,6 @@ export const shareDownload = async (item) => {
 
     setTimeout(() => URL.revokeObjectURL(url), 10000);
   } catch (error) {
-    console.error(error);
     toast.error("Unable to share file.");
   }
 };

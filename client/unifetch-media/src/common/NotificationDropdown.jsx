@@ -11,6 +11,7 @@ import {
   ArrowRight,
   LoaderCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -61,7 +62,7 @@ export default function NotificationDropdown() {
       const data = await getNotifications();
       setNotifications(data || []);
     } catch (err) {
-      console.error(err);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -104,7 +105,7 @@ export default function NotificationDropdown() {
         ),
       );
     } catch (err) {
-      console.error(err);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -119,7 +120,7 @@ export default function NotificationDropdown() {
         })),
       );
     } catch (err) {
-      console.error(err);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -130,7 +131,7 @@ export default function NotificationDropdown() {
       await deleteNotification(id);
       setNotifications((prev) => prev.filter((item) => item._id !== id));
     } catch (err) {
-      console.error(err);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -140,7 +141,7 @@ export default function NotificationDropdown() {
 
       setNotifications([]);
     } catch (err) {
-      console.error(err);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 

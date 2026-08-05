@@ -1,6 +1,6 @@
 import "../Dashboard/style/Dashboard.css";
 import "./Analytics.css";
-
+import { toast } from "sonner";
 /* ==========================================
    DASHBOARD
 ========================================== */
@@ -31,11 +31,10 @@ export default function Analytics() {
     const fetchAnalytics = async () => {
       try {
         const res = await getDashboardAnalytics();
-        console.log(res.data.data);
         
         setAnalytics(res.data.data);
       } catch (error) {
-        console.error(error);
+        toast.error("Something went wrong. Please try again.");
       } finally {
         setLoading(false);
       }

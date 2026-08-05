@@ -44,15 +44,10 @@ export default function ProfileSettings() {
       if (profileRes.data.success) {
         setProfile(profileRes.data.user);
       }
-
-      console.log(preferencesRes.data);
-
       if (preferencesRes.data.success) {
         setPreferences(preferencesRes.data.data);
       }
     } catch (error) {
-      console.error(error);
-
       toast.error(
         error.response?.data?.message || "Failed to load profile settings.",
       );
@@ -79,8 +74,6 @@ export default function ProfileSettings() {
         toast.success(data.message);
       }
     } catch (error) {
-      console.error(error);
-
       toast.error(
         error.response?.data?.message || "Failed to update preferences.",
       );

@@ -8,6 +8,7 @@ import {
   ArrowDown,
   Trash2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   retryDownload,
@@ -33,12 +34,8 @@ const QueueActions = ({ item }) => {
       setLoadingAction(action);
 
       await apiCall(item._id);
-
-      // No fetchQueue()
-      // No window.location.reload()
-      // Socket.IO will update the UI automatically.
     } catch (error) {
-      console.error(`${action} failed:`, error);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoadingAction(null);
     }

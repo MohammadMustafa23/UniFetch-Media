@@ -14,7 +14,7 @@ import FavoriteList from "./FavoritesList/FavoriteList";
 import EmptyFavorites from "./EmptyFavorites/EmptyFavorites";
 
 import PageLoader from "../../common/PageLoader";
-
+import { toast } from "sonner";
 import { getFavorites } from "../../service/history.service.js";
 
 export default function Favorites() {
@@ -29,7 +29,7 @@ export default function Favorites() {
 
       setFavorites(response.data);
     } catch (error) {
-      console.error(error);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

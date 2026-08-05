@@ -6,6 +6,7 @@ import "./Downloads.css";
 import Sidebar from "../Dashboard/Sidebar/Sidebar";
 import Topbar from "../Dashboard/Topbar/Topbar";
 import Footer from "../Dashboard/Footer/Footer";
+import { toast } from "sonner";
 
 import DownloadsHeader from "./DownloadsHeader/DownloadsHeader";
 import DownloadsToolbar from "./DownloadsToolbar/DownloadsToolbar";
@@ -32,7 +33,7 @@ export default function Downloads() {
       setDownloads(response.data.data);
       setFilteredDownloads(response.data.data);
     } catch (error) {
-      console.error(error);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

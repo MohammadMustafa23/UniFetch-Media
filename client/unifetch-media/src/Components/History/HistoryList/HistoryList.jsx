@@ -6,6 +6,7 @@ import HistoryEmpty from "../HistoryEmpty/HistoryEmpty";
 import PageLoader from "../../../common/PageLoader";
 
 import { getHistory } from "../../../service/history.service";
+import { toast } from "sonner";
 
 export default function HistoryList({ filter }) {
   const [history, setHistory] = useState([]);
@@ -20,12 +21,9 @@ export default function HistoryList({ filter }) {
       setLoading(true);
 
       const { data } = await getHistory(filter);
-
-      console.log(data.data);
-
       setHistory(data.data);
     } catch (error) {
-      console.error(error);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

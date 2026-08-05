@@ -56,7 +56,6 @@ export default function Dashboard({collapsed,setCollapsed}) {
       // Clear Input
       setUrl("");
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.message || "Download failed");
     }
   };
@@ -69,7 +68,7 @@ export default function Dashboard({collapsed,setCollapsed}) {
           setPreference(data.data);
         }
       } catch (error) {
-        console.error("Failed to load preferences", error);
+        toast.error("Something went wrong. Please try again.");
       }
     };
     loadPreferences();
@@ -85,7 +84,6 @@ export default function Dashboard({collapsed,setCollapsed}) {
         }
       } catch (error) {
         toast.error("Failed to load dashboard");
-        console.error(error);
       } finally {
         setDashboardLoading(false);
       }

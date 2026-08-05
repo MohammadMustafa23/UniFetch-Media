@@ -1,6 +1,6 @@
 import "./Topbar.css";
 import { useEffect, useState, useMemo } from "react";
-import { Search, Bell, ChevronDown,ChevronRight } from "lucide-react";
+import { Search, Bell, ChevronDown, ChevronRight } from "lucide-react";
 import debounce from "lodash.debounce";
 import { replace, useNavigate } from "react-router-dom";
 import { globalSearch } from "../../../service/history.service.js";
@@ -8,6 +8,7 @@ import { getNotifications } from "../../../service/notification.service.js";
 
 import NotificationDropdown from "../../../common/NotificationDropdown.jsx";
 import SearchDropdown from "../../../common/SearchDropdown.jsx";
+import { toast } from "sonner";
 
 export default function Topbar() {
   const [notifications, setNotifications] = useState([]);
@@ -41,13 +42,10 @@ export default function Topbar() {
           setLoading(true);
 
           const data = await globalSearch(value);
-
-          console.log(data);
-
           setResults(data);
           setShowDropdown(true);
         } catch (error) {
-          console.error(error);
+          toast.error("Something went wrong. Please try again.");
         } finally {
           setLoading(false);
         }
@@ -68,7 +66,7 @@ export default function Topbar() {
       const data = await getNotifications();
       setNotifications(data);
     } catch (error) {
-      console.error(error);
+      toast.error("Something went wrong. Please try again.");
     }
   }
 
@@ -129,7 +127,7 @@ export default function Topbar() {
 
         <button
           className="ufm-topbar-profile"
-          onClick={() => navigate("/settings",{replace : true})}
+          onClick={() => navigate("/settings", { replace: true })}
         >
           <div className="ufm-topbar-avatar">M</div>
 

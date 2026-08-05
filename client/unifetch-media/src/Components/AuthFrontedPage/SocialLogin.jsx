@@ -25,8 +25,6 @@ export default function SocialLogin() {
 
         navigate("/dashboard", { replace: true });
       } catch (error) {
-        console.error(error);
-
         toast.error(
           error.response?.data?.message ||
             "Unable to sign in with Google."

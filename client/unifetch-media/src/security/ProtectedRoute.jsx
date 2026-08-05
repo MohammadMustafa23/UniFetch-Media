@@ -20,13 +20,8 @@ export default function ProtectedRoute({ children }) {
             socket.connect();
           }
 
-          socket.on("connect", () => {
-            console.log("✅ Socket Connected:", socket.id);
-          });
-
-          socket.on("connect_error", (err) => {
-            console.log("❌ Socket Error:", err.message);
-          });
+          socket.on("connect", () => {});
+          socket.on("connect_error", (err) => {});
         }
       } catch (error) {
         setIsAuthenticated(false);
@@ -37,19 +32,10 @@ export default function ProtectedRoute({ children }) {
 
     verifyUser();
 
-    const handleWelcome = (data) => {
-      console.log(data.message);
-    };
-
-    socket.on("welcome", handleWelcome);
-
     // 👇 Add this here
-    socket.on("download-completed", (data) => {
-      console.log("✅ ProtectedRoute received:", data);
-    });
+    socket.on("download-completed", (data) => {});
 
     return () => {
-      socket.off("welcome", handleWelcome);
       socket.off("download-completed");
     };
   }, []);
