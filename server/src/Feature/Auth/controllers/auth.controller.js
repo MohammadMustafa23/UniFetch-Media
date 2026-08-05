@@ -91,7 +91,7 @@ const LoginUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -210,7 +210,7 @@ async function ForgotPassword(req, res) {
     });
   } catch (error) {
     console.log(error);
-    
+
     return res.status(500).json({
       success: false,
       message: "Internal server error.",
@@ -262,7 +262,6 @@ async function VerifyResetOTP(req, res) {
       message: "OTP verified successfully.",
       resetToken,
     });
-
   } catch (error) {
     console.error("VerifyResetOTP Error:", error);
     return res.status(500).json({
@@ -424,11 +423,12 @@ const googleLogin = async (req, res) => {
         userId: user._id,
       });
     }
+    
     // Set Cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
