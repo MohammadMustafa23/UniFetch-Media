@@ -2,7 +2,7 @@ import { useRef } from "react";
 
 import NavBar from "../Components/HeroSectionCTA/NavBar";
 import HeroSection from "../Components/HeroSectionCTA/HeroSection";
-import PlatformSection from "../Components/HeroSectionCTA/PlatformSectio";
+import PlatformSection from "../Components/HeroSectionCTA/PlatformSection";
 import FeatureSection from "../Components/HeroSectionCTA/Featuresection";
 import HowItsWork from "../Components/HeroSectionCTA/HowitsWork";
 import DashboardShowcase from "../Components/HeroSectionCTA/DashBoard/DashBoardShowcase";
