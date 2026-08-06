@@ -102,7 +102,7 @@ export const getDashboard = async (req, res) => {
 
     const userName = User.findById(userId).select("userName");
     const dashboardData = {
-      userName,
+      userName : userName,
       stats: {
         totalDownloads,
         todayDownloads,
