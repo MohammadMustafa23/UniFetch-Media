@@ -78,9 +78,8 @@ export default function Dashboard({collapsed,setCollapsed}) {
     const loadDashboard = async () => {
       try {
         const { data } = await getDashboard();
+
         if (data.success) {
-          console.log(data.success);
-          
           setDashboard(data.data);
         }
       } catch (error) {
@@ -89,6 +88,7 @@ export default function Dashboard({collapsed,setCollapsed}) {
         setDashboardLoading(false);
       }
     };
+
     loadDashboard();
   }, []);
 
@@ -104,7 +104,7 @@ export default function Dashboard({collapsed,setCollapsed}) {
         />
       )}
 
-      <Sidebar isCollapsed={collapsed} setCollapsed={setCollapsed}  user={dashboard.userName} />
+      <Sidebar isCollapsed={collapsed} setCollapsed={setCollapsed} />
 
       <main className="ufm-dashboard-main">
         <Topbar />
