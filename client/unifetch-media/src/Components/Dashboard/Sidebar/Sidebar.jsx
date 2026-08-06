@@ -65,7 +65,7 @@ const menuItems = [
   },
 ];
 
-export default function Sidebar({ isCollapsed, setCollapsed,user }) {
+export default function Sidebar({ isCollapsed, setCollapsed,userName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -177,7 +177,7 @@ export default function Sidebar({ isCollapsed, setCollapsed,user }) {
 
           {!isCollapsed && (
             <div className="ufm-sidebar-user-info">
-              <h4>{user || "Guest User"}</h4>
+              <h4>{userName || "Guest User"}</h4>
               <span>Premium Plan</span>
             </div>
           )}

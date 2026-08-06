@@ -78,7 +78,6 @@ export default function Dashboard({collapsed,setCollapsed}) {
     const loadDashboard = async () => {
       try {
         const { data } = await getDashboard();
-
         if (data.success) {
           setDashboard(data.data);
         }
@@ -104,7 +103,7 @@ export default function Dashboard({collapsed,setCollapsed}) {
         />
       )}
 
-      <Sidebar isCollapsed={collapsed} setCollapsed={setCollapsed} />
+      <Sidebar isCollapsed={collapsed} setCollapsed={setCollapsed} userName={dashboard?.userName} />
 
       <main className="ufm-dashboard-main">
         <Topbar />
