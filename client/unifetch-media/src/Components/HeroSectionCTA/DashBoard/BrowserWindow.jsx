@@ -1,4 +1,4 @@
-import "../style/DashboardShowcase.css";
+import "../style/DashBoardShowCase.css";
 
 export default function BrowserWindow({ children }) {
   return (
