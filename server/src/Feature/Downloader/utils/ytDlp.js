@@ -17,31 +17,16 @@ const FFMPEG_PATH = isWindows
   : path.join(BIN_DIR, "ffmpeg");
 
 export async function getVideoInfo(url) {
-  const args = [
+  const { stdout } = await execFileAsync(YT_DLP_PATH, [
     "-J",
     "--no-playlist",
     "--ffmpeg-location",
     FFMPEG_PATH,
-  ];
+    url,
+  ]);
 
-  // Use cookies ONLY for YouTube
-  if (url.includes("youtube.com") || url.includes("youtu.be")) {
-    args.push(
-      "--cookies",
-      path.join(BIN_DIR, "cookie.txt")
-    );
-  }
-
-  args.push(url);
-  try {
-    const { stdout } = await execFileAsync(YT_DLP_PATH, args);
-    return JSON.parse(stdout);
-  } catch (err) {
-    console.error("STDERR:", err.stderr);
-    throw err;
-  }
+  return JSON.parse(stdout);
 }
-
 
 function getFormatSelector(quality, type) {
   // Audio Only
@@ -80,16 +65,8 @@ export function downloadVideo({
   format = "mp4",
   type = "video",
 }) {
-  const args = [
-    "--newline",
-    "--no-playlist",
+  const args = ["--newline", "--no-playlist", "--ffmpeg-location", FFMPEG_PATH];
 
-    "--cookies",
-    path.join(BIN_DIR, "cookie.txt"),
-
-    "--ffmpeg-location",
-    FFMPEG_PATH,
-  ];
   // ============================
   // AUDIO DOWNLOAD
   // ============================

@@ -2,7 +2,7 @@ import Download from "../models/download.model.js";
 import fs from "fs";
 import { formatFileSize } from "../utils/formatFileSize.js";
 import { redisClient } from "../../../config/redis.js";
-
+import User from '../../../models/user.model.js'
 export const getDashboard = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -99,7 +99,10 @@ export const getDashboard = async (req, res) => {
         ? 0
         : Number(((completedDownloads / totalDownloads) * 100).toFixed(1));
 
+
+    const userName = User.findById(userId).select("userName");
     const dashboardData = {
+      userName,
       stats: {
         totalDownloads,
         todayDownloads,
@@ -107,18 +110,14 @@ export const getDashboard = async (req, res) => {
         completedDownloads,
         successRate,
         storageUsed: formatFileSize(totalBytes),
-        storageLimit: "2 GB",
+        storageLimit: "500 MB",
       },
-
       today: {
         downloads: todayDownloads,
         bandwidth: formatFileSize(todayBytes),
       },
-
       liveQueue,
-
       recentDownloads,
-
       latestUpdates: [],
     };
 
