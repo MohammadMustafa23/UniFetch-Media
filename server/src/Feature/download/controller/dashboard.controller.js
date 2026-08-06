@@ -100,9 +100,9 @@ export const getDashboard = async (req, res) => {
         : Number(((completedDownloads / totalDownloads) * 100).toFixed(1));
 
 
-    const userName = User.findById(userId).select("userName");
+   const user = await User.findById(userId).select("userName");
     const dashboardData = {
-      userName : userName,
+      userName: user?.userName || "Guest User",
       stats: {
         totalDownloads,
         todayDownloads,
