@@ -16,13 +16,17 @@ const FFMPEG_PATH = isWindows
   ? path.join(BIN_DIR, "ffmpeg.exe")
   : path.join(BIN_DIR, "ffmpeg");
 
-  
 export async function getVideoInfo(url) {
   const { stdout } = await execFileAsync(YT_DLP_PATH, [
     "-J",
     "--no-playlist",
+
+    "--cookies",
+    path.join(BIN_DIR, "cookie.txt"),
+
     "--ffmpeg-location",
     FFMPEG_PATH,
+
     url,
   ]);
 
@@ -66,8 +70,16 @@ export function downloadVideo({
   format = "mp4",
   type = "video",
 }) {
-  const args = ["--newline", "--no-playlist", "--ffmpeg-location", FFMPEG_PATH];
+  const args = [
+    "--newline",
+    "--no-playlist",
 
+    "--cookies",
+    path.join(BIN_DIR, "cookie.txt"),
+
+    "--ffmpeg-location",
+    FFMPEG_PATH,
+  ];
   // ============================
   // AUDIO DOWNLOAD
   // ============================
