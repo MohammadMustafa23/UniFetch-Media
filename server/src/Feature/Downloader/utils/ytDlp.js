@@ -20,25 +20,28 @@ export async function getVideoInfo(url) {
   const args = [
     "-J",
     "--no-playlist",
-    "--cookies",
-    path.join(BIN_DIR, "cookie.txt"),
     "--ffmpeg-location",
     FFMPEG_PATH,
-    url,
   ];
 
-  console.log("YT_DLP_PATH:", YT_DLP_PATH);
-  console.log("ARGS:", args);
+  // Use cookies ONLY for YouTube
+  if (url.includes("youtube.com") || url.includes("youtu.be")) {
+    args.push(
+      "--cookies",
+      path.join(BIN_DIR, "cookie.txt")
+    );
+  }
 
+  args.push(url);
   try {
     const { stdout } = await execFileAsync(YT_DLP_PATH, args);
     return JSON.parse(stdout);
   } catch (err) {
     console.error("STDERR:", err.stderr);
-    console.error("STDOUT:", err.stdout);
     throw err;
   }
 }
+
 
 function getFormatSelector(quality, type) {
   // Audio Only
