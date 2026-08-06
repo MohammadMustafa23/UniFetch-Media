@@ -6,10 +6,17 @@ const execFileAsync = promisify(execFile);
 
 const BIN_DIR = path.resolve(process.cwd(), "bin");
 
-const YT_DLP_PATH = path.join(BIN_DIR, "yt-dlp.exe");
+const isWindows = process.platform === "win32";
 
-const FFMPEG_PATH = path.join(BIN_DIR, "ffmpeg.exe");
+const YT_DLP_PATH = isWindows
+  ? path.join(BIN_DIR, "yt-dlp.exe")
+  : path.join(BIN_DIR, "yt-dlp");
 
+const FFMPEG_PATH = isWindows
+  ? path.join(BIN_DIR, "ffmpeg.exe")
+  : path.join(BIN_DIR, "ffmpeg");
+
+  
 export async function getVideoInfo(url) {
   const { stdout } = await execFileAsync(YT_DLP_PATH, [
     "-J",
