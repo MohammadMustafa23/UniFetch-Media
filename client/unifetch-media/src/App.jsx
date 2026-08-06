@@ -1,12 +1,12 @@
 import "./App.css";
 
-import { lazy, Suspense,useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 
 import PageLoader from "./common/PageLoader";
 import ProtectedRoute from "./security/ProtectedRoute";
-
+import PublicRoute from "./security/PublicRoute";
 /* ==========================================
    LAZY IMPORTS
 ========================================== */
@@ -38,7 +38,7 @@ const TermsOfService = lazy(() => import("./security/TermsOfService"));
 ========================================== */
 
 function App() {
-   const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   return (
     <>
       <Toaster
@@ -70,9 +70,23 @@ function App() {
         <Routes>
           {/* Public Routes */}
 
-          <Route path="/" element={<HeroPageCTA />} />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <HeroPageCTA />
+              </PublicRoute>
+            }
+          />
 
-          <Route path="/authantication-page" element={<AuthPage />} />
+          <Route
+            path="/authantication-page"
+            element={
+              <PublicRoute>
+                <AuthPage />
+              </PublicRoute>
+            }
+          />
 
           {/* Protected Routes */}
 
@@ -107,7 +121,7 @@ function App() {
             path="/history"
             element={
               <ProtectedRoute>
-                <History  collapsed={collapsed} setCollapsed={setCollapsed} />
+                <History collapsed={collapsed} setCollapsed={setCollapsed} />
               </ProtectedRoute>
             }
           />
