@@ -177,7 +177,7 @@ export default function Sidebar({ isCollapsed, setCollapsed,user }) {
 
           {!isCollapsed && (
             <div className="ufm-sidebar-user-info">
-              <h4>{user}</h4>
+              <h4>{user || "Guest User"}</h4>
               <span>Premium Plan</span>
             </div>
           )}

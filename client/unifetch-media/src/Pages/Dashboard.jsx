@@ -79,6 +79,8 @@ export default function Dashboard({collapsed,setCollapsed}) {
       try {
         const { data } = await getDashboard();
         if (data.success) {
+          console.log(data.success);
+          
           setDashboard(data.data);
         }
       } catch (error) {
