@@ -17,20 +17,27 @@ const FFMPEG_PATH = isWindows
   : path.join(BIN_DIR, "ffmpeg");
 
 export async function getVideoInfo(url) {
-  const { stdout } = await execFileAsync(YT_DLP_PATH, [
+  const args = [
     "-J",
     "--no-playlist",
-
     "--cookies",
     path.join(BIN_DIR, "cookie.txt"),
-
     "--ffmpeg-location",
     FFMPEG_PATH,
-
     url,
-  ]);
+  ];
 
-  return JSON.parse(stdout);
+  console.log("YT_DLP_PATH:", YT_DLP_PATH);
+  console.log("ARGS:", args);
+
+  try {
+    const { stdout } = await execFileAsync(YT_DLP_PATH, args);
+    return JSON.parse(stdout);
+  } catch (err) {
+    console.error("STDERR:", err.stderr);
+    console.error("STDOUT:", err.stdout);
+    throw err;
+  }
 }
 
 function getFormatSelector(quality, type) {
