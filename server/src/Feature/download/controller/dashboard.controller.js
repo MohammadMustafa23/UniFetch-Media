@@ -128,6 +128,9 @@ export const getDashboard = async (req, res) => {
       ex: 60 * 2,
     });
 
+    console.log(dashboardData);
+    
+
     return res.status(200).json({
       success: true,
       data: dashboardData,
