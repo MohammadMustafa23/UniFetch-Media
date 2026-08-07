@@ -4,7 +4,6 @@ import { EMAIL_USER } from "../../../config/env.js";
 const sendOTPEmail = async (email, otp) => {
   try {
     console.log("📧 Sending OTP to:", email);
-
     const info = await transporter.sendMail({
       from: `"UniFetch Media" <${EMAIL_USER}>`,
       to: email,
