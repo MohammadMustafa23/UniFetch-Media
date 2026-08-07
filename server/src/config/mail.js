@@ -1,6 +1,10 @@
 import nodemailer from "nodemailer";
 import { EMAIL_USER, EMAIL_PASS } from "./env.js";
 
+
+console.log("EMAIL_USER:", EMAIL_USER);
+console.log("EMAIL_PASS exists:", EMAIL_PASS);
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -8,13 +12,4 @@ const transporter = nodemailer.createTransport({
     pass: EMAIL_PASS,
   },
 });
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ SMTP Verify Error:", error);
-  } else {
-    console.log("✅ SMTP Server Ready");
-  }
-});
-
 export default transporter;
