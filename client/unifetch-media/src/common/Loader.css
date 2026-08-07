@@ -1,126 +1,148 @@
-/* =========================
-   Loader Container
-========================= */
+:root {
+  --bg: #09090b;
+  --primary: #3b82f6;
+  --secondary: #8b5cf6;
+
+  --text: #f8fafc;
+  --muted: #94a3b8;
+}
+
+/* ===========================
+   Background
+=========================== */
+
+.loader-overlay,
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 18px;
+  text-align: center;
+
+  background:
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 40%),
+    radial-gradient(
+      circle at bottom right,
+      rgba(139, 92, 246, 0.15),
+      transparent 40%
+    ),
+    var(--bg);
+}
 
 .loader-overlay {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100vh;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  z-index: 9999;
-  padding: 20px;
-  text-align: center;
-  animation: fadeIn 0.25s ease;
+  z-index: 99999;
 }
-
-/* Inline Loader */
 
 .loader-container {
   width: 100%;
-  min-height: 220px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  padding: 20px;
-  text-align: center;
+  min-height: 260px;
+  padding: 40px 20px;
 }
 
-/* =========================
-   Animated Dots
-========================= */
+/* ===========================
+   Loader
+=========================== */
 
 .loader {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  align-items: flex-end;
+  gap: 10px;
+  height: 26px;
 }
 
 .loader span {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #2563eb;
-  animation: bounce 0.6s infinite alternate;
+
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+
+  box-shadow:
+    0 0 12px rgba(59, 130, 246, 0.45),
+    0 0 22px rgba(139, 92, 246, 0.35);
+
+  animation: bounce 0.7s ease-in-out infinite alternate;
 }
 
 .loader span:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: 0.15s;
 }
 
 .loader span:nth-child(3) {
-  animation-delay: 0.4s;
+  animation-delay: 0.3s;
 }
 
-/* =========================
+/* ===========================
    Brand
-========================= */
+=========================== */
 
 .loader-overlay h2,
 .loader-container h2 {
   margin: 0;
-  font-size: 24px;
+
+  font-size: 30px;
   font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.3px;
+
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* =========================
-   Status Text
-========================= */
+/* ===========================
+   Status
+=========================== */
 
 .loader-overlay p,
 .loader-container p {
   margin: 0;
-  max-width: 320px;
-  color: #6b7280;
+  color: var(--muted);
+
   font-size: 15px;
-  line-height: 1.6;
+  letter-spacing: 0.3px;
+
+  max-width: 300px;
 }
 
-/* =========================
-   Animations
-========================= */
+/* ===========================
+   Animation
+=========================== */
 
 @keyframes bounce {
-  from {
-    transform: translateY(0);
+  0% {
+    transform: translateY(0) scale(0.9);
     opacity: 0.5;
   }
 
-  to {
-    transform: translateY(-8px);
+  100% {
+    transform: translateY(-12px) scale(1.2);
     opacity: 1;
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-/* =========================
-   Tablet
-========================= */
+/* ===========================
+   Responsive
+=========================== */
 
 @media (max-width: 768px) {
-  .loader-overlay,
-  .loader-container {
-    gap: 16px;
-    padding: 18px;
+  .loader-overlay h2,
+  .loader-container h2 {
+    font-size: 26px;
+  }
+
+  .loader-overlay p,
+  .loader-container p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loader {
+    gap: 8px;
   }
 
   .loader span {
@@ -130,55 +152,12 @@
 
   .loader-overlay h2,
   .loader-container h2 {
-    font-size: 21px;
-  }
-
-  .loader-overlay p,
-  .loader-container p {
-    font-size: 14px;
-    max-width: 280px;
-  }
-}
-
-/* =========================
-   Mobile
-========================= */
-
-@media (max-width: 480px) {
-  .loader-overlay,
-  .loader-container {
-    gap: 14px;
-    padding: 16px;
-  }
-
-  .loader span {
-    width: 8px;
-    height: 8px;
-  }
-
-  .loader-overlay h2,
-  .loader-container h2 {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .loader-overlay p,
   .loader-container p {
     font-size: 13px;
-    max-width: 240px;
-  }
-}
-
-/* =========================
-   Accessibility
-========================= */
-
-@media (prefers-reduced-motion: reduce) {
-  .loader span {
-    animation: none;
-  }
-
-  .loader-overlay,
-  .loader-container {
-    animation: none;
+    max-width: 220px;
   }
 }

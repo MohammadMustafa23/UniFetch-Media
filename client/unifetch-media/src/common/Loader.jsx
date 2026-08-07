@@ -1,9 +1,6 @@
 import "./Loader.css";
 
-export default function Loader({
-  text = "Loading...",
-  fullScreen = true,
-}) {
+export default function Loader({ text = "Loading...", fullScreen = true }) {
   return (
     <div className={fullScreen ? "loader-overlay" : "loader-container"}>
       <div className="loader">
@@ -13,6 +10,7 @@ export default function Loader({
       </div>
 
       <h2>UniFetch Media</h2>
+
       <p>{text}</p>
     </div>
   );
