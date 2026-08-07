@@ -44,26 +44,8 @@ async function RegisterUser(req, res) {
   );
 
   // 5. Send OTP Email
-  try {
-    console.log("📧 Sending OTP email...");
+  await sendOTP(email, otp);
 
-    await sendOTP(email, otp);
-
-    console.log("✅ OTP email sent successfully");
-  } catch (error) {
-    console.error("❌ EMAIL SEND ERROR");
-    console.error(error);
-    console.error("Message:", error.message);
-    console.error("Code:", error.code);
-    console.error("Response:", error.response);
-    console.error("Response Code:", error.responseCode);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to send OTP email.",
-      error: error.message, // Remove this in production after debugging
-    });
-  }
   // 6. Success Response
   return res.status(200).json({
     success: true,

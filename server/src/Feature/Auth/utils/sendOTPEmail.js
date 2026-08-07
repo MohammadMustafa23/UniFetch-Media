@@ -2,51 +2,31 @@ import transporter from "../../../config/mail.js";
 import { EMAIL_USER } from "../../../config/env.js";
 
 const sendOTPEmail = async (email, otp) => {
-  console.log("📧 1. sendOTPEmail() called");
-  console.log("📧 2. Sending to:", email);
+  await transporter.sendMail({
+    from: `"UniFetch Media" <${EMAIL_USER}>`,
+    to: email,
+    subject: "Verify Your Email",
 
-  try {
-    console.log("📧 3. Before transporter.sendMail()");
+    html: `
+      <div style="font-family:Arial,sans-serif;padding:30px">
+        <h2>Welcome to UniFetch Media</h2>
 
-    const info = await transporter.sendMail({
-      from: `"UniFetch Media" <${EMAIL_USER}>`,
-      to: email,
-      subject: "Verify Your Email",
+        <p>Your verification code is:</p>
 
-      html: `
-        <div style="font-family:Arial,sans-serif;padding:30px">
-          <h2>Welcome to UniFetch Media</h2>
+        <h1 style="font-size:40px;letter-spacing:8px;color:#2563EB;">
+          ${otp}
+        </h1>
 
-          <p>Your verification code is:</p>
+        <p>This code will expire in <strong>5 minute</strong>.</p>
 
-          <h1 style="font-size:40px;letter-spacing:8px;color:#2563EB;">
-            ${otp}
-          </h1>
+        <p>If you didn't request this account, you can safely ignore this email.</p>
 
-          <p>This code will expire in <strong>5 minute</strong>.</p>
+        <br/>
 
-          <p>If you didn't request this account, you can safely ignore this email.</p>
-
-          <br/>
-
-          <p>— UniFetch Media Team</p>
-        </div>
-      `,
-    });
-
-    console.log("📧 4. transporter.sendMail() completed");
-    console.log("📧 Message ID:", info.messageId);
-    console.log("📧 Response:", info.response);
-  } catch (error) {
-    console.error("❌ transporter.sendMail() failed");
-    console.error(error);
-    console.error("Message:", error.message);
-    console.error("Code:", error.code);
-    console.error("Response:", error.response);
-    console.error("Response Code:", error.responseCode);
-
-    throw error;
-  }
+        <p>— UniFetch Media Team</p>
+      </div>
+    `,
+  });
 };
 
 export default sendOTPEmail;
