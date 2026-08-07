@@ -1,12 +1,12 @@
-import resend from "../../../config/resend.js";
+import transporter from "../../../config/mail.js";
+import { EMAIL_USER } from "../../../config/env.js";
 
 const sendOTPEmail = async (email, otp) => {
   try {
-    console.log("📧 Sending email via Resend...");
-    console.log("📧 To:", email);
+    console.log("📧 Sending OTP to:", email);
 
-    const { data, error } = await resend.emails.send({
-      from: "UniFetch Media <onboarding@resend.dev>",
+    const info = await transporter.sendMail({
+      from: `"UniFetch Media" <${EMAIL_USER}>`,
       to: email,
       subject: "Verify Your Email",
       html: `
@@ -30,16 +30,10 @@ const sendOTPEmail = async (email, otp) => {
       `,
     });
 
-    if (error) {
-      console.error("❌ Resend API Error:", error);
-      throw new Error(error.message);
-    }
-
-    console.log("✅ Email sent successfully!");
-    console.log("📧 Response:", data);
-
+    console.log("✅ Email Sent");
+    console.log(info);
   } catch (err) {
-    console.error("❌ Failed to send email");
+    console.error("❌ Email Send Failed");
     console.error(err);
     throw err;
   }

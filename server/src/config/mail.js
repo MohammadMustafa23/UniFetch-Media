@@ -1,22 +1,24 @@
 import nodemailer from "nodemailer";
-import { EMAIL_USER, EMAIL_PASS } from "./env.js";
+import { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } from "./env.js";
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  family: 4,
+  host: SMTP_HOST,
+  port: Number(SMTP_PORT),
+  secure: false, // STARTTLS (587)
 
   auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_PASS,
+    user: SMTP_USER,
+    pass: SMTP_PASS,
   },
+});
 
-  requireTLS: true,
-
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ SMTP Verify Error:");
+    console.error(error);
+  } else {
+    console.log("✅ Brevo SMTP Server Ready");
+  }
 });
 
 export default transporter;
