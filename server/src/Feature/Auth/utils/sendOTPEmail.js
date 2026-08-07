@@ -2,6 +2,9 @@ import resend from "../../../config/resend.js";
 
 const sendOTPEmail = async (email, otp) => {
   try {
+    console.log("📧 Sending email via Resend...");
+    console.log("📧 To:", email);
+
     const { data, error } = await resend.emails.send({
       from: "UniFetch Media <onboarding@resend.dev>",
       to: email,
@@ -28,13 +31,16 @@ const sendOTPEmail = async (email, otp) => {
     });
 
     if (error) {
-      console.error("❌ Resend Error:", error);
+      console.error("❌ Resend API Error:", error);
       throw new Error(error.message);
     }
 
-    console.log("✅ Email sent:", data);
+    console.log("✅ Email sent successfully!");
+    console.log("📧 Response:", data);
+
   } catch (err) {
-    console.error("❌ Failed to send email:", err);
+    console.error("❌ Failed to send email");
+    console.error(err);
     throw err;
   }
 };
