@@ -6,3 +6,4 @@ export const EMAIL_USER = process.env.EMAIL_USER;
 export const EMAIL_PASS = process.env.EMAIL_PASS;
 export const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL; 
 export const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+export const RESEND_API_KEY = process.env.RESEND_API_KEY;

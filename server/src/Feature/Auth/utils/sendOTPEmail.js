@@ -1,32 +1,42 @@
-import transporter from "../../../config/mail.js";
-import { EMAIL_USER } from "../../../config/env.js";
+import resend from "../../../config/resend.js";
 
 const sendOTPEmail = async (email, otp) => {
-  await transporter.sendMail({
-    from: `"UniFetch Media" <${EMAIL_USER}>`,
-    to: email,
-    subject: "Verify Your Email",
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "UniFetch Media <onboarding@resend.dev>",
+      to: email,
+      subject: "Verify Your Email",
+      html: `
+        <div style="font-family:Arial,sans-serif;padding:30px">
+          <h2>Welcome to UniFetch Media</h2>
 
-    html: `
-      <div style="font-family:Arial,sans-serif;padding:30px">
-        <h2>Welcome to UniFetch Media</h2>
+          <p>Your verification code is:</p>
 
-        <p>Your verification code is:</p>
+          <h1 style="font-size:40px;letter-spacing:8px;color:#2563EB;">
+            ${otp}
+          </h1>
 
-        <h1 style="font-size:40px;letter-spacing:8px;color:#2563EB;">
-          ${otp}
-        </h1>
+          <p>This code will expire in <strong>5 minutes</strong>.</p>
 
-        <p>This code will expire in <strong>5 minute</strong>.</p>
+          <p>If you didn't request this account, you can safely ignore this email.</p>
 
-        <p>If you didn't request this account, you can safely ignore this email.</p>
+          <br/>
 
-        <br/>
+          <p>— UniFetch Media Team</p>
+        </div>
+      `,
+    });
 
-        <p>— UniFetch Media Team</p>
-      </div>
-    `,
-  });
+    if (error) {
+      console.error("❌ Resend Error:", error);
+      throw new Error(error.message);
+    }
+
+    console.log("✅ Email sent:", data);
+  } catch (err) {
+    console.error("❌ Failed to send email:", err);
+    throw err;
+  }
 };
 
 export default sendOTPEmail;
