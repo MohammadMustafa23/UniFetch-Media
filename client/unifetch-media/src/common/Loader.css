@@ -1,359 +1,184 @@
-/* ===========================
-   UniFetch Media Loader
-=========================== */
+/* =========================
+   Loader Container
+========================= */
 
-:root {
-  --bg: #09090b;
-  --card: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.08);
-
-  --primary: #3b82f6;
-  --secondary: #8b5cf6;
-
-  --text: #f8fafc;
-  --muted: #94a3b8;
-}
-
-/* ===========================
-   Wrapper
-=========================== */
-
-.ufm-loader-overlay,
-.ufm-loader {
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background:
-    radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 40%),
-    radial-gradient(
-      circle at bottom right,
-      rgba(139, 92, 246, 0.15),
-      transparent 40%
-    ),
-    var(--bg);
-
-  overflow: hidden;
-}
-
-.ufm-loader-overlay {
+.loader-overlay {
   position: fixed;
   inset: 0;
-  z-index: 99999;
-}
-
-/* ===========================
-   Glass Card
-=========================== */
-
-.ufm-loader-card {
-  width: 340px;
-
-  padding: 42px 34px;
-
-  border-radius: 28px;
-
-  background: var(--card);
-
-  border: 1px solid var(--border);
-
-  backdrop-filter: blur(22px);
-
-  -webkit-backdrop-filter: blur(22px);
-
-  box-shadow:
-    0 15px 45px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
+  width: 100%;
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  z-index: 9999;
+  padding: 20px;
   text-align: center;
-
-  animation:
-    cardFloat 5s ease-in-out infinite,
-    fadeScale 0.6s ease;
+  animation: fadeIn 0.25s ease;
 }
 
-/* ===========================
-   Logo
-=========================== */
+/* Inline Loader */
 
-.ufm-logo {
-  position: relative;
-
-  width: 120px;
-  height: 120px;
-
-  margin: auto auto 30px;
+.loader-container {
+  width: 100%;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  text-align: center;
 }
 
-.ufm-ring {
-  position: absolute;
-  inset: 0;
+/* =========================
+   Animated Dots
+========================= */
 
-  border-radius: 50%;
-  border: 2px solid transparent;
-}
-
-.ring-1 {
-  border-top-color: var(--primary);
-  border-right-color: var(--primary);
-
-  animation: rotateClock 2.5s linear infinite;
-
-  box-shadow: 0 0 18px rgba(59, 130, 246, 0.45);
-}
-
-.ring-2 {
-  inset: 12px;
-
-  border-left-color: var(--secondary);
-  border-bottom-color: var(--secondary);
-
-  animation: rotateAnti 3.2s linear infinite;
-
-  box-shadow: 0 0 18px rgba(139, 92, 246, 0.45);
-}
-
-/* ===========================
-   Center Circle
-=========================== */
-
-.ufm-center {
-  position: absolute;
-  inset: 26px;
-
-  border-radius: 50%;
-
+.loader {
   display: flex;
   align-items: center;
-  justify-content: center;
-
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-
-  color: white;
-
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: 1px;
-
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.35);
-
-  animation: pulse 2s infinite;
-}
-
-/* ===========================
-   Brand
-=========================== */
-
-.ufm-brand {
-  margin: 0;
-
-  font-size: 28px;
-  font-weight: 700;
-
-  color: var(--text);
-}
-
-.ufm-brand span {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* ===========================
-   Status
-=========================== */
-
-.ufm-status {
-  margin-top: 14px;
-  margin-bottom: 28px;
-
-  color: var(--muted);
-
-  font-size: 15px;
-  line-height: 1.6;
-
-  letter-spacing: 0.3px;
-}
-
-/* ===========================
-   Progress Bar
-=========================== */
-
-.ufm-progress {
-  width: 100%;
-  height: 8px;
-
-  overflow: hidden;
-
-  border-radius: 999px;
-
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.ufm-progress-fill {
-  width: 40%;
-  height: 100%;
-
-  border-radius: 999px;
-
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-
-  animation: loading 1.6s infinite;
-}
-
-/* ===========================
-   Loading Dots
-=========================== */
-
-.ufm-dots {
-  margin-top: 24px;
-
-  display: flex;
   justify-content: center;
   gap: 8px;
 }
 
-.ufm-dots span {
-  width: 9px;
-  height: 9px;
-
+.loader span {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-
-  background: var(--primary);
-
-  animation: bounce 1.2s infinite;
+  background: #2563eb;
+  animation: bounce 0.6s infinite alternate;
 }
 
-.ufm-dots span:nth-child(2) {
+.loader span:nth-child(2) {
   animation-delay: 0.2s;
 }
 
-.ufm-dots span:nth-child(3) {
+.loader span:nth-child(3) {
   animation-delay: 0.4s;
 }
 
-/* ===========================
+/* =========================
+   Brand
+========================= */
+
+.loader-overlay h2,
+.loader-container h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.3px;
+}
+
+/* =========================
+   Status Text
+========================= */
+
+.loader-overlay p,
+.loader-container p {
+  margin: 0;
+  max-width: 320px;
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* =========================
    Animations
-=========================== */
-
-@keyframes rotateClock {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes rotateAnti {
-  from {
-    transform: rotate(360deg);
-  }
-
-  to {
-    transform: rotate(0deg);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
-  }
-
-  50% {
-    transform: scale(1.08);
-
-    box-shadow: 0 0 38px rgba(139, 92, 246, 0.5);
-  }
-}
-
-@keyframes loading {
-  0% {
-    transform: translateX(-120%);
-  }
-
-  100% {
-    transform: translateX(320%);
-  }
-}
+========================= */
 
 @keyframes bounce {
-  0%,
-  80%,
-  100% {
+  from {
     transform: translateY(0);
-
-    opacity: 0.4;
+    opacity: 0.5;
   }
 
-  40% {
+  to {
     transform: translateY(-8px);
-
     opacity: 1;
   }
 }
 
-@keyframes fadeScale {
+@keyframes fadeIn {
   from {
     opacity: 0;
-
-    transform: scale(0.92);
   }
 
   to {
     opacity: 1;
-
-    transform: scale(1);
   }
 }
 
-@keyframes cardFloat {
-  0%,
-  100% {
-    transform: translateY(0);
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 768px) {
+  .loader-overlay,
+  .loader-container {
+    gap: 16px;
+    padding: 18px;
   }
 
-  50% {
-    transform: translateY(-8px);
+  .loader span {
+    width: 9px;
+    height: 9px;
+  }
+
+  .loader-overlay h2,
+  .loader-container h2 {
+    font-size: 21px;
+  }
+
+  .loader-overlay p,
+  .loader-container p {
+    font-size: 14px;
+    max-width: 280px;
   }
 }
 
-/* ===========================
-   Responsive
-=========================== */
+/* =========================
+   Mobile
+========================= */
 
 @media (max-width: 480px) {
-  .ufm-loader-card {
-    width: 90%;
-
-    padding: 36px 24px;
+  .loader-overlay,
+  .loader-container {
+    gap: 14px;
+    padding: 16px;
   }
 
-  .ufm-logo {
-    width: 100px;
-    height: 100px;
+  .loader span {
+    width: 8px;
+    height: 8px;
   }
 
-  .ufm-center {
-    inset: 22px;
-
-    font-size: 22px;
+  .loader-overlay h2,
+  .loader-container h2 {
+    font-size: 18px;
   }
 
-  .ufm-brand {
-    font-size: 24px;
+  .loader-overlay p,
+  .loader-container p {
+    font-size: 13px;
+    max-width: 240px;
+  }
+}
+
+/* =========================
+   Accessibility
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .loader span {
+    animation: none;
   }
 
-  .ufm-status {
-    font-size: 14px;
+  .loader-overlay,
+  .loader-container {
+    animation: none;
   }
 }
