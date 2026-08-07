@@ -138,7 +138,7 @@ const LogoutUser = async (req, res) => {
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     return res.status(200).json({
@@ -423,7 +423,7 @@ const googleLogin = async (req, res) => {
         userId: user._id,
       });
     }
-    
+
     // Set Cookie
     res.cookie("token", token, {
       httpOnly: true,
