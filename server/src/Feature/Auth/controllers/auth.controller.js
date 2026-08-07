@@ -10,24 +10,26 @@ import UserPreference from "../../Preferences/models/preferences.model.js";
 import { createNotification } from "../../notification/service/notification.service.js";
 
 async function RegisterUser(req, res) {
-  console.log("1. Register started");
-
   const { userName, email, password } = req.body;
 
-  console.log("2. Checking user");
-
+  // 1. Check Email Exists
   const existingUser = await User.findOne({ email });
 
-  console.log("3. User checked");
+  if (existingUser) {
+    return res.status(409).json({
+      success: false,
+      message: "User already exists.",
+    });
+  }
 
+  // 2. Hash Password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  console.log("4. Password hashed");
-
+  //   3. Generate OTP
   const otp = generateOTP();
 
-  console.log("5. OTP generated");
-
+  // Redis Key
+  const cacheKey = `register:${email}`;
   await redisClient.set(
     `register:${email}`,
     JSON.stringify({
@@ -36,15 +38,15 @@ async function RegisterUser(req, res) {
       password: hashedPassword,
       otp,
     }),
-    { EX: 300 }
+    {
+      EX: 300,
+    },
   );
 
-  console.log("6. Redis saved");
-
+  // 5. Send OTP Email
   await sendOTP(email, otp);
 
-  console.log("7. Email sent");
-
+  // 6. Success Response
   return res.status(200).json({
     success: true,
     message: "OTP sent successfully.",
@@ -54,6 +56,7 @@ async function RegisterUser(req, res) {
 const LoginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     // Find User
     const user = await User.findOne({ email });
 
