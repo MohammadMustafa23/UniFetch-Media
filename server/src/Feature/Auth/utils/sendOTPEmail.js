@@ -3,7 +3,6 @@ import { EMAIL_USER } from "../../../config/env.js";
 
 const sendOTPEmail = async (email, otp) => {
   try {
-    console.log("📧 Sending OTP to:", email);
     const info = await transporter.sendMail({
       from: `"UniFetch Media" <${EMAIL_USER}>`,
       to: email,
@@ -28,11 +27,7 @@ const sendOTPEmail = async (email, otp) => {
         </div>
       `,
     });
-
-    console.log("✅ Email Sent");
-    console.log(info);
   } catch (err) {
-    console.error("❌ Email Send Failed");
     console.error(err);
     throw err;
   }
