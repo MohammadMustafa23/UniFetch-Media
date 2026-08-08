@@ -229,6 +229,13 @@ class DownloadQueue {
       // Output Path
       const outputPath = path.join(folder, fileName);
 
+      console.log("QUEUE DOWNLOAD:", {
+        id: download._id,
+        mediaType: download.mediaType,
+        format: download.format,
+        quality: download.quality,
+      });
+      
       // Start Download
       const ytProcess = downloadVideo({
         url: download.url,

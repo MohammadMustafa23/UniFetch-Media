@@ -93,7 +93,7 @@ export async function createDownload(req, res) {
       thumbnail,
       platform,
       duration,
-      type : mediaType,
+      type: mediaType,
       quality,
       format,
       fileSize,
@@ -101,6 +101,12 @@ export async function createDownload(req, res) {
       storageProvider: preference.storage.provider,
       status: "queued",
       progress: 0,
+    });
+
+    console.log("SAVED DOWNLOAD:", {
+      id: download._id,
+      mediaType: download.mediaType,
+      format: download.format,
     });
 
     // ✅ Clear Downloads Cache
