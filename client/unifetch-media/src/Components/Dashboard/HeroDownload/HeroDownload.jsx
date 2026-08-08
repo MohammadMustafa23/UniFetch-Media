@@ -45,9 +45,7 @@ export default function HeroDownload({
         setVideoInfo(data.data); // Keep preview open
       }
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to fetch media information.",
-      );
+      toast.error("Failed to fetch media information.");
     } finally {
       setLoading(false);
     }

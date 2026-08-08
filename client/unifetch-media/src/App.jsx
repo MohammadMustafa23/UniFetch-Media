@@ -73,9 +73,7 @@ function App() {
           <Route
             path="/"
             element={
-              <PublicRoute>
-                <HeroPageCTA />
-              </PublicRoute>
+              <HeroPageCTA />
             }
           />
 
