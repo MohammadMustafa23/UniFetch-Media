@@ -53,7 +53,11 @@ const downloadSchema = new mongoose.Schema(
       type: String,
       default: "best",
     },
-
+    mediaType: {
+      type: String,
+      enum: ["video", "audio"],
+      default: "video",
+    },
     format: {
       type: String,
       default: "mp4",

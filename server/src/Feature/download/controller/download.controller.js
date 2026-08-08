@@ -31,6 +31,7 @@ export async function createDownload(req, res) {
       thumbnail,
       platform,
       duration,
+      mediaType = "video",
       quality = "best",
       format = "mp4",
       fileSize = 0,
@@ -40,8 +41,10 @@ export async function createDownload(req, res) {
       videoId,
       userId,
       platform,
+      mediaType,
+      format,
     });
-
+    
     if (existingDownload) {
       return res.status(409).json({
         success: false,
@@ -90,6 +93,7 @@ export async function createDownload(req, res) {
       thumbnail,
       platform,
       duration,
+      type,
       quality,
       format,
       fileSize,

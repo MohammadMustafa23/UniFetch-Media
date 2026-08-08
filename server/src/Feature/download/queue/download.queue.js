@@ -233,6 +233,7 @@ class DownloadQueue {
       const ytProcess = downloadVideo({
         url: download.url,
         outputPath,
+        mediaType: download.mediaType,
         quality: download.quality,
         format: download.format,
       });

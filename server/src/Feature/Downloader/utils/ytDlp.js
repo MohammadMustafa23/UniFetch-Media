@@ -84,14 +84,19 @@ export function downloadVideo({
   outputPath,
   quality = "best",
   format = "mp4",
-  type = "video",
+  mediaType = "video",
 }) {
-  const args = ["--newline", "--no-playlist", "--ffmpeg-location", FFMPEG_PATH];
+  const args = [
+    "--newline",
+    "--no-playlist",
+    "--ffmpeg-location",
+    FFMPEG_PATH,
+  ];
 
   // ============================
   // AUDIO DOWNLOAD
   // ============================
-  if (type === "audio" || format === "mp3") {
+  if (mediaType === "audio") {
     args.push(
       "-f",
       "bestaudio/best",
@@ -99,7 +104,7 @@ export function downloadVideo({
       "-x",
 
       "--audio-format",
-      "mp3",
+      format,
 
       "--audio-quality",
       "0",
@@ -134,5 +139,13 @@ export function downloadVideo({
 
   // URL should always be last
   args.push(url);
+
+  console.log("YT-DLP:", {
+    mediaType,
+    quality,
+    format,
+    args,
+  });
+
   return spawn(YT_DLP_PATH, args);
 }
