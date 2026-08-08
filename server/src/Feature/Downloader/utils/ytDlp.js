@@ -91,58 +91,43 @@ function isInstagramUrl(url) {
 // =====================================================
 // COOKIES
 // =====================================================
-
-function getCookiesPathForUrl(url) {
-  // Currently cookies are used only for YouTube.
+function getWritableCookiesPath(url) {
   if (!isYouTubeUrl(url)) {
     return null;
   }
 
-  if (!YT_COOKIES_PATH) {
-    console.log("YT-DLP: YouTube cookies env is not configured.");
+  const sourcePath = YOUTUBE_COOKIES_PATH;
+
+  if (!fs.existsSync(sourcePath)) {
+    console.error(
+      "YT-DLP: YouTube cookies file not found:",
+      sourcePath
+    );
+
     return null;
   }
 
+  const writablePath = "/tmp/youtube_cookies.txt";
+
   try {
-    if (!fs.existsSync(YOUTUBE_COOKIES_PATH)) {
-      console.error(
-        "YT-DLP: YouTube cookies file does not exist:",
-        YOUTUBE_COOKIES_PATH,
-      );
-
-      return null;
-    }
-
-    const stats = fs.statSync(YOUTUBE_COOKIES_PATH);
-
-    if (!stats.isFile()) {
-      console.error(
-        "YT-DLP: YouTube cookies path is not a file:",
-        YOUTUBE_COOKIES_PATH,
-      );
-
-      return null;
-    }
-
-    if (stats.size === 0) {
-      console.error("YT-DLP: YouTube cookies file is empty.");
-
-      return null;
-    }
+    fs.copyFileSync(sourcePath, writablePath);
 
     console.log(
-      "YT-DLP: YouTube cookies file found:",
-      YOUTUBE_COOKIES_PATH,
-      `(${stats.size} bytes)`,
+      "YT-DLP: Cookies copied successfully:",
+      writablePath
     );
 
-    return YOUTUBE_COOKIES_PATH;
+    return writablePath;
   } catch (error) {
-    console.error("YT-DLP: Failed to check cookies file:", error.message);
+    console.error(
+      "YT-DLP: Failed to copy cookies:",
+      error.message
+    );
 
     return null;
   }
 }
+
 
 // =====================================================
 // COMMON YT-DLP ARGUMENTS
@@ -195,8 +180,8 @@ function getCommonArgs(url) {
   // Cookies
   // ---------------------------------------------
 
-  const cookiesPath = getCookiesPathForUrl(url);
-
+  const cookiesPath = getWritableCookiesPath(url);
+  
   if (cookiesPath) {
     args.push("--cookies", cookiesPath);
   }
