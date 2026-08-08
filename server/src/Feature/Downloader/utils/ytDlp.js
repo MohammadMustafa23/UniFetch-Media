@@ -17,16 +17,37 @@ const FFMPEG_PATH = isWindows
   : path.join(BIN_DIR, "ffmpeg");
 
 export async function getVideoInfo(url) {
-  const { stdout } = await execFileAsync(YT_DLP_PATH, [
-    "-J",
-    "--no-playlist",
-    "--ffmpeg-location",
-    FFMPEG_PATH,
-    url,
-  ]);
+  if (!url || typeof url !== "string") {
+    throw new Error("A valid URL is required.");
+  }
+
+  const cleanUrl = url.trim();
+
+  const { stdout } = await execFileAsync(
+    YT_DLP_PATH,
+    [
+      "--dump-single-json",
+      "--no-playlist",
+      "--no-warnings",
+      "--skip-download",
+      "--ffmpeg-location",
+      FFMPEG_PATH,
+      cleanUrl,
+    ],
+    {
+      maxBuffer: 20 * 1024 * 1024,
+      timeout: 60_000,
+      killSignal: "SIGKILL",
+    }
+  );
+
+  if (!stdout?.trim()) {
+    throw new Error("Unable to fetch media information.");
+  }
 
   return JSON.parse(stdout);
 }
+
 
 function getFormatSelector(quality, type) {
   // Audio Only

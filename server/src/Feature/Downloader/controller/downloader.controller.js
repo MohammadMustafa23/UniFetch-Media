@@ -5,7 +5,7 @@ import formatVideoInfo from "../utils/formatVideoInfo.js";
 import { createHistoryService } from "../../History/service/history.service.js";
 import History from "../../History/models/history.model.js";
 import { redisClient } from "../../../config/redis.js";
-import { extractYouTubeVideoId } from "../utils/extractYouTubeVideoId.js";
+import { extractVideoId } from "../utils/extractVideoId.js";
 
 export async function getDownloadInfo(req, res) {
   try {
@@ -24,20 +24,26 @@ export async function getDownloadInfo(req, res) {
     // Detect Platform
     const platform = detectPlatform(url);
 
-    if (platform === "other") {
+    if (platform !== "youtube" && platform !== "instagram") {
       return res.status(400).json({
         success: false,
         message: "Unsupported platform.",
       });
     }
 
-    // ==============================
-    // Check History First
-    // ==============================
-    const videoId = extractYouTubeVideoId(url);
+    const videoId = extractVideoId(url, platform);
+
+    if (!videoId) {
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported URL.",
+      });
+    }
 
     const cacheKey = `video-info:${platform}:${videoId}`;
+
     const cachedVideo = await redisClient.get(cacheKey);
+
     if (cachedVideo) {
       return res.status(200).json({
         success: true,
@@ -61,12 +67,13 @@ export async function getDownloadInfo(req, res) {
         data: history,
       });
     }
+    
 
     // ==============================
     // Fetch Video Info
     // ==============================
     const videoInfo = await getVideoInfo(url);
-    
+
     const formatted = formatVideoInfo(videoInfo, url);
 
     await redisClient.set(cacheKey, formatted, {
