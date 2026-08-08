@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { getPreferences } from "../service/preferences.service.js";
 import { getDashboard } from "../service/analytics.service.js";
 
-export default function Dashboard({collapsed,setCollapsed}) {
+export default function Dashboard({ collapsed, setCollapsed }) {
   const [videoInfo, setVideoInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
@@ -39,6 +39,10 @@ export default function Dashboard({collapsed,setCollapsed}) {
         platform: videoInfo.platform,
         duration: videoInfo.duration,
         url: videoInfo.url,
+
+        // 👇 IMPORTANT
+        mediaType: type,
+
         quality,
         format: type === "video" ? "mp4" : "mp3",
 
@@ -103,7 +107,11 @@ export default function Dashboard({collapsed,setCollapsed}) {
         />
       )}
 
-      <Sidebar isCollapsed={collapsed} setCollapsed={setCollapsed} userName={dashboard?.userName} />
+      <Sidebar
+        isCollapsed={collapsed}
+        setCollapsed={setCollapsed}
+        userName={dashboard?.userName}
+      />
 
       <main className="ufm-dashboard-main">
         <Topbar />

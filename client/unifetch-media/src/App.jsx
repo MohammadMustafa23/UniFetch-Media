@@ -63,7 +63,7 @@ function App() {
         fallback={
           <PageLoader
             title="Loading Page"
-            subtitle="Preparing your experience..."
+            message="Preparing your experience..."
           />
         }
       >
