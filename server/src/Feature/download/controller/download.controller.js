@@ -44,7 +44,7 @@ export async function createDownload(req, res) {
       mediaType,
       format,
     });
-    
+
     if (existingDownload) {
       return res.status(409).json({
         success: false,
@@ -93,7 +93,7 @@ export async function createDownload(req, res) {
       thumbnail,
       platform,
       duration,
-      type,
+      type : mediaType,
       quality,
       format,
       fileSize,
