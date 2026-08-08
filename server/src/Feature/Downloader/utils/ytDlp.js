@@ -30,6 +30,8 @@ const FFMPEG_PATH = isWindows
 const YOUTUBE_COOKIES_PATH =
   YT_COOKIES_PATH || "/etc/secrets/youtube_cookies.txt";
 
+const DENO_PATH = process.env.DENO_PATH || "/opt/render/project/deno/bin/deno";
+
 // =====================================================
 // USER AGENTS
 // =====================================================
@@ -99,10 +101,7 @@ function getWritableCookiesPath(url) {
   const sourcePath = YOUTUBE_COOKIES_PATH;
 
   if (!fs.existsSync(sourcePath)) {
-    console.error(
-      "YT-DLP: YouTube cookies file not found:",
-      sourcePath
-    );
+    console.error("YT-DLP: YouTube cookies file not found:", sourcePath);
 
     return null;
   }
@@ -112,22 +111,15 @@ function getWritableCookiesPath(url) {
   try {
     fs.copyFileSync(sourcePath, writablePath);
 
-    console.log(
-      "YT-DLP: Cookies copied successfully:",
-      writablePath
-    );
+    console.log("YT-DLP: Cookies copied successfully:", writablePath);
 
     return writablePath;
   } catch (error) {
-    console.error(
-      "YT-DLP: Failed to copy cookies:",
-      error.message
-    );
+    console.error("YT-DLP: Failed to copy cookies:", error.message);
 
     return null;
   }
 }
-
 
 // =====================================================
 // COMMON YT-DLP ARGUMENTS
@@ -148,6 +140,8 @@ function getCommonArgs(url) {
     "1",
 
     "--force-ipv4",
+    "--js-runtimes",
+    `deno:${DENO_PATH}`,
   ];
 
   let userAgent = null;
@@ -181,7 +175,7 @@ function getCommonArgs(url) {
   // ---------------------------------------------
 
   const cookiesPath = getWritableCookiesPath(url);
-  
+
   if (cookiesPath) {
     args.push("--cookies", cookiesPath);
   }
