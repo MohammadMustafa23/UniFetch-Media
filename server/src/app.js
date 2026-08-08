@@ -14,7 +14,9 @@ import cors from "cors";
 const app = express();
 const allowedOrigins = process.env.FRONTEND_CLIENT_ID.split(",");
 
-// Security headers
+// Trust Render's reverse proxy so req.ip / X-Forwarded-For 
+app.set("trust proxy", 1);
+
 app.use(
   helmet({
     crossOriginOpenerPolicy: false,
