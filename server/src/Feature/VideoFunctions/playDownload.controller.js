@@ -163,9 +163,7 @@ export const saveDownload = async (req, res) => {
     const safeTitle = (download.title || "video")
       .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
       .trim();
-
-    const fileName = `${safeTitle}${extension}`;
-
+      
     console.log("==============================================");
     console.log("SAVE DOWNLOAD DEBUG");
     console.log("==============================================");
