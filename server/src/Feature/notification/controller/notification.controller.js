@@ -14,14 +14,21 @@ export const getNotifications = async (req, res) => {
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const cacheKey = `notifications:${userId}:${page}:${limit}`;
+    const versionKey = `notifications:version:${userId}`;
+    let version = await redisClient.get(versionKey);
 
+    if (!version) {
+      version = 1;
+      await redisClient.set(versionKey, version);
+    }
+
+    
+    const cacheKey = `notifications:${userId}:${version}:${page}:${limit}`;
     // ==========================
     // Redis Cache
     // ==========================
 
     const cached = await redisClient.get(cacheKey);
-
     if (cached) {
       return res.status(200).json({
         success: true,
@@ -62,7 +69,7 @@ export const getNotifications = async (req, res) => {
     };
 
     await redisClient.set(cacheKey, payload, {
-      ex: 60,
+      ex: 300,
     });
 
     return res.status(200).json({
@@ -78,6 +85,7 @@ export const getNotifications = async (req, res) => {
     });
   }
 };
+
 
 /* ==========================================================
    MARK AS READ
@@ -115,13 +123,6 @@ export const markAsRead = async (req, res) => {
       });
     }
 
-    // Clear all cached pages
-    const keys = await redisClient.keys(`notifications:${req.user._id}:*`);
-
-    if (keys.length) {
-      await redisClient.del(keys);
-    }
-
     return res.status(200).json({
       success: true,
       message: "Notification marked as read.",
@@ -140,23 +141,23 @@ export const markAsRead = async (req, res) => {
 /* ==========================================================
    MARK ALL AS READ
 ========================================================== */
-
 export const markAllAsRead = async (req, res) => {
   try {
+    const userId = req.user._id;
+
     const result = await Notification.updateMany(
       {
-        userId: req.user._id,
+        userId,
         isRead: false,
       },
       {
         isRead: true,
-      },
+      }
     );
 
-    const keys = await redisClient.keys(`notifications:${req.user._id}:*`);
-
-    if (keys.length) {
-      await redisClient.del(keys);
+    // Invalidate all notification cache pages
+    if (result.modifiedCount > 0) {
+      await redisClient.incr(`notifications:version:${userId}`);
     }
 
     return res.status(200).json({
@@ -164,6 +165,7 @@ export const markAllAsRead = async (req, res) => {
       message: "All notifications marked as read.",
       modifiedCount: result.modifiedCount,
     });
+
   } catch (error) {
     console.error("Mark All Read Error:", error);
 
@@ -181,6 +183,7 @@ export const markAllAsRead = async (req, res) => {
 export const deleteNotification = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user._id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -191,7 +194,7 @@ export const deleteNotification = async (req, res) => {
 
     const notification = await Notification.findOneAndDelete({
       _id: id,
-      userId: req.user._id,
+      userId,
     });
 
     if (!notification) {
@@ -201,17 +204,15 @@ export const deleteNotification = async (req, res) => {
       });
     }
 
-    const keys = await redisClient.keys(`notifications:${req.user._id}:*`);
-
-    if (keys.length) {
-      await redisClient.del(keys);
-    }
+    // Invalidate all notification cache pages
+    await redisClient.incr(`notifications:version:${userId}`);
 
     return res.status(200).json({
       success: true,
       message: "Notification deleted successfully.",
       notification,
     });
+
   } catch (error) {
     console.error("Delete Notification Error:", error);
 
@@ -225,24 +226,23 @@ export const deleteNotification = async (req, res) => {
 /* ==========================================================
    CLEAR ALL NOTIFICATIONS
 ========================================================== */
-
 export const clearNotifications = async (req, res) => {
   try {
+    const userId = req.user._id;
+
     const result = await Notification.deleteMany({
-      userId: req.user._id,
+      userId,
     });
 
-    const keys = await redisClient.keys(`notifications:${req.user._id}:*`);
-
-    if (keys.length) {
-      await redisClient.del(keys);
-    }
+    // Invalidate all notification cache pages
+    await redisClient.incr(`notifications:version:${userId}`);
 
     return res.status(200).json({
       success: true,
       message: "All notifications cleared successfully.",
       deletedCount: result.deletedCount,
     });
+
   } catch (error) {
     console.error("Clear Notifications Error:", error);
 
