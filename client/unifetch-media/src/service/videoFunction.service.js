@@ -29,49 +29,96 @@ export const saveDownload = async (id) => {
     responseType: "blob",
   });
 
-  const blob = new Blob([response.data]);
+  // -----------------------------------------
+  // Check that we actually received a file
+  // -----------------------------------------
+
+  if (!response.data || response.data.size === 0) {
+    throw new Error("Empty file received from server.");
+  }
+
+  // -----------------------------------------
+  // Preserve server Content-Type
+  // -----------------------------------------
+
+  const contentType =
+    response.headers["content-type"] ||
+    "application/octet-stream";
+
+  const blob = new Blob([response.data], {
+    type: contentType,
+  });
+
+  // -----------------------------------------
+  // Create download URL
+  // -----------------------------------------
+
   const url = window.URL.createObjectURL(blob);
 
-  const disposition = response.headers["content-disposition"];
+  // -----------------------------------------
+  // Get filename
+  // -----------------------------------------
 
-  let fileName = "download.mp4";
+  const disposition =
+    response.headers["content-disposition"];
+
+  let fileName = "download";
 
   if (disposition) {
-    // RFC 5987 (filename*=UTF-8'')
-    const utf8Match = disposition.match(/filename\*\s*=\s*UTF-8''([^;]+)/i);
+    // filename*=UTF-8''filename.mp4
+    const utf8Match = disposition.match(
+      /filename\*\s*=\s*UTF-8''([^;]+)/i
+    );
 
-    if (utf8Match) {
-      fileName = decodeURIComponent(utf8Match[1]);
+    if (utf8Match?.[1]) {
+      fileName = decodeURIComponent(
+        utf8Match[1]
+      );
     } else {
-      // Normal filename=""
-      const normalMatch = disposition.match(/filename\s*=\s*"([^"]+)"/i);
+      // filename="filename.mp4"
+      const normalMatch = disposition.match(
+        /filename\s*=\s*"([^"]+)"/i
+      );
 
-      if (normalMatch) {
+      if (normalMatch?.[1]) {
         fileName = normalMatch[1];
       }
     }
   }
 
+  // -----------------------------------------
+  // Create temporary download link
+  // -----------------------------------------
+
   const link = document.createElement("a");
+
   link.href = url;
   link.download = fileName;
 
   document.body.appendChild(link);
+
   link.click();
 
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(url);
+  link.remove();
+
+  // IMPORTANT:
+  // Don't revoke immediately.
+  setTimeout(() => {
+    window.URL.revokeObjectURL(url);
+  }, 5000);
 };
+
 
 export const shareDownload = async (item) => {
   try {
-    // ==========================
-    // Cloud Storage
-    // ==========================
+    // ==========================================
+    // CLOUD / PLATFORM STORAGE
+    // ==========================================
+
     if (item.storageProvider === "platform") {
       if (navigator.share) {
         await navigator.share({
-          title: item.title,
+          title: item.title || "UniFetch Download",
           text: "Shared from UniFetch",
           url: item.filePath,
         });
@@ -79,29 +126,110 @@ export const shareDownload = async (item) => {
         return;
       }
 
-      await navigator.clipboard.writeText(item.filePath);
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(item.filePath);
 
-      toast.success("Cloud link copied.");
+        toast.success("Cloud link copied.");
+        return;
+      }
 
+      toast.error("Sharing is not supported on this device.");
       return;
     }
 
-    // ==========================
-    // Device Storage
-    // ==========================
-    const response = await api.get(`/download/save/${item._id}`, {
-      responseType: "blob",
-    });
+    // ==========================================
+    // DEVICE STORAGE
+    // ==========================================
 
-    const extension = item.format?.toLowerCase() || "mp4";
+    const response = await api.get(
+      `/download/save/${item._id}`,
+      {
+        responseType: "blob",
+      },
+    );
 
-    const file = new File([response.data], `${item.title}.${extension}`, {
-      type: response.data.type,
-    });
+    if (!response.data || response.data.size === 0) {
+      throw new Error("Empty file received.");
+    }
 
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    // ==========================================
+    // Get correct content type
+    // ==========================================
+
+    const contentType =
+      response.headers["content-type"] ||
+      response.data.type ||
+      "application/octet-stream";
+
+    // ==========================================
+    // Get extension
+    // ==========================================
+
+    let extension = "mp4";
+
+    if (contentType === "audio/mpeg") {
+      extension = "mp3";
+    } else if (contentType === "audio/mp4") {
+      extension = "m4a";
+    } else if (contentType === "video/webm") {
+      extension = "webm";
+    } else if (contentType === "video/quicktime") {
+      extension = "mov";
+    } else if (contentType === "image/jpeg") {
+      extension = "jpg";
+    } else if (contentType === "image/png") {
+      extension = "png";
+    } else if (item.format) {
+      extension = item.format
+        .toLowerCase()
+        .replace(".", "");
+    }
+
+    // ==========================================
+    // Filename
+    // ==========================================
+
+    const safeTitle =
+      (item.title || "UniFetch Download")
+        .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+        .trim() || "UniFetch Download";
+
+    const fileName = `${safeTitle}.${extension}`;
+
+    // ==========================================
+    // Create File
+    // ==========================================
+
+    const file = new File(
+      [response.data],
+      fileName,
+      {
+        type: contentType,
+      },
+    );
+
+    console.log("SHARE DEBUG");
+    console.log("File:", file.name);
+    console.log("Size:", file.size);
+    console.log("Type:", file.type);
+    console.log(
+      "Can Share:",
+      !!navigator.share,
+    );
+
+    // ==========================================
+    // MOBILE / WEB SHARE
+    // ==========================================
+
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({
+        files: [file],
+      })
+    ) {
       await navigator.share({
-        title: item.title,
+        title: item.title || "UniFetch Download",
         text: "Shared from UniFetch",
         files: [file],
       });
@@ -109,14 +237,41 @@ export const shareDownload = async (item) => {
       return;
     }
 
+    // ==========================================
+    // Fallback: normal browser download
+    // ==========================================
+
     const url = URL.createObjectURL(file);
 
-    await navigator.clipboard.writeText(url);
+    const link = document.createElement("a");
 
-    toast.success("Temporary file link copied.");
+    link.href = url;
+    link.download = fileName;
 
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 5000);
+
+    toast.success("File downloaded.");
   } catch (error) {
-    toast.error("Unable to share file.");
+    console.error(
+      "Share Download Error:",
+      error,
+    );
+
+    // User cancelled native share
+    if (error?.name === "AbortError") {
+      return;
+    }
+
+    toast.error(
+      "Unable to share file.",
+    );
   }
 };
