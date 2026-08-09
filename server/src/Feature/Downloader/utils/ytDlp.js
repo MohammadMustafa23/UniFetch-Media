@@ -123,9 +123,6 @@ function getWritableCookiesPath(url) {
 // =====================================================
 // COMMON YT-DLP ARGUMENTS
 // =====================================================
-// =====================================================
-// COMMON YT-DLP ARGUMENTS
-// =====================================================
 
 function getCommonArgs(url) {
   const args = [
@@ -142,38 +139,18 @@ function getCommonArgs(url) {
     "1",
 
     "--force-ipv4",
-
-    // YouTube JavaScript challenge solving
     "--js-runtimes",
     `deno:${DENO_PATH}`,
-
-    // Allow yt-dlp to fetch the current EJS components
-    "--remote-components",
-    "ejs:github",
   ];
 
   let userAgent = null;
-  let cookiesPath = null;
 
   // ---------------------------------------------
   // YouTube
   // ---------------------------------------------
 
   if (isYouTubeUrl(url)) {
-    /*
-     * IMPORTANT:
-     * Do NOT use the current YouTube cookies.
-     *
-     * Your Render logs showed:
-     * "The provided YouTube account cookies are no longer valid"
-     *
-     * So for this test we intentionally run YouTube
-     * WITHOUT cookies.
-     *
-     * Also don't force the old Chrome 124 UA.
-     * Let yt-dlp use its own default UA.
-     */
-    userAgent = null;
+    userAgent = YOUTUBE_USER_AGENT;
   }
 
   // ---------------------------------------------
@@ -190,31 +167,16 @@ function getCommonArgs(url) {
     userAgent = INSTAGRAM_USER_AGENT;
   }
 
-  // ---------------------------------------------
-  // User Agent
-  // ---------------------------------------------
-
-  if (userAgent) {
-    args.push("--user-agent", userAgent);
-  }
+  args.push("--user-agent", userAgent);
 
   // ---------------------------------------------
   // Cookies
   // ---------------------------------------------
 
-  /*
-   * IMPORTANT:
-   * Only use cookies for non-YouTube platforms for now.
-   *
-   * YouTube cookies are temporarily disabled because
-   * the current cookie file is invalid/rotated.
-   */
-  if (!isYouTubeUrl(url)) {
-    cookiesPath = getWritableCookiesPath(url);
+  const cookiesPath = getWritableCookiesPath(url);
 
-    if (cookiesPath) {
-      args.push("--cookies", cookiesPath);
-    }
+  if (cookiesPath) {
+    args.push("--cookies", cookiesPath);
   }
 
   return {
