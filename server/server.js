@@ -8,6 +8,7 @@ import { connectRedis } from "./src/config/redis.js";
 import { recoverDownloads } from "./src/Feature/download/utils/recoverDownloads.js";
 import http from "http";
 import { initSocket } from "./src/socket/socket.js";
+import { checkFFmpeg } from "./src/Feature/Downloader/utils/ytDlp.js";
 
 connectDB();
 // Redis Connection
@@ -24,4 +25,5 @@ initSocket(server);
 
 server.listen(PORT, () => {
   console.log("🚀 Server Running on Port", PORT);
+  await checkFFmpeg();
 });

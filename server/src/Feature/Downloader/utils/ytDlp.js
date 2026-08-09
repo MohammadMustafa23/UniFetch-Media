@@ -219,27 +219,64 @@ export async function getYtDlpVersion() {
 // FFMPEG CHECK
 // =====================================================
 
+// =====================================================
+// FFMPEG CHECK
+// =====================================================
+
 export async function checkFFmpeg() {
+  console.log("==============================================");
+  console.log("FFMPEG CHECK");
+  console.log("==============================================");
+
+  console.log("FFMPEG PATH:", FFMPEG_PATH);
+  console.log("FFMPEG EXISTS:", fs.existsSync(FFMPEG_PATH));
+
   try {
-    const { stdout, stderr } = await execFileAsync(FFMPEG_PATH, ["-version"], {
-      timeout: 15_000,
-    });
+    // Make sure Linux binary is executable
+    if (!isWindows && fs.existsSync(FFMPEG_PATH)) {
+      try {
+        fs.chmodSync(FFMPEG_PATH, 0o755);
+        console.log("FFMPEG PERMISSION: chmod 755 applied");
+      } catch (chmodError) {
+        console.error(
+          "FFMPEG CHMOD ERROR:",
+          chmodError.message
+        );
+      }
+    }
 
-    const firstLine = stdout?.split("\n")?.[0]?.trim() || "UNKNOWN";
+    const { stdout, stderr } = await execFileAsync(
+      FFMPEG_PATH,
+      ["-version"],
+      {
+        timeout: 15_000,
+      }
+    );
 
-    console.log("FFMPEG:", firstLine);
+    const firstLine =
+      stdout?.split("\n")?.[0]?.trim() || "UNKNOWN";
+
+    console.log("FFMPEG VERSION:", firstLine);
 
     if (stderr?.trim()) {
       console.log("FFMPEG STDERR:", stderr.trim());
     }
 
+    console.log("FFMPEG STATUS: OK");
+    console.log("==============================================");
+
     return true;
   } catch (error) {
-    console.error("FFMPEG CHECK ERROR:", error.message);
+    console.error("FFMPEG STATUS: FAILED");
+    console.error("FFMPEG ERROR:", error.message);
+    console.error("FFMPEG PATH:", FFMPEG_PATH);
+    console.error("FFMPEG EXISTS:", fs.existsSync(FFMPEG_PATH));
+    console.log("==============================================");
 
     return false;
   }
 }
+
 
 // =====================================================
 // GET VIDEO INFORMATION
@@ -388,6 +425,7 @@ function getFormatSelector(quality, mediaType) {
       return `bestvideo*+bestaudio/best${videoOnlyGuard}`;
   }
 }
+
 
 // =====================================================
 // DOWNLOAD VIDEO / AUDIO
