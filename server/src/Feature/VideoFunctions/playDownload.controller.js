@@ -47,8 +47,7 @@ export const playDownload = async (req, res) => {
     const filePath = download.filePath;
     const stat = fs.statSync(filePath);
     const fileSize = stat.size;
-    const contentType =
-      mime.lookup(filePath) || "application/octet-stream";
+    const contentType = mime.lookup(filePath) || "application/octet-stream";
 
     const range = req.headers.range;
 
@@ -66,10 +65,12 @@ export const playDownload = async (req, res) => {
         "Content-Disposition": "inline",
       });
 
-      return fs.createReadStream(filePath, {
-        start,
-        end,
-      }).pipe(res);
+      return fs
+        .createReadStream(filePath, {
+          start,
+          end,
+        })
+        .pipe(res);
     }
 
     res.writeHead(200, {
@@ -163,6 +164,32 @@ export const saveDownload = async (req, res) => {
 
     const fileName = `${safeTitle}${extension}`;
 
+    const extension = path.extname(download.filePath);
+
+    const safeTitle = (download.title || "video")
+      .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+      .trim();
+
+    const fileName = `${safeTitle}${extension}`;
+
+    console.log("==============================================");
+    console.log("SAVE DOWNLOAD DEBUG");
+    console.log("==============================================");
+    console.log("Download ID:", download._id.toString());
+    console.log("Storage Provider:", download.storageProvider);
+    console.log("File Path:", download.filePath);
+    console.log("File Exists:", fs.existsSync(download.filePath));
+    console.log("File Name:", fileName);
+
+    if (fs.existsSync(download.filePath)) {
+      const stats = await fs.promises.stat(download.filePath);
+
+      console.log("File Size:", stats.size);
+      console.log("Is File:", stats.isFile());
+    }
+
+    console.log("==============================================");
+
     res.download(download.filePath, fileName, async (err) => {
       if (err) {
         console.error("Download Error:", err);
@@ -187,7 +214,7 @@ export const saveDownload = async (req, res) => {
 
           // Delete MongoDB record
           await Download.findByIdAndDelete(download._id);
-          
+
           // Clear Redis cache
           await redisClient.del(`downloads:${download.userId}`);
         }
@@ -236,7 +263,7 @@ export const deleteDownload = async (req, res) => {
             "cloudStorage.used": -download.fileSize,
           },
         });
-        
+
         await download.deleteOne();
 
         // Clear Redis Cache
