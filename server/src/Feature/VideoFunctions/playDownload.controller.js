@@ -156,12 +156,6 @@ export const saveDownload = async (req, res) => {
       });
     }
 
-    const extension = path.extname(download.filePath);
-
-    const safeTitle = (download.title || "video")
-      .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
-      .trim();
-
     const fileName = `${safeTitle}${extension}`;
 
     const extension = path.extname(download.filePath);
