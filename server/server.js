@@ -16,6 +16,9 @@ connectRedis();
 // Recover Downlaod
 await recoverDownloads();
 
+// check 
+await checkFFmpeg();
+
 
 
 const PORT = process.env.PORT;
@@ -25,5 +28,4 @@ initSocket(server);
 
 server.listen(PORT, () => {
   console.log("🚀 Server Running on Port", PORT);
-  await checkFFmpeg();
 });
