@@ -103,11 +103,7 @@ export async function createDownload(req, res) {
       progress: 0,
     });
 
-    console.log("SAVED DOWNLOAD:", {
-      id: download._id,
-      mediaType: download.mediaType,
-      format: download.format,
-    });
+    c
 
     // ✅ Clear Downloads Cache
     await redisClient.del(`downloads:${userId}`);

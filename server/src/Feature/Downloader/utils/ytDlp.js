@@ -46,19 +46,6 @@ const INSTAGRAM_USER_AGENT =
   "AppleWebKit/537.36 (KHTML, like Gecko) " +
   "Chrome/124.0.0.0 Safari/537.36";
 
-// =====================================================
-// INITIAL LOG
-// =====================================================
-
-console.log("==============================================");
-console.log("YT-DLP DOWNLOADER INITIALIZED");
-console.log("==============================================");
-console.log("YT-DLP PATH:", YT_DLP_PATH);
-console.log("FFMPEG PATH:", FFMPEG_PATH);
-console.log("Cookies configured:", Boolean(YT_COOKIES_PATH));
-console.log("Cookies path:", YOUTUBE_COOKIES_PATH);
-console.log("Platform:", process.platform);
-console.log("==============================================");
 
 // =====================================================
 // PLATFORM HELPERS
@@ -109,9 +96,6 @@ function getWritableCookiesPath(url) {
 
   try {
     fs.copyFileSync(sourcePath, writablePath);
-
-    console.log("YT-DLP: Cookies copied successfully:", writablePath);
-
     return writablePath;
   } catch (error) {
     console.error("YT-DLP: Failed to copy cookies:", error.message);
@@ -197,16 +181,6 @@ export async function getYtDlpVersion() {
     });
 
     const version = stdout?.trim();
-
-    console.log("==============================================");
-    console.log("YT-DLP VERSION:", version || "UNKNOWN");
-
-    if (stderr?.trim()) {
-      console.log("YT-DLP VERSION STDERR:", stderr.trim());
-    }
-
-    console.log("==============================================");
-
     return version;
   } catch (error) {
     console.error("YT-DLP VERSION ERROR:", error.message);
@@ -224,19 +198,11 @@ export async function getYtDlpVersion() {
 // =====================================================
 
 export async function checkFFmpeg() {
-  console.log("==============================================");
-  console.log("FFMPEG CHECK");
-  console.log("==============================================");
-
-  console.log("FFMPEG PATH:", FFMPEG_PATH);
-  console.log("FFMPEG EXISTS:", fs.existsSync(FFMPEG_PATH));
-
   try {
     // Make sure Linux binary is executable
     if (!isWindows && fs.existsSync(FFMPEG_PATH)) {
       try {
         fs.chmodSync(FFMPEG_PATH, 0o755);
-        console.log("FFMPEG PERMISSION: chmod 755 applied");
       } catch (chmodError) {
         console.error(
           "FFMPEG CHMOD ERROR:",
@@ -255,24 +221,9 @@ export async function checkFFmpeg() {
 
     const firstLine =
       stdout?.split("\n")?.[0]?.trim() || "UNKNOWN";
-
-    console.log("FFMPEG VERSION:", firstLine);
-
-    if (stderr?.trim()) {
-      console.log("FFMPEG STDERR:", stderr.trim());
-    }
-
-    console.log("FFMPEG STATUS: OK");
-    console.log("==============================================");
-
     return true;
   } catch (error) {
-    console.error("FFMPEG STATUS: FAILED");
     console.error("FFMPEG ERROR:", error.message);
-    console.error("FFMPEG PATH:", FFMPEG_PATH);
-    console.error("FFMPEG EXISTS:", fs.existsSync(FFMPEG_PATH));
-    console.log("==============================================");
-
     return false;
   }
 }
@@ -310,23 +261,6 @@ export async function getVideoInfo(url) {
     cleanUrl,
   ];
 
-  console.log("==============================================");
-  console.log("YT-DLP getVideoInfo");
-  console.log("==============================================");
-  console.log("URL:", cleanUrl);
-  console.log(
-    "Platform:",
-    isYouTubeUrl(cleanUrl)
-      ? "youtube"
-      : isInstagramUrl(cleanUrl)
-        ? "instagram"
-        : "other",
-  );
-  console.log("Using cookies:", Boolean(cookiesPath));
-  console.log("Cookies path:", cookiesPath || "NONE");
-  console.log("User agent:", userAgent);
-  console.log("==============================================");
-
   try {
     const { stdout, stderr } = await execFileAsync(YT_DLP_PATH, args, {
       maxBuffer: 50 * 1024 * 1024,
@@ -337,14 +271,6 @@ export async function getVideoInfo(url) {
     });
 
     // -----------------------------------------
-    // STDERR
-    // -----------------------------------------
-
-    if (stderr?.trim()) {
-      console.log("YT-DLP getVideoInfo STDERR:", stderr.trim());
-    }
-
-    // -----------------------------------------
     // STDOUT
     // -----------------------------------------
 
@@ -353,38 +279,15 @@ export async function getVideoInfo(url) {
     }
 
     const data = JSON.parse(stdout);
-
-    console.log("==============================================");
-    console.log("YT-DLP INFO SUCCESS");
-    console.log("==============================================");
-    console.log("ID:", data.id);
-    console.log("Title:", data.title);
-    console.log("Extractor:", data.extractor);
-    console.log("Duration:", data.duration);
-    console.log(
-      "Formats:",
-      Array.isArray(data.formats) ? data.formats.length : 0,
-    );
-    console.log("==============================================");
-
     return data;
   } catch (error) {
-    console.error("==============================================");
-    console.error("YT-DLP getVideoInfo ERROR");
-    console.error("==============================================");
-
     console.error("Message:", error.message);
-
     if (error.stdout) {
       console.error("STDOUT:", error.stdout);
     }
-
     if (error.stderr) {
       console.error("STDERR:", error.stderr);
     }
-
-    console.error("==============================================");
-
     throw error;
   }
 }
@@ -419,8 +322,6 @@ function getFormatSelector(quality, mediaType) {
       return `bestvideo*[height<=144]+bestaudio/best[height<=144]${videoOnlyGuard}/bestvideo*+bestaudio/best${videoOnlyGuard}`;
 
     default:
-      // Try split streams first, then a combined "best" format —
-      // but at every step, REQUIRE a video codec to be present.
       // This can never silently resolve to audio-only.
       return `bestvideo*+bestaudio/best${videoOnlyGuard}`;
   }
@@ -515,33 +416,6 @@ export function downloadVideo({
   );
 
   // =================================================
-  // LOG
-  // =================================================
-
-  console.log("==============================================");
-  console.log("YT-DLP DOWNLOAD");
-  console.log("==============================================");
-  console.log("URL:", cleanUrl);
-  console.log("Media Type:", mediaType);
-  console.log("Quality:", quality);
-  console.log("Format:", format);
-  console.log("Using Cookies:", Boolean(cookiesPath));
-  console.log("Cookies Path:", cookiesPath || "NONE");
-  console.log("User Agent:", userAgent);
-  console.log("Output:", outputPath);
-  console.log("Arguments:");
-
-  console.log(
-    args
-      .map((arg, index) => {
-        return `${index}: ${arg}`;
-      })
-      .join("\n"),
-  );
-
-  console.log("==============================================");
-
-  // =================================================
   // SPAWN
   // =================================================
 
@@ -554,22 +428,9 @@ export function downloadVideo({
   // =================================================
 
   process.on("error", (error) => {
-    console.error("==============================================");
-
-    console.error("YT-DLP PROCESS ERROR");
-
-    console.error("==============================================");
-
     console.error("Message:", error.message);
-
     console.error("Code:", error.code);
-
-    console.error("==============================================");
   });
-
-  // =================================================
-  // STDERR
-  // =================================================
 
   process.stderr.on("data", (data) => {
     const message = data.toString().trim();
@@ -578,26 +439,5 @@ export function downloadVideo({
       console.error("YT-DLP STDERR:", message);
     }
   });
-
-  // =================================================
-  // CLOSE
-  // =================================================
-
-  process.on("close", (code, signal) => {
-    console.log("==============================================");
-
-    console.log("YT-DLP PROCESS CLOSED");
-
-    console.log("Exit Code:", code);
-
-    console.log("Signal:", signal || "NONE");
-
-    console.log("Media Type:", mediaType);
-
-    console.log("Format:", format);
-
-    console.log("==============================================");
-  });
-
   return process;
 }

@@ -130,12 +130,6 @@ export const saveDownload = async (req, res) => {
     // =====================================================
 
     if (download.storageProvider === "platform") {
-      console.log("==============================================");
-      console.log("SAVE DOWNLOAD - PLATFORM");
-      console.log("==============================================");
-      console.log("Download ID:", download._id.toString());
-      console.log("Cloud URL:", download.filePath);
-
       const response = await fetch(download.filePath);
 
       if (!response.ok || !response.body) {
@@ -184,11 +178,6 @@ export const saveDownload = async (req, res) => {
         res.setHeader("Content-Length", contentLength);
       }
 
-      console.log("File Name:", fileName);
-      console.log("Content Type:", contentType);
-      console.log("Content Length:", contentLength || "unknown");
-      console.log("==============================================");
-
       // =================================================
       // STREAM CLOUD FILE
       // =================================================
@@ -224,11 +213,6 @@ export const saveDownload = async (req, res) => {
     // =====================================================
 
     if (download.storageProvider === "device") {
-      console.log("==============================================");
-      console.log("SAVE DOWNLOAD - DEVICE");
-      console.log("==============================================");
-      console.log("Download ID:", download._id.toString());
-      console.log("File Path:", download.filePath);
 
       // -----------------------------------------------
       // Check file
@@ -292,15 +276,6 @@ export const saveDownload = async (req, res) => {
         "application/octet-stream";
 
       // -----------------------------------------------
-      // Debug
-      // -----------------------------------------------
-
-      console.log("File Exists:", true);
-      console.log("File Size:", stats.size);
-      console.log("File Name:", fileName);
-      console.log("Content Type:", contentType);
-
-      // -----------------------------------------------
       // Headers
       // -----------------------------------------------
 
@@ -338,11 +313,6 @@ export const saveDownload = async (req, res) => {
       fileStream.on("end", async () => {
         streamFinished = true;
 
-        console.log(
-          "File successfully sent to client:",
-          fileName,
-        );
-
         // =============================================
         // CLEANUP AFTER SUCCESSFUL SEND
         // =============================================
@@ -350,11 +320,6 @@ export const saveDownload = async (req, res) => {
         try {
           if (fs.existsSync(download.filePath)) {
             await fs.promises.unlink(download.filePath);
-
-            console.log(
-              "Temporary file deleted:",
-              download.filePath,
-            );
           }
 
           await Download.findByIdAndDelete(
@@ -364,8 +329,6 @@ export const saveDownload = async (req, res) => {
           await redisClient.del(
             `downloads:${download.userId}`,
           );
-
-          console.log("Download record cleaned up.");
         } catch (cleanupError) {
           console.error(
             "Cleanup Error:",
