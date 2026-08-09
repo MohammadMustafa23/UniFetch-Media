@@ -86,7 +86,6 @@ function isYouTubeUrl(url) {
 
 function isInstagramUrl(url) {
   const hostname = getHostname(url);
-
   return hostname === "instagram.com" || hostname === "www.instagram.com";
 }
 
@@ -124,6 +123,9 @@ function getWritableCookiesPath(url) {
 // =====================================================
 // COMMON YT-DLP ARGUMENTS
 // =====================================================
+// =====================================================
+// COMMON YT-DLP ARGUMENTS
+// =====================================================
 
 function getCommonArgs(url) {
   const args = [
@@ -140,18 +142,38 @@ function getCommonArgs(url) {
     "1",
 
     "--force-ipv4",
+
+    // YouTube JavaScript challenge solving
     "--js-runtimes",
     `deno:${DENO_PATH}`,
+
+    // Allow yt-dlp to fetch the current EJS components
+    "--remote-components",
+    "ejs:github",
   ];
 
   let userAgent = null;
+  let cookiesPath = null;
 
   // ---------------------------------------------
   // YouTube
   // ---------------------------------------------
 
   if (isYouTubeUrl(url)) {
-    userAgent = YOUTUBE_USER_AGENT;
+    /*
+     * IMPORTANT:
+     * Do NOT use the current YouTube cookies.
+     *
+     * Your Render logs showed:
+     * "The provided YouTube account cookies are no longer valid"
+     *
+     * So for this test we intentionally run YouTube
+     * WITHOUT cookies.
+     *
+     * Also don't force the old Chrome 124 UA.
+     * Let yt-dlp use its own default UA.
+     */
+    userAgent = null;
   }
 
   // ---------------------------------------------
@@ -168,16 +190,31 @@ function getCommonArgs(url) {
     userAgent = INSTAGRAM_USER_AGENT;
   }
 
-  args.push("--user-agent", userAgent);
+  // ---------------------------------------------
+  // User Agent
+  // ---------------------------------------------
+
+  if (userAgent) {
+    args.push("--user-agent", userAgent);
+  }
 
   // ---------------------------------------------
   // Cookies
   // ---------------------------------------------
 
-  const cookiesPath = getWritableCookiesPath(url);
+  /*
+   * IMPORTANT:
+   * Only use cookies for non-YouTube platforms for now.
+   *
+   * YouTube cookies are temporarily disabled because
+   * the current cookie file is invalid/rotated.
+   */
+  if (!isYouTubeUrl(url)) {
+    cookiesPath = getWritableCookiesPath(url);
 
-  if (cookiesPath) {
-    args.push("--cookies", cookiesPath);
+    if (cookiesPath) {
+      args.push("--cookies", cookiesPath);
+    }
   }
 
   return {
@@ -356,50 +393,37 @@ export async function getVideoInfo(url) {
 // =====================================================
 // FORMAT SELECTOR
 // =====================================================
-
 function getFormatSelector(quality, mediaType) {
-  // =============================================
-  // AUDIO
-  // =============================================
-
   if (mediaType === "audio") {
     return "bestaudio";
   }
 
-  // =============================================
-  // VIDEO
-  // =============================================
+  const videoOnlyGuard = "[vcodec!=none]";
 
   switch (quality) {
     case "1080p":
-      return "bestvideo*[height<=1080]+bestaudio/" + "bestvideo*[height<=1080]";
+      return `bestvideo*[height<=1080]+bestaudio/best[height<=1080]${videoOnlyGuard}/bestvideo*+bestaudio/best${videoOnlyGuard}`;
 
     case "720p":
-      return "bestvideo*[height<=720]+bestaudio/" + "bestvideo*[height<=720]";
+      return `bestvideo*[height<=720]+bestaudio/best[height<=720]${videoOnlyGuard}/bestvideo*+bestaudio/best${videoOnlyGuard}`;
 
     case "480p":
-      return "bestvideo*[height<=480]+bestaudio/" + "bestvideo*[height<=480]";
+      return `bestvideo*[height<=480]+bestaudio/best[height<=480]${videoOnlyGuard}/bestvideo*+bestaudio/best${videoOnlyGuard}`;
 
     case "360p":
-      return "bestvideo*[height<=360]+bestaudio/" + "bestvideo*[height<=360]";
+      return `bestvideo*[height<=360]+bestaudio/best[height<=360]${videoOnlyGuard}/bestvideo*+bestaudio/best${videoOnlyGuard}`;
 
     case "240p":
-      return "bestvideo*[height<=240]+bestaudio/" + "bestvideo*[height<=240]";
+      return `bestvideo*[height<=240]+bestaudio/best[height<=240]${videoOnlyGuard}/bestvideo*+bestaudio/best${videoOnlyGuard}`;
 
     case "144p":
-      return "bestvideo*[height<=144]+bestaudio/" + "bestvideo*[height<=144]";
+      return `bestvideo*[height<=144]+bestaudio/best[height<=144]${videoOnlyGuard}/bestvideo*+bestaudio/best${videoOnlyGuard}`;
 
     default:
-      // IMPORTANT:
-      //
-      // Do NOT use:
-      // bestvideo*+bestaudio/best
-      //
-      // because "best" can potentially select
-      // an unwanted non-video format.
-      //
-      // This fallback always requires video.
-      return "bestvideo*+bestaudio/bestvideo*";
+      // Try split streams first, then a combined "best" format —
+      // but at every step, REQUIRE a video codec to be present.
+      // This can never silently resolve to audio-only.
+      return `bestvideo*+bestaudio/best${videoOnlyGuard}`;
   }
 }
 
