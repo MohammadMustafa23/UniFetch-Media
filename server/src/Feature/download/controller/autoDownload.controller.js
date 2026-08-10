@@ -8,12 +8,14 @@ import downloadQueue from "../queue/download.queue.js";
 import { redisClient } from "../../../config/redis.js";
 import History from "../../History/models/history.model.js";
 import User from "../../../models/user.model.js";
+import detectPlatform from "../../Downloader/utils/detectPlatform.js";
 
 import { createHistoryService } from "../../History/service/history.service.js";
 
 export async function autoDownload(req, res) {
   try {
     const { url } = req.body;
+    // Validate Request
 
     if (!url) {
       return res.status(400).json({
@@ -22,8 +24,43 @@ export async function autoDownload(req, res) {
       });
     }
 
+    // Detect Platform
+    const platform = detectPlatform(url);
+
+    if (platform !== "youtube" && platform !== "instagram") {
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported platform.",
+      });
+    }
+
+    const videoId = extractVideoId(url, platform);
+
+    if (!videoId) {
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported URL.",
+      });
+    }
+
+    const cacheKey = `video-info:${platform}:${videoId}`;
+    const cachedVideo = await redisClient.get(cacheKey);
+
+    if (cachedVideo) {
+      return res.status(200).json({
+        success: true,
+        fromCache: true,
+        message: "Video information fetched successfully.",
+        data: cachedVideo,
+      });
+    }
+    
+
     const userId = req.user._id;
-    const user = await User.findById(userId).select("downloadLimit.max downloadLimit.used");
+    const user = await User.findById(userId).select(
+      "downloadLimit.max downloadLimit.used",
+    );
+
     if (user.downloadLimit.used >= user.downloadLimit.max) {
       return res.status(403).json({
         success: false,
@@ -40,6 +77,7 @@ export async function autoDownload(req, res) {
         message: "Preferences not found.",
       });
     }
+
 
     // Get video information
     const video = await getVideoInfo(url);
@@ -92,10 +130,11 @@ export async function autoDownload(req, res) {
       url,
       title: video.title,
       thumbnail: video.thumbnail,
-      platform: detectPlatform(url),
+      platform: platform,
       duration: video.duration,
       quality: preference.quality,
       format: "mp4",
+      mediaType = "video",
       storageProvider: preference.storage.provider,
     };
 
@@ -121,11 +160,14 @@ export async function autoDownload(req, res) {
       ...downloadData,
       status: "queued",
       progress: 0,
-
       // Save estimated size from yt-dlp
       fileSize: fileSize || 0,
       downloadedSize: 0,
     });
+
+    // ✅ Clear Downloads Cache
+    await redisClient.del(`downloads:${userId}`);
+    await redisClient.del(`history:${req.user._id}`);
 
     const history = await History.findOne({
       userId: req.user._id,
@@ -134,9 +176,6 @@ export async function autoDownload(req, res) {
     }).lean();
 
     if (!history) {
-      // ==============================
-      // Save History
-      // ==============================
       await createHistoryService({
         userId: req.user._id,
         url,
@@ -144,11 +183,7 @@ export async function autoDownload(req, res) {
         videoInfo: downloadData,
       });
     }
-
-    // ✅ Clear Downloads Cache
-    await redisClient.del(`downloads:${userId}`);
-    await redisClient.del(`history:${req.user._id}`);
-
+    
     // Add to queue
     downloadQueue.add(download._id);
 
