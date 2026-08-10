@@ -1,5 +1,4 @@
 import "./HeroDownload.css";
-import { useState } from "react";
 import { toast } from "sonner";
 import {
   Download,
@@ -14,6 +13,7 @@ import {
   getDownloadInfo,
   autoDownload,
 } from "../../../service/download.service.js";
+
 import isSupportedUrl from "../../../utils/isSupportedURL.js";
 
 export default function HeroDownload({
@@ -24,43 +24,81 @@ export default function HeroDownload({
   preference,
 }) {
   const handleDownloadInfo = async (mediaUrl = url) => {
-    if (!mediaUrl.trim()) {
+    const cleanUrl = mediaUrl?.trim();
+
+    if (!cleanUrl) {
       return toast.error("Please paste a media URL.");
     }
 
     try {
       setLoading(true);
 
-      if (preference?.autoDownload) {
-        const { data } = await autoDownload({ url: mediaUrl });
-        if (data.success) {
-          toast.success(data.message);
-          setUrl("");
-          return;
+      // ==========================================
+      // AUTO DOWNLOAD ON
+      // ==========================================
+
+      if (preference?.autoDownload === true) {
+        const { data } = await autoDownload({
+          url: cleanUrl,
+        });
+
+        if (!data?.success) {
+          throw new Error(data?.message || "Auto download failed.");
         }
+
+        toast.success(data.message || "Download added to queue.");
+
+        setUrl("");
+
+        return;
       }
 
-      const { data } = await getDownloadInfo(mediaUrl);
-      if (data.success) {
-        setVideoInfo(data.data); // Keep preview open
+      // ==========================================
+      // AUTO DOWNLOAD OFF
+      // ==========================================
+
+      const { data } = await getDownloadInfo(cleanUrl);
+
+      if (!data?.success) {
+        throw new Error(data?.message || "Failed to fetch media information.");
       }
+
+      setVideoInfo(data.data);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to fetch media information.");
+      console.error("Handle Download Info Error:", error);
+
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to process media.",
+      );
     } finally {
       setLoading(false);
     }
   };
+
   const handleAutoPaste = async () => {
     try {
       const text = await navigator.clipboard.readText();
-      if (!isSupportedUrl(text)) {
+      const cleanUrl = text?.trim();
+
+      if (!cleanUrl) {
+        return toast.error("Clipboard doesn't contain a URL.");
+      }
+
+      if (!isSupportedUrl(cleanUrl)) {
         return toast.error("Clipboard doesn't contain a supported URL.");
       }
-      setUrl(text);
-    } catch {
+
+      setUrl(cleanUrl);
+    } catch (error) {
+      console.error("Auto Paste Error:", error);
+
       toast.error("Unable to access clipboard.");
     }
   };
+
+  // ...
   return (
     <section className="ufm-hero">
       {/* LEFT */}

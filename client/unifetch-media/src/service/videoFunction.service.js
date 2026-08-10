@@ -2,8 +2,6 @@ import api from "./axios.js";
 export const playDownload = async (id) => {
   try {
     const { data } = await api.get(`/download/play/${id}`);
-    console.log(data);
-    
     // Cloudinary / Platform Storage
     if (data.success && data.type === "cloud") {
       window.open(data.url, "_blank");
@@ -208,14 +206,7 @@ export const shareDownload = async (item) => {
       },
     );
 
-    console.log("SHARE DEBUG");
-    console.log("File:", file.name);
-    console.log("Size:", file.size);
-    console.log("Type:", file.type);
-    console.log(
-      "Can Share:",
-      !!navigator.share,
-    );
+   
 
     // ==========================================
     // MOBILE / WEB SHARE
