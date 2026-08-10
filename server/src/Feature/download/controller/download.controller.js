@@ -103,8 +103,6 @@ export async function createDownload(req, res) {
       progress: 0,
     });
 
-    c
-
     // ✅ Clear Downloads Cache
     await redisClient.del(`downloads:${userId}`);
     await redisClient.del(`history:${req.user._id}`);
