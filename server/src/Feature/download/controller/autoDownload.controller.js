@@ -7,7 +7,7 @@ import { redisClient } from "../../../config/redis.js";
 import History from "../../History/models/history.model.js";
 import User from "../../../models/user.model.js";
 import detectPlatform from "../../Downloader/utils/detectPlatform.js";
-
+import { extractVideoId } from "../../Downloader/utils/extractVideoId.js";
 import { createHistoryService } from "../../History/service/history.service.js";
 
 export async function autoDownload(req, res) {
