@@ -133,7 +133,7 @@ export async function autoDownload(req, res) {
       duration: video.duration,
       quality: preference.quality,
       format: "mp4",
-      mediaType = "video",
+      mediaType : "video",
       storageProvider: preference.storage.provider,
     };
 
