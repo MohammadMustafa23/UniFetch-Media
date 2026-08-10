@@ -1,7 +1,5 @@
 import Preference from "../../Preferences/models/preferences.model.js";
 import { getVideoInfo } from "../../Downloader/utils/ytDlp.js";
-import detectPlatform from "../../Downloader/utils/detectPlatform.js";
-
 import Download from "../models/download.model.js";
 import downloadQueue from "../queue/download.queue.js";
 
@@ -57,6 +55,7 @@ export async function autoDownload(req, res) {
     
 
     const userId = req.user._id;
+
     const user = await User.findById(userId).select(
       "downloadLimit.max downloadLimit.used",
     );
@@ -183,7 +182,7 @@ export async function autoDownload(req, res) {
         videoInfo: downloadData,
       });
     }
-    
+
     // Add to queue
     downloadQueue.add(download._id);
 
