@@ -1,83 +1,158 @@
-# UniFetch Media
+<div align="center">
 
-> Download and manage media from YouTube, Instagram, and other platforms — all from one simple web app.
+# 🎬 UniFetch Media
 
-## About
+**One app to download and manage media from YouTube, Instagram, and more — no ads, no extra steps.**
 
-UniFetch Media is a full-stack web app (MERN stack) that lets you download videos and audio using just a URL. Paste a link, preview the media, pick a quality, and the app downloads it in the background while you keep using the app. You get live progress updates, download history, notifications, and the option to save the file to your device or share it directly.
+[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socketdotio&logoColor=white)](https://socket.io/)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-## Features
+[🔗 Live Demo](https://unifetch-media.vercel.app/) · [📦 GitHub Repo](https://github.com/MohammadMustafa23/UniFetch-Media)
 
-- **Multi-platform downloads** — Currently supports YouTube and Instagram, built so more platforms can be added later.
-- **Media preview** — See thumbnail, title, uploader, duration, and available formats before downloading.
-- **Custom download options** — Pick video/audio quality, format, and whether to download the thumbnail.
-- **Background download queue** — Downloads run on the server, so you don't have to keep the tab open and waiting.
-- **Live progress** — Real-time percentage, speed, and ETA over Socket.IO.
-- **Download history** — Every download is saved with title, platform, size, and status. Mark favorites, clear history anytime.
-- **Notifications** — Get notified when a download finishes, plus other account notifications.
-- **Save & share** — Save completed files to your device, or share them directly (Web Share API on mobile).
-- **Auto-detect & auto-download** — Optionally detect a copied link and start the download without manual steps.
-- **Accounts** — Email/password signup with OTP verification, plus Google sign-in.
+</div>
 
-## Tech Stack
+---
 
-| Layer | Technology |
-|---|---|
-| Frontend | React, Vite, React Router, Axios, Socket.IO Client |
-| Backend | Node.js, Express.js, Socket.IO, JWT, bcrypt |
-| Database | MongoDB (Mongoose) |
-| Cache / Temp Data | Redis |
-| Media Engine | yt-dlp, FFmpeg, FFprobe, Deno (for YouTube extraction) |
-| Hosting | Vercel (frontend), Render (backend), Upstash (Redis) |
+## 📖 About
 
-## How It Works
+Most media downloaders make you jump between different sites, click through ads, and start over for every platform. **UniFetch Media** fixes that with one simple flow:
 
-1. You paste a media URL (or it's auto-detected from your clipboard).
-2. The backend detects the platform and asks yt-dlp for the media info.
-3. You see a preview (thumbnail, title, formats) and pick a quality.
-4. The download is added to a background queue instead of blocking the request.
-5. A background worker runs yt-dlp (and FFmpeg if needed) to fetch and process the file.
-6. Progress updates are pushed to your browser in real time over Socket.IO.
-7. Once done, you can play, save to device, share, or delete the file.
+> Paste a link → preview the media → pick your quality → download runs in the background → track it live → manage everything from your own library.
 
-## Architecture
+It's built as a **MERN-stack** app, so the backend does the heavy lifting (via `yt-dlp` + `FFmpeg`) while the frontend stays fast and simple.
 
-Instead of one giant diagram, here's what each part does:
+---
 
-- **Client (React)** — The UI. Talks to the backend over REST for normal requests, and over Socket.IO for live updates.
-- **API Server (Node/Express)** — Handles auth, download requests, history, preferences, and notifications.
-- **MongoDB** — Stores permanent data: users, downloads, history, preferences, notifications.
-- **Redis** — Stores short-lived data: cached user info, OTPs, and cache invalidation for downloads.
-- **Download Queue + Worker** — Picks up a queued download and runs it in the background with yt-dlp/FFmpeg, so the API never freezes while a file downloads.
-- **Socket.IO** — Sends progress from the worker back to the exact user who started the download (each user gets a private room, so no one sees another user's progress).
+## ✨ Features
 
+**🔐 Account & Security**
+- Email/password signup with OTP email verification
+- Google Sign-In (OAuth)
+- JWT auth with protected routes
+- Forgot / reset password flow
+- Rate limiting on sensitive routes
+
+**⬇️ Download Engine**
+- Paste a URL, or let auto-detect grab it from your clipboard
+- Optional auto-download (skips the manual click)
+- Preview before downloading — thumbnail, title, uploader, duration, formats
+- Pick quality, format (mp4/mp3), and thumbnail download
+- Background download queue — keeps working even if you close the tab
+- Live progress (%, speed, ETA) pushed over Socket.IO
+- Retry failed downloads, pause/resume active ones
+
+**📚 History & Media Library**
+- Every URL you process gets saved to history — even if you don't finish downloading it
+- Mark favorites, search and filter
+- Stream/play downloaded media right in the browser
+- Save to device or share directly (mobile Web Share API)
+- Delete files and records anytime
+
+**🔔 Notifications**
+- Get notified when a download finishes
+- Mark as read, mark all as read, delete, or clear all
+
+**⚙️ Preferences**
+- Personal settings for auto-paste, auto-download, default quality/format, and overwrite rules
+
+---
+
+## 🧱 Tech Stack
+
+| Layer             | Technology                                              |
+|--------------------|----------------------------------------------------------|
+| Frontend           | React, Vite, React Router, Axios, Socket.IO Client       |
+| Backend            | Node.js, Express.js, Socket.IO, JWT, bcrypt              |
+| Database           | MongoDB (Mongoose)                                       |
+| Cache / Temp Data  | Redis (OTPs, user cache)                                  |
+| Media Engine       | yt-dlp, FFmpeg, FFprobe, Deno (YouTube extraction)        |
+| Auth               | Google OAuth, Nodemailer (OTP emails)                    |
+| Hosting            | Vercel (frontend), Render (backend), Upstash (Redis)      |
+
+---
+
+## 🔄 How It Works
+
+```mermaid
+flowchart TD
+    A([Paste or auto-detect URL]) --> B{Platform supported?}
+    B -- No --> Z([Show error])
+    B -- Yes --> C[Fetch media info via yt-dlp]
+    C --> D[Show preview: title, thumbnail, duration]
+    D --> E[Apply your preferences: quality / format]
+    E --> F[Add to background Download Queue]
+    F --> G[Worker runs yt-dlp + FFmpeg]
+    G --> H[Live progress over Socket.IO]
+    H --> I{Finished?}
+    I -- Yes --> J[Saved to History + Media Library]
+    I -- Failed --> K[Retry option]
 ```
-Client (React)
-   |
-   |  REST API                Socket.IO (live updates)
-   v                                ^
-API Server (Node/Express) ----------|
-   |
-   |------> MongoDB   (users, downloads, history, notifications)
-   |------> Redis     (cache, OTP, temp data)
-   |
-   v
-Download Queue --> Worker --> yt-dlp + FFmpeg --> Media File
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    A[React Client] -- REST API --> B[Node / Express Server]
+    B -- Socket.IO --> A
+    B --> C[(MongoDB<br/>users, downloads, history)]
+    B --> D[(Redis<br/>OTP, cache)]
+    B --> E[Download Queue]
+    E --> F[yt-dlp]
+    F --> G[FFmpeg]
+    G --> H[(Media Storage)]
 ```
 
-## Project Structure
+- **MongoDB** holds permanent data — users, downloads, history, preferences, notifications.
+- **Redis** holds short-lived data — OTPs and cached user sessions.
+- **Download Queue** keeps the API free while `yt-dlp`/`FFmpeg` do the actual work.
+- **Socket.IO** sends progress to a **private room per user**, so nobody sees anyone else's downloads.
+
+<details>
+<summary>🔑 Signup / OTP flow (click to expand)</summary>
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant B as Backend
+    participant R as Redis
+    participant M as MongoDB
+
+    U->>F: Enter email + password
+    F->>B: POST /register
+    B->>R: Save temp data + OTP
+    B->>U: Send OTP via email
+    U->>F: Enter OTP
+    F->>B: POST /verify
+    B->>R: Check OTP
+    B->>M: Create user account
+    B->>F: JWT token
+```
+
+</details>
+
+---
+
+## 📁 Project Structure
 
 ```
 UniFetch-Media/
-├── client/            # React frontend
+├── client/unifetch-media/     # React frontend
 │   └── src/
 │       ├── Components/
 │       ├── Pages/
 │       ├── Services/
 │       └── socket/
 │
-├── server/            # Node backend
-│   ├── bin/           # ffmpeg, ffprobe, yt-dlp binaries
+├── server/                    # Node backend
+│   ├── bin/                   # ffmpeg, ffprobe, yt-dlp binaries
 │   └── src/
 │       ├── config/
 │       ├── models/
@@ -89,10 +164,11 @@ UniFetch-Media/
 └── README.md
 ```
 
-## Environment Variables
+---
 
-Create a `.env` file inside `server/`:
+## 🔑 Environment Variables
 
+**Server** — create `.env` inside `server/`:
 ```
 PORT=
 MONGODB_URI=
@@ -101,14 +177,24 @@ JWT_SECRET=
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 FRONTEND_URL=
+EMAIL_USER=
+```
+*(plus whatever mail/OTP credential your Nodemailer setup needs)*
+
+**Client** — create `.env` inside `client/unifetch-media/`:
+```
+VITE_BACKEND_URL=
+VITE_API_URL=
+VITE_GOOGLE_CLIENT_ID=
 ```
 
-Never commit `.env` or `youtube_cookies.txt` to GitHub.
+> ⚠️ Never commit `.env` or `youtube_cookies.txt` to GitHub.
 
-## Getting Started
+---
 
-### Backend
+## 🚀 Getting Started
 
+**Backend**
 ```bash
 git clone https://github.com/MohammadMustafa23/UniFetch-Media.git
 cd UniFetch-Media/server
@@ -118,24 +204,43 @@ chmod +x bin/ffmpeg bin/ffprobe bin/yt-dlp
 npm start
 ```
 
-### Frontend
-
+**Frontend**
 ```bash
 cd ../client
 npm install
 npm run dev
 ```
 
-## Known Limitations
+---
 
-- **YouTube** — YouTube regularly changes its anti-bot system, so extraction can occasionally break or need updated cookies. Not every video is guaranteed to work.
-- **Large file downloads** — "Save to Device" goes through the browser, so it depends on your network, browser, and free storage space.
+## 🧪 Testing Phase Note
 
-## Legal Note
+UniFetch is still being polished. Right now, **new accounts are limited to 3 downloads** so people can test the app without overloading the server.
 
-UniFetch Media is meant for personal and educational use. Only download content you have the right to use, and always follow the source platform's terms of service.
+## ⚠️ Known Limitations
 
-## Author
+- **YouTube** changes its anti-bot system often, so extraction can occasionally break or need updated cookies. Not every video is guaranteed to work.
+- **Large downloads** go through the browser to save to device, so speed depends on your network and free storage.
+
+---
+
+## 🗺️ Roadmap
+
+- ☁️ Full cloud storage deployment
+- 📦 Per-user storage quota (2 GB planned)
+- 🌍 Support for more platforms beyond YouTube & Instagram
+- 📊 Deeper download analytics
+- ⚙️ More advanced queue infrastructure
+
+---
+
+## ⚖️ Legal Note
+
+UniFetch Media is a **personal project**, built for learning and personal use. It follows YouTube's and Instagram's terms and privacy policies — only download content you have the right to use.
+
+---
+
+## 👤 Author
 
 **Mohammad Mustafa**
-Repo: https://github.com/MohammadMustafa23/UniFetch-Media
+Repo: [github.com/MohammadMustafa23/UniFetch-Media](https://github.com/MohammadMustafa23/UniFetch-Media)
