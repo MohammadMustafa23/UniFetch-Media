@@ -34,7 +34,6 @@ const QueueList = ({ filter }) => {
   }, [fetchQueue]);
 
   // Live Progress Updates
-  // Live Progress Updates
   useEffect(() => {
     const handleProgress = (data) => {
       setQueue((prev) =>
@@ -86,7 +85,6 @@ const QueueList = ({ filter }) => {
     };
 
     const handleDelete = ({ downloadId }) => {
-    
       setQueue((prev) => prev.filter((item) => item._id !== downloadId));
       // Sync with backend
       fetchQueue();
@@ -94,7 +92,6 @@ const QueueList = ({ filter }) => {
 
     // Register listeners
     socket.on("download-progress", handleProgress);
-
     socket.on("download-status", handleStatus);
     socket.on("download-deleted", handleDelete);
 

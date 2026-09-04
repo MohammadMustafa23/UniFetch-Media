@@ -14,7 +14,7 @@ import DownloadsGrid from "./DownloadsGrid/DownloadsGrid";
 
 import { getDownloads } from "../../service/download.service.js";
 
-export default function Downloads() {
+export default function Downloads({ collapsed, setCollapsed, userName }) {
   const [downloads, setDownloads] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -58,8 +58,14 @@ export default function Downloads() {
   }, [search, filter, downloads]);
 
   return (
-    <div className="ufm-dashboard">
-      <Sidebar />
+    <div
+      className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
+    >
+      <Sidebar
+        isCollapsed={collapsed}
+        setCollapsed={setCollapsed}
+        userName={userName}
+      />
 
       <main className="ufm-dashboard-main">
         <Topbar />

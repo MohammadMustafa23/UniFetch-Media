@@ -11,12 +11,18 @@ import QueueHeader from "./QueueHeader/QueueHeader";
 import QueueFilter from "./QueueFilter/QueueFilter";
 import QueueList from "./QueueList/QueueList";
 
-export default function QueuePage() {
+export default function QueuePage({ collapsed, setCollapsed, userName }) {
   const [filter, setFilter] = useState("All");
 
   return (
-    <div className="ufm-dashboard">
-      <Sidebar />
+    <div
+      className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
+    >
+      <Sidebar
+        isCollapsed={collapsed}
+        setCollapsed={setCollapsed}
+        userName={userName}
+      />
 
       <main className="ufm-dashboard-main">
         <Topbar />

@@ -17,7 +17,7 @@ import PageLoader from "../../common/PageLoader";
 import { toast } from "sonner";
 import { getFavorites } from "../../service/history.service.js";
 
-export default function Favorites() {
+export default function Favorites({ collapsed, setCollapsed, userName }) {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,8 +49,14 @@ export default function Favorites() {
   }
 
   return (
-    <div className="ufm-dashboard">
-      <Sidebar />
+    <div
+      className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
+    >
+      <Sidebar
+        isCollapsed={collapsed}
+        setCollapsed={setCollapsed}
+        userName={userName}
+      />
 
       <main className="ufm-dashboard-main">
         <Topbar />

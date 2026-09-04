@@ -23,7 +23,7 @@ import { useEffect, useState } from "react";
 import { getDashboardAnalytics } from "../../service/analytics.service.js";
 import PageLoader from "../../common/PageLoader.jsx";
 
-export default function Analytics() {
+export default function Analytics({ collapsed, setCollapsed, userName }) {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,8 +53,12 @@ export default function Analytics() {
     );
   }
   return (
-    <div className="ufm-dashboard">
-      <Sidebar />
+    <div className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}>
+      <Sidebar
+        isCollapsed={collapsed}
+        setCollapsed={setCollapsed}
+        userName={userName}
+      />
 
       <main className="ufm-dashboard-main">
         <Topbar />

@@ -1,12 +1,13 @@
 import "./App.css";
 
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
-
+import { getCachedUser, setCachedUser } from "./utils/userCache.js";
 import PageLoader from "./common/PageLoader";
 import ProtectedRoute from "./security/ProtectedRoute";
 import PublicRoute from "./security/PublicRoute";
+import { getCurrentUser } from "./service/auth.service";
 /* ==========================================
    LAZY IMPORTS
 ========================================== */
@@ -39,6 +40,36 @@ const TermsOfService = lazy(() => import("./security/TermsOfService"));
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
+  const [userName, setUserName] = useState(() => {
+    const cachedUser = getCachedUser();
+    return cachedUser?.userName || cachedUser?.name || cachedUser?.email || "";
+  });
+  useEffect(() => {
+    const loadUser = async () => {
+      const cachedUser = getCachedUser();
+
+      // Already available → don't call API
+      if (cachedUser) {
+        return;
+      }
+
+      try {
+        const { data } = await getCurrentUser();
+
+        if (data.success) {
+          const user = data.user || data.data;
+
+          setCachedUser(user);
+
+          setUserName(user?.userName || user?.name || user?.email || "User");
+        }
+      } catch (error) {
+        console.error("Failed to load user:", error);
+      }
+    };
+
+    loadUser();
+  }, []);
   return (
     <>
       <Toaster
@@ -70,12 +101,7 @@ function App() {
         <Routes>
           {/* Public Routes */}
 
-          <Route
-            path="/"
-            element={
-              <HeroPageCTA />
-            }
-          />
+          <Route path="/" element={<HeroPageCTA />} />
 
           <Route
             path="/authantication-page"
@@ -92,7 +118,11 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard collapsed={collapsed} setCollapsed={setCollapsed} />
+                <Dashboard
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  userName={userName}
+                />
               </ProtectedRoute>
             }
           />
@@ -101,7 +131,11 @@ function App() {
             path="/downloads"
             element={
               <ProtectedRoute>
-                <Downloads collapsed={collapsed} setCollapsed={setCollapsed} />
+                <Downloads
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  userName={userName}
+                />
               </ProtectedRoute>
             }
           />
@@ -110,7 +144,11 @@ function App() {
             path="/queue"
             element={
               <ProtectedRoute>
-                <Queue collapsed={collapsed} setCollapsed={setCollapsed} />
+                <Queue
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  userName={userName}
+                />
               </ProtectedRoute>
             }
           />
@@ -119,7 +157,11 @@ function App() {
             path="/history"
             element={
               <ProtectedRoute>
-                <History collapsed={collapsed} setCollapsed={setCollapsed} />
+                <History
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  userName={userName}
+                />
               </ProtectedRoute>
             }
           />
@@ -128,7 +170,11 @@ function App() {
             path="/favorites"
             element={
               <ProtectedRoute>
-                <Favorites collapsed={collapsed} setCollapsed={setCollapsed} />
+                <Favorites
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  userName={userName}
+                />
               </ProtectedRoute>
             }
           />
@@ -137,7 +183,11 @@ function App() {
             path="/analytics"
             element={
               <ProtectedRoute>
-                <Analytics collapsed={collapsed} setCollapsed={setCollapsed} />
+                <Analytics
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  userName={userName}
+                />
               </ProtectedRoute>
             }
           />
@@ -146,7 +196,11 @@ function App() {
             path="/storage"
             element={
               <ProtectedRoute>
-                <Storage collapsed={collapsed} setCollapsed={setCollapsed} />
+                <Storage
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  userName={userName}
+                />
               </ProtectedRoute>
             }
           />
@@ -155,7 +209,11 @@ function App() {
             path="/settings"
             element={
               <ProtectedRoute>
-                <Settings />
+                <Settings
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  userName={userName}
+                />
               </ProtectedRoute>
             }
           />
