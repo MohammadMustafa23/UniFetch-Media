@@ -1,4 +1,4 @@
-import downloadQueue from "./download.bullMQ.js";
+import downloadQueue from "./download.bullmq.js";
 import { runningDownloads } from "./download.worker.js";
 import Download from "../models/download.model.js";
 import { getIO } from "../../../socket/socket.js";

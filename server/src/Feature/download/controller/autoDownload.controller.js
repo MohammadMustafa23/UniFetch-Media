@@ -1,6 +1,6 @@
 import Preference from "../../Preferences/models/preferences.model.js";
 import Download from "../models/download.model.js";
-import downloadQueue from "../queue/download.bullMQ.js";
+import downloadQueue from "../queue/download.bullmq.js";
 import User from "../../../models/user.model.js";
 import detectPlatform from "../../Downloader/utils/detectPlatform.js";
 

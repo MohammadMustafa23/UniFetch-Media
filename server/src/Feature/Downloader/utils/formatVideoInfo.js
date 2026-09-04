@@ -132,22 +132,34 @@ function getQualityLabel(height) {
 
   return map[height] || `${height}p`;
 }
-
 export default function formatVideoInfo(video, url) {
+  const platform = video.extractor_key?.toLowerCase();
+  const isInstagram = platform === "instagram";
+
   const videoFormats = extractVideoFormats(video.formats);
 
-  return {
-    /* ===========================
-       Basic Information
-    =========================== */
+  // =====================================================
+  // TITLE
+  // =====================================================
 
+  const title = isInstagram
+    ? video.description?.trim() || video.title || "Instagram Video"
+    : video.title || "Untitled Video";
+
+  // =====================================================
+  // BASIC INFO
+  // =====================================================
+
+  return {
     id: video.id,
-    url: url,
-    platform: video.extractor_key?.toLowerCase(),
+    url,
+    platform,
+
     fileSize: {
       bytes: video.filesize ?? video.filesize_approx ?? 0,
       text: formatSize(video.filesize ?? video.filesize_approx),
     },
+
     type:
       video.live_status === "is_live"
         ? "live"
@@ -155,82 +167,88 @@ export default function formatVideoInfo(video, url) {
           ? "short"
           : "video",
 
-    title: video.title,
-    description: video.description?.slice(0, 300),
+    title,
 
-    thumbnail: video.thumbnail,
+    description: video.description?.slice(0, 300) || "",
 
-    duration: video.duration,
+    thumbnail: video.thumbnail || "",
 
-    durationString: formatDuration(video.duration),
+    duration: video.duration ?? null,
 
-    uploadDate: formatDate(video.upload_date),
+    durationString:
+      video.duration != null ? formatDuration(video.duration) : "",
 
-    timestamp: video.timestamp,
+    uploadDate: video.upload_date ? formatDate(video.upload_date) : "",
 
-    webpageUrl: video.webpage_url,
+    timestamp: video.timestamp ?? null,
 
-    /* ===========================
-       Channel Information
-    =========================== */
+    webpageUrl: video.webpage_url || url,
+
+    // ===================================================
+    // CHANNEL / CREATOR
+    // ===================================================
 
     uploader: {
-      id: video.channel_id,
+      id: video.channel_id || video.uploader_id || null,
 
-      name: video.uploader,
+      name: video.uploader || "",
 
-      url: video.uploader_url,
+      url: video.uploader_url || "",
 
       verified: video.channel_is_verified ?? false,
     },
 
-    /* ===========================
-       Statistics
-    =========================== */
+    // ===================================================
+    // STATISTICS
+    // ===================================================
 
     statistics: {
       views: {
-        count: video.view_count,
-        text: formatNumber(video.view_count),
+        count: video.view_count ?? null,
+        text: video.view_count != null ? formatNumber(video.view_count) : "",
       },
 
       likes: {
-        count: video.like_count,
-        text: formatNumber(video.like_count),
+        count: video.like_count ?? null,
+        text: video.like_count != null ? formatNumber(video.like_count) : "",
       },
 
       comments: {
-        count: video.comment_count,
-        text: formatNumber(video.comment_count),
+        count: video.comment_count ?? null,
+        text:
+          video.comment_count != null ? formatNumber(video.comment_count) : "",
       },
     },
 
-    /* ===========================
-       Media
-    =========================== */
+    // ===================================================
+    // MEDIA
+    // ===================================================
 
     media: {
-      live: video.is_live,
+      live: video.is_live ?? false,
 
-      wasLive: video.was_live,
+      wasLive: video.was_live ?? false,
 
-      availability: video.availability,
+      availability: video.availability || null,
 
-      ageLimit: video.age_limit,
+      ageLimit: video.age_limit ?? 0,
     },
 
-    /* ===========================
-       Quick Options
-    =========================== */
+    // ===================================================
+    // QUICK OPTIONS
+    // ===================================================
 
-    qualities: [...new Set(videoFormats.map((item) => item.quality))],
+    qualities: [
+      ...new Set(videoFormats.map((item) => item.quality).filter(Boolean)),
+    ],
 
-    /* ===========================
-       Download Options
-    =========================== */
+    // ===================================================
+    // DOWNLOAD OPTIONS
+    // ===================================================
 
     downloads: {
       video: videoFormats,
+
       audio: extractAudioFormats(video.formats),
     },
   };

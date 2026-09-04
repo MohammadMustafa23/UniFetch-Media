@@ -22,7 +22,7 @@ import { getIO } from "../../../socket/socket.js";
 
 import { createNotification } from "../../notification/service/notification.service.js";
 
-import { DOWNLOAD_QUEUE_NAME } from "./download.bullMQ.js";
+import { DOWNLOAD_QUEUE_NAME } from "./download.bullmq.js";
 
 // ============================================================
 // REDIS CONNECTION
@@ -268,8 +268,7 @@ const downloadWorker = new Worker(
 
       const videoId = video.id || download.videoId || null;
 
-      const title = video.title || download.title || "Downloaded Media";
-
+      const title = download.platform === "instagram" ? video.description?.trim() || video.title || download.title || "Instagram Video" : video.title || download.title || "Downloaded Media";
       const thumbnail = video.thumbnail || download.thumbnail || "";
 
       const fileSize =
