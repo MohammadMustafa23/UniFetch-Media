@@ -2,14 +2,18 @@ import downloadQueue from "../queue/download.queue.js";
 import Download from "../models/download.model.js";
 import { getIO } from "../../../socket/socket.js";
 
-// ==============================
+// ============================================================
 // Retry Download
-// ==============================
+// ============================================================
+
 export const retryDownload = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const download = await Download.findById(id);
+    const download = await Download.findOne({
+      _id: id,
+      userId: req.user._id,
+    });
 
     if (!download) {
       return res.status(404).json({
@@ -25,39 +29,34 @@ export const retryDownload = async (req, res) => {
       });
     }
 
-    download.status = "queued";
-    download.progress = 0;
-    download.error = "";
-    download.downloadSpeed = "";
-    download.eta = "";
-    download.filePath = "";
-
-    await download.save();
-
-    downloadQueue.add(download._id);
+    await downloadQueue.retry(id);
 
     return res.status(200).json({
       success: true,
       message: "Download added to queue.",
     });
   } catch (error) {
-    console.error("Retry Error:", error);
+    console.error("[Retry Download]", error);
 
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
       message: error.message || "Failed to retry download.",
     });
   }
 };
 
-// ==============================
+// ============================================================
 // Pause Download
-// ==============================
+// ============================================================
+
 export const pauseDownload = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const download = await Download.findById(id);
+    const download = await Download.findOne({
+      _id: id,
+      userId: req.user._id,
+    });
 
     if (!download) {
       return res.status(404).json({
@@ -65,6 +64,7 @@ export const pauseDownload = async (req, res) => {
         message: "Download not found.",
       });
     }
+
     await downloadQueue.pause(id);
 
     return res.status(200).json({
@@ -72,23 +72,27 @@ export const pauseDownload = async (req, res) => {
       message: "Download paused successfully.",
     });
   } catch (error) {
-    console.error("Pause Error:", error);
+    console.error("[Pause Download]", error);
 
     return res.status(400).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to pause download.",
     });
   }
 };
 
-// ==============================
+// ============================================================
 // Resume Download
-// ==============================
+// ============================================================
+
 export const resumeDownload = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const download = await Download.findById(id);
+    const download = await Download.findOne({
+      _id: id,
+      userId: req.user._id,
+    });
 
     if (!download) {
       return res.status(404).json({
@@ -97,7 +101,6 @@ export const resumeDownload = async (req, res) => {
       });
     }
 
-    
     await downloadQueue.resume(id);
 
     return res.status(200).json({
@@ -105,21 +108,27 @@ export const resumeDownload = async (req, res) => {
       message: "Download resumed successfully.",
     });
   } catch (error) {
-    console.error("Resume Error:", error);
+    console.error("[Resume Download]", error);
 
     return res.status(400).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to resume download.",
     });
   }
 };
 
+// ============================================================
+// Cancel Download
+// ============================================================
 
 export const cancelDownload = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const download = await Download.findById(id);
+    const download = await Download.findOne({
+      _id: id,
+      userId: req.user._id,
+    });
 
     if (!download) {
       return res.status(404).json({
@@ -128,10 +137,9 @@ export const cancelDownload = async (req, res) => {
       });
     }
 
-    // Stop download & remove from queue
     await downloadQueue.cancel(id);
 
-    // Notify frontend immediately
+    // Frontend immediately removes the item.
     getIO().to(download.userId.toString()).emit("download-deleted", {
       downloadId: id,
     });
@@ -141,11 +149,11 @@ export const cancelDownload = async (req, res) => {
       message: "Download cancelled successfully.",
     });
   } catch (error) {
-    console.error("Delete Error:", error);
+    console.error("[Cancel Download]", error);
 
     return res.status(400).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to cancel download.",
     });
   }
 };

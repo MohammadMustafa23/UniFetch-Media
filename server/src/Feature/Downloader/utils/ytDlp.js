@@ -29,9 +29,7 @@ const FFMPEG_PATH = isWindows
 // =====================================================
 const YOUTUBE_COOKIES_PATH =
   YT_COOKIES_PATH || "/etc/secrets/youtube_cookies.txt";
-
-const DENO_PATH = process.env.DENO_PATH || "/opt/render/project/deno/bin/deno";
-
+const DENO_PATH = process.env.DENO_PATH || "deno";
 // =====================================================
 // USER AGENTS
 // =====================================================
@@ -45,7 +43,6 @@ const INSTAGRAM_USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
   "AppleWebKit/537.36 (KHTML, like Gecko) " +
   "Chrome/124.0.0.0 Safari/537.36";
-
 
 // =====================================================
 // PLATFORM HELPERS
@@ -87,8 +84,6 @@ function getWritableCookiesPath(url) {
   const sourcePath = YOUTUBE_COOKIES_PATH;
 
   if (!fs.existsSync(sourcePath)) {
-    console.error("YT-DLP: YouTube cookies file not found:", sourcePath);
-
     return null;
   }
 
@@ -98,7 +93,7 @@ function getWritableCookiesPath(url) {
     fs.copyFileSync(sourcePath, writablePath);
     return writablePath;
   } catch (error) {
-    console.error("YT-DLP: Failed to copy cookies:", error.message);
+    console.warn("YT-DLP: Failed to copy cookies:", error.message);
 
     return null;
   }
@@ -204,34 +199,21 @@ export async function checkFFmpeg() {
       try {
         fs.chmodSync(FFMPEG_PATH, 0o755);
       } catch (chmodError) {
-        console.error(
-          "FFMPEG CHMOD ERROR:",
-          chmodError.message
-        );
+        console.error("FFMPEG CHMOD ERROR:", chmodError.message);
       }
     }
 
-    const { stdout, stderr } = await execFileAsync(
-      FFMPEG_PATH,
-      ["-version"],
-      {
-        timeout: 15_000,
-      }
-    );
+    const { stdout, stderr } = await execFileAsync(FFMPEG_PATH, ["-version"], {
+      timeout: 15_000,
+    });
 
-    const firstLine =
-      stdout?.split("\n")?.[0]?.trim() || "UNKNOWN";
+    const firstLine = stdout?.split("\n")?.[0]?.trim() || "UNKNOWN";
     return true;
   } catch (error) {
     console.error("FFMPEG ERROR:", error.message);
     return false;
   }
 }
-
-
-// =====================================================
-// GET VIDEO INFORMATION
-// =====================================================
 
 export async function getVideoInfo(url) {
   if (!url || typeof url !== "string") {
@@ -244,50 +226,75 @@ export async function getVideoInfo(url) {
     throw new Error("URL cannot be empty.");
   }
 
-  const { args: commonArgs, cookiesPath, userAgent } = getCommonArgs(cleanUrl);
-
+  // ---------------------------------------------
+  // FAST INFO ARGS
+  // ---------------------------------------------
   const args = [
     "--dump-single-json",
-
     "--no-playlist",
-
     "--skip-download",
 
-    "--ffmpeg-location",
-    FFMPEG_PATH,
+    // Don't make yt-dlp wait between requests.
+    "--sleep-requests",
+    "0",
 
-    ...commonArgs,
+    // Keep metadata failures reasonably fast.
+    "--retries",
+    "2",
 
-    cleanUrl,
+    "--extractor-retries",
+    "1",
+
+    // Useful for Render/network environments.
+    "--force-ipv4",
   ];
+
+  // ---------------------------------------------
+  // PLATFORM-SPECIFIC OPTIONS
+  // ---------------------------------------------
+
+  if (isYouTubeUrl(cleanUrl)) {
+    args.push(
+      "--js-runtimes",
+      `deno:${DENO_PATH}`,
+      "--user-agent",
+      YOUTUBE_USER_AGENT,
+    );
+
+    const cookiesPath = getWritableCookiesPath(cleanUrl);
+
+    if (cookiesPath) {
+      args.push("--cookies", cookiesPath);
+    }
+  } else if (isInstagramUrl(cleanUrl)) {
+    args.push("--user-agent", INSTAGRAM_USER_AGENT);
+  }
+
+  // ---------------------------------------------
+  // URL
+  // ---------------------------------------------
+
+  args.push(cleanUrl);
 
   try {
     const { stdout, stderr } = await execFileAsync(YT_DLP_PATH, args, {
       maxBuffer: 50 * 1024 * 1024,
-
-      timeout: 60_000,
-
+      timeout: 30_000,
       killSignal: "SIGKILL",
     });
-
-    // -----------------------------------------
-    // STDOUT
-    // -----------------------------------------
 
     if (!stdout?.trim()) {
       throw new Error("yt-dlp returned empty media information.");
     }
 
-    const data = JSON.parse(stdout);
-    return data;
+    return JSON.parse(stdout);
   } catch (error) {
-    console.error("Message:", error.message);
-    if (error.stdout) {
-      console.error("STDOUT:", error.stdout);
-    }
+    console.error("YT-DLP INFO ERROR:", error.message);
+
     if (error.stderr) {
-      console.error("STDERR:", error.stderr);
+      console.error("YT-DLP STDERR:", error.stderr);
     }
+
     throw error;
   }
 }
@@ -326,7 +333,6 @@ function getFormatSelector(quality, mediaType) {
       return `bestvideo*+bestaudio/best${videoOnlyGuard}`;
   }
 }
-
 
 // =====================================================
 // DOWNLOAD VIDEO / AUDIO
