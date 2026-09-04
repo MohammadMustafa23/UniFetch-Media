@@ -32,12 +32,10 @@ export async function createHistory(req, res) {
 export async function getHistory(req, res) {
   try {
     const { status } = req.query;
+    const userId = req.user._id;
 
-    const cacheKey = `history:${req.user._id}:${status || "all"}`;
+    const cacheKey = `history:${userId}`;
 
-    // ==========================
-    // Check Redis Cache
-    // ==========================
     const cachedHistory = await redisClient.get(cacheKey);
 
     if (cachedHistory) {
@@ -47,14 +45,8 @@ export async function getHistory(req, res) {
       });
     }
 
-    // ==========================
-    // Fetch from MongoDB
-    // ==========================
-    const history = await getHistoryService(req.user._id, status);
+    const history = await getHistoryService(userId, status);
 
-    // ==========================
-    // Save to Redis (2 Minutes)
-    // ==========================
     await redisClient.set(cacheKey, history, {
       ex: 60 * 2,
     });
@@ -64,7 +56,7 @@ export async function getHistory(req, res) {
       data: history,
     });
   } catch (error) {
-    console.error(error);
+    console.error("[History] Get failed:", error);
 
     return res.status(500).json({
       success: false,
