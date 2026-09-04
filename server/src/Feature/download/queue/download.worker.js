@@ -1,5 +1,7 @@
 import IORedis from "ioredis";
 import { Worker, UnrecoverableError } from "bullmq";
+import History from "../../History/models/history.model.js";
+import { createHistoryService } from "../../History/service/history.service.js";
 
 import path from "path";
 import fs from "fs";
@@ -268,7 +270,13 @@ const downloadWorker = new Worker(
 
       const videoId = video.id || download.videoId || null;
 
-      const title = download.platform === "instagram" ? video.description?.trim() || video.title || download.title || "Instagram Video" : video.title || download.title || "Downloaded Media";
+      const title =
+        download.platform === "instagram"
+          ? video.description?.trim() ||
+            video.title ||
+            download.title ||
+            "Instagram Video"
+          : video.title || download.title || "Downloaded Media";
       const thumbnail = video.thumbnail || download.thumbnail || "";
 
       const fileSize =
@@ -329,7 +337,7 @@ const downloadWorker = new Worker(
 
       emitDownloadStatus(download, {
         status: "downloading",
-        progress: 0,
+        progress: download.progress || 0,
         downloadSpeed: "",
         eta: "",
       });
@@ -616,6 +624,42 @@ const downloadWorker = new Worker(
         downloadSpeed: "",
         eta: "",
       });
+
+      try {
+        const existingHistory = await History.findOne({
+          userId: download.userId,
+          platform: download.platform,
+          videoId: download.videoId,
+        })
+          .select("_id")
+          .lean();
+
+        if (!existingHistory) {
+          await createHistoryService({
+            userId: download.userId,
+            url: download.url,
+            platform: download.platform,
+            videoInfo: {
+              videoId: download.videoId,
+              title: download.title,
+              thumbnail: download.thumbnail,
+              duration: download.duration,
+              fileSize: download.fileSize,
+              quality: download.quality,
+              format: download.format,
+              mediaType: download.mediaType,
+              storageProvider: download.storageProvider,
+            },
+          });
+          console.log(`[DownloadWorker] History saved: ${downloadId}`);
+        }
+      } catch (historyError) {
+        console.warn(
+          `[DownloadWorker] History creation failed: ${historyError.message}`,
+        );
+      }
+
+      await redisClient.del(`history:${download.userId}`);
 
       // ========================================================
       // 22. NOTIFICATION

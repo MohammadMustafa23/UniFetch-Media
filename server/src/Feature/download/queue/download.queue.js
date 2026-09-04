@@ -108,8 +108,13 @@ export async function retry(downloadId) {
 // ============================================================
 // PAUSE
 // ============================================================
+// ============================================================
+// PAUSE
+// ============================================================
 
 export async function pause(downloadId) {
+  const id = downloadId.toString();
+
   const download = await Download.findById(downloadId);
 
   if (!download) {
@@ -120,37 +125,16 @@ export async function pause(downloadId) {
     throw new Error("Only queued or downloading media can be paused.");
   }
 
-  const running = runningDownloads.get(downloadId.toString());
-
-  // ----------------------------------------------------------
-  // Stop active yt-dlp
-  // ----------------------------------------------------------
-
-  if (running?.process) {
-    try {
-      if (process.platform === "win32") {
-        // Kill yt-dlp + FFmpeg child processes.
-        const killer = await import("child_process");
-
-        const taskkill = killer.spawn("taskkill", [
-          "/PID",
-          running.process.pid.toString(),
-          "/T",
-          "/F",
-        ]);
-
-        await new Promise((resolve) => taskkill.on("close", resolve));
-      } else {
-        running.process.kill("SIGTERM");
-      }
-    } catch (error) {
-      console.warn("[DownloadQueue] Failed to stop process:", error.message);
-    }
-  }
-
-  // ----------------------------------------------------------
-  // Mark paused
-  // ----------------------------------------------------------
+  // ==========================================================
+  // 1. MARK PAUSED FIRST
+  // ==========================================================
+  //
+  // IMPORTANT:
+  // The database MUST say "paused" before yt-dlp is killed.
+  //
+  // Otherwise the worker sees yt-dlp's non-zero exit and
+  // BullMQ may retry the job.
+  // ==========================================================
 
   const updated = await Download.findByIdAndUpdate(
     download._id,
@@ -164,12 +148,63 @@ export async function pause(downloadId) {
     },
   );
 
+  console.log(`[DownloadQueue] Marked paused BEFORE stopping process: ${id}`);
+
+  // ==========================================================
+  // 2. STOP ACTIVE YT-DLP
+  // ==========================================================
+
+  const running = runningDownloads.get(id);
+
+  if (running?.process) {
+    try {
+      if (process.platform === "win32") {
+        const { spawn } = await import("child_process");
+
+        const taskkill = spawn("taskkill", [
+          "/PID",
+          running.process.pid.toString(),
+          "/T",
+          "/F",
+        ]);
+
+        await new Promise((resolve) => {
+          taskkill.on("close", resolve);
+          taskkill.on("error", resolve);
+        });
+      } else {
+        try {
+          running.process.kill("SIGTERM");
+        } catch {
+          // Process may already have stopped.
+        }
+      }
+
+      console.log(`[DownloadQueue] yt-dlp stopped for pause: ${id}`);
+    } catch (error) {
+      console.warn(`[DownloadQueue] Failed to stop process: ${error.message}`);
+    }
+  }
+
+  // ==========================================================
+  // 3. REMOVE PROCESS REFERENCE
+  // ==========================================================
+
+  runningDownloads.delete(id);
+
+  // ==========================================================
+  // 4. NOTIFY FRONTEND
+  // ==========================================================
+
   emitStatus(updated, "paused", {
+    progress: updated.progress,
     downloadSpeed: "",
     eta: "",
   });
 
-  console.log(`[DownloadQueue] Paused: ${downloadId}`);
+  console.log(`[DownloadQueue] Paused successfully: ${id}`);
+
+  return updated;
 }
 
 // ============================================================
