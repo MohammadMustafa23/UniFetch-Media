@@ -21,7 +21,7 @@ import {
   updatePreferences,
 } from "../../service/preferences.service";
 
-export default function ProfileSettings() {
+export default function ProfileSettings({ collapsed, setCollapsed, userName }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -92,8 +92,14 @@ export default function ProfileSettings() {
   }
 
   return (
-    <div className="ufm-dashboard">
-      <Sidebar />
+    <div
+      className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
+    >
+      <Sidebar
+        isCollapsed={collapsed}
+        setCollapsed={setCollapsed}
+        userName={userName}
+      />
 
       <main className="ufm-dashboard-main">
         <Topbar />

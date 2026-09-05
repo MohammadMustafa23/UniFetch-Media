@@ -24,7 +24,7 @@ import { getStorage } from "../../service/storage.service.js";
 
 import PageLoader from "../../common/PageLoader.jsx";
 
-export default function Storage() {
+export default function Storage({ collapsed, setCollapsed, userName }) {
   const [storage, setStorage] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,8 +53,14 @@ export default function Storage() {
   }
 
   return (
-    <div className="ufm-dashboard">
-      <Sidebar />
+    <div
+      className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
+    >
+      <Sidebar
+        isCollapsed={collapsed}
+        setCollapsed={setCollapsed}
+        userName={userName}
+      />
 
       <main className="ufm-dashboard-main">
         <Topbar />

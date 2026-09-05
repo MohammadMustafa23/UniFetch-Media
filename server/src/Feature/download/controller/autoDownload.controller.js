@@ -1,203 +1,210 @@
 import Preference from "../../Preferences/models/preferences.model.js";
-import { getVideoInfo } from "../../Downloader/utils/ytDlp.js";
 import Download from "../models/download.model.js";
-import downloadQueue from "../queue/download.queue.js";
-
-import { redisClient } from "../../../config/redis.js";
-import History from "../../History/models/history.model.js";
+import downloadQueue from "../queue/download.bullmq.js";
 import User from "../../../models/user.model.js";
 import detectPlatform from "../../Downloader/utils/detectPlatform.js";
-import { extractVideoId } from "../../Downloader/utils/extractVideoId.js";
-import { createHistoryService } from "../../History/service/history.service.js";
+
+const SUPPORTED_PLATFORMS = new Set(["youtube", "instagram"]);
 
 export async function autoDownload(req, res) {
-  try {
-    const { url } = req.body;
-    // Validate Request
+  let download = null;
 
-    if (!url) {
+  try {
+    const userId = req.user._id;
+    const { url } = req.body;
+
+    // ---------------------------------------------------------
+    // 1. Basic request validation
+    // ---------------------------------------------------------
+    if (!url || typeof url !== "string") {
       return res.status(400).json({
         success: false,
         message: "URL is required.",
       });
     }
 
-    // Detect Platform
-    const platform = detectPlatform(url);
+    const cleanUrl = url.trim();
 
-    if (platform !== "youtube" && platform !== "instagram") {
+    if (!cleanUrl) {
       return res.status(400).json({
         success: false,
-        message: "Unsupported platform.",
+        message: "URL is required.",
       });
     }
 
-    const videoId = extractVideoId(url, platform);
+    // ---------------------------------------------------------
+    // 2. Detect platform
+    // ---------------------------------------------------------
+    const platform = detectPlatform(cleanUrl);
 
-    if (!videoId) {
+    if (!SUPPORTED_PLATFORMS.has(platform)) {
       return res.status(400).json({
         success: false,
-        message: "Unsupported URL.",
+        message: "Only YouTube and Instagram are supported.",
       });
     }
 
-    const cacheKey = `video-info:${platform}:${videoId}`;
-    const cachedVideo = await redisClient.get(cacheKey);
+    // ---------------------------------------------------------
+    // 3. Load user + preference in parallel
+    // ---------------------------------------------------------
+    const [user, preference] = await Promise.all([
+      User.findById(userId)
+        .select("_id downloadLimit.max downloadLimit.used")
+        .lean(),
 
-    if (cachedVideo) {
-      return res.status(200).json({
-        success: true,
-        fromCache: true,
-        message: "Video information fetched successfully.",
-        data: cachedVideo,
-      });
-    }
-    
+      Preference.findOne({ userId }).lean(),
+    ]);
 
-    const userId = req.user._id;
-
-    const user = await User.findById(userId).select(
-      "downloadLimit.max downloadLimit.used",
-    );
-
-    if (user.downloadLimit.used >= user.downloadLimit.max) {
-      return res.status(403).json({
+    if (!user) {
+      return res.status(404).json({
         success: false,
-        message: "Download limit reached. Upgrade your plan.",
+        message: "User not found.",
       });
     }
-
-    // Get user preferences
-    const preference = await Preference.findOne({ userId });
 
     if (!preference) {
       return res.status(404).json({
         success: false,
-        message: "Preferences not found.",
+        message: "User preferences not found.",
       });
     }
 
-
-    // Get video information
-    const video = await getVideoInfo(url);
-
-    if (!video) {
-      return res.status(400).json({
+    // ---------------------------------------------------------
+    // 4. Check download limit
+    // ---------------------------------------------------------
+    if (user.downloadLimit.used >= user.downloadLimit.max) {
+      return res.status(403).json({
         success: false,
-        message: "Unable to fetch video information.",
+        message: "Download limit reached.",
       });
     }
 
-    // =====================================
-    // Cloud Storage Limit Check
-    // =====================================
-    const fileSize = video.filesize ?? video.filesize_approx;
-
-    if (preference.storage.provider === "platform") {
-      const user = await User.findById(userId).select("cloudStorage");
-      const remaining = user.cloudStorage.limit - user.cloudStorage.used;
-
-      if (fileSize && fileSize > remaining) {
-        await createNotification({
-          userId: user._id,
-          title: "Storage Limit Reached",
-          message:
-            "Your cloud storage is full. Delete some files or upgrade your storage plan to continue downloading.",
-          type: "warning",
-          metadata: {
-            storageUsed: user.cloudStorage.used,
-            storageLimit: user.cloudStorage.limit,
-          },
-        });
-
-        return res.status(403).json({
-          success: false,
-          message: "Cloud storage limit exceeded.",
-          storage: {
-            used: user.cloudStorage.used,
-            limit: user.cloudStorage.limit,
-            remaining,
-            required: fileSize,
-          },
-        });
-      }
-    }
-
-    const downloadData = {
-      videoId: video.id,
-      userId,
-      url,
-      title: video.title,
-      thumbnail: video.thumbnail,
-      platform: platform,
-      duration: video.duration,
-      quality: preference.quality,
-      format: "mp4",
-      mediaType : "video",
-      storageProvider: preference.storage.provider,
-    };
-
-    // Check duplicate
+    // ---------------------------------------------------------
+    // 5. Prevent obvious duplicate active downloads
+    //
+    // IMPORTANT:
+    // videoId is NOT available here anymore because we don't
+    // call yt-dlp inside the HTTP request.
+    // ---------------------------------------------------------
     const existingDownload = await Download.findOne({
-      videoId: downloadData.videoId,
-      userId: downloadData.userId,
-      platform: downloadData.platform,
+      userId,
+      platform,
+      url: cleanUrl,
       status: {
         $in: ["queued", "downloading", "completed"],
       },
-    });
+    })
+      .select("_id status")
+      .lean();
 
     if (existingDownload) {
       return res.status(409).json({
         success: false,
-        message: "This media is already in your download queue.",
+        message:
+          "This media has already been downloaded or is already in the queue.",
+        data: {
+          downloadId: existingDownload._id,
+          status: existingDownload.status,
+        },
       });
     }
 
-    // Create download record
-    const download = await Download.create({
-      ...downloadData,
+    // ---------------------------------------------------------
+    // 6. Create lightweight DB record
+    //
+    // NO yt-dlp
+    // NO FFmpeg
+    // NO file-size check
+    // NO Cloudinary
+    // NO video metadata
+    // NO history creation
+    // ---------------------------------------------------------
+    download = await Download.create({
+      userId,
+      url: cleanUrl,
+      platform,
+
+      videoId: null,
+      title: "Preparing download...",
+      thumbnail: "",
+      duration: 0,
+
+      quality: preference.quality || "best",
+      format: "mp4",
+      mediaType: "video",
+
+      storageProvider: preference.storage?.provider || "device",
+
       status: "queued",
       progress: 0,
-      // Save estimated size from yt-dlp
-      fileSize: fileSize || 0,
+
+      fileSize: 0,
       downloadedSize: 0,
+      downloadSpeed: "",
+      eta: "",
+
+      filePath: "",
+      publicId: null,
+      error: "",
     });
 
-    // ✅ Clear Downloads Cache
-    await redisClient.del(`downloads:${userId}`);
-    await redisClient.del(`history:${req.user._id}`);
+    // ---------------------------------------------------------
+    // 7. Push job to BullMQ
+    // ---------------------------------------------------------
+    const job = await downloadQueue.add(
+      "download",
+      {
+        downloadId: download._id.toString(),
+        userId: userId.toString(),
+        url: cleanUrl,
+        platform,
 
-    const history = await History.findOne({
-      userId: req.user._id,
-      platform: downloadData.platform,
-      videoId: downloadData.videoId,
-    }).lean();
+        quality: preference.quality || "best",
+        format: "mp4",
+        mediaType: "video",
 
-    if (!history) {
-      await createHistoryService({
-        userId: req.user._id,
-        url,
-        platform: downloadData.platform,
-        videoInfo: downloadData,
-      });
-    }
+        storageProvider: preference.storage?.provider || "device",
+      },
+      {
+        jobId: download._id.toString(),
+      },
+    );
 
-    // Add to queue
-    downloadQueue.add(download._id);
+    // ---------------------------------------------------------
+    // 8. Save BullMQ job ID
+    // ---------------------------------------------------------
+    await Download.findByIdAndUpdate(download._id, {
+      jobId: job.id,
+    });
 
-    return res.status(201).json({
+    // ---------------------------------------------------------
+    // 9. Respond immediately
+    // ---------------------------------------------------------
+    return res.status(202).json({
       success: true,
-      message: "Download added to queue successfully.",
-      data: download,
+      message: "Download added to queue.",
+      data: {
+        downloadId: download._id,
+        jobId: job.id,
+        status: "queued",
+      },
     });
   } catch (error) {
-    console.error("Auto Download Error:", error);
+    console.error("[AutoDownload]", error.message);
+
+    // If Mongo record was created but BullMQ failed,
+    // don't leave a fake queued download behind.
+    if (download?._id) {
+      try {
+        await Download.findByIdAndDelete(download._id);
+      } catch (cleanupError) {
+        console.error("[AutoDownload Cleanup]", cleanupError.message);
+      }
+    }
 
     return res.status(500).json({
       success: false,
-      message: "Auto download failed.",
-      error: error.message,
+      message: "Unable to add download to queue.",
     });
   }
 }

@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const REDIS_URL = process.env.REDIS_URL;
-
+export const DENO_PATH = process.env.DENO_PATH;
 export const EMAIL_USER = process.env.EMAIL_USER;
 
 export const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;

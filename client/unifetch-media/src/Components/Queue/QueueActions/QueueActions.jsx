@@ -32,7 +32,6 @@ const QueueActions = ({ item }) => {
   const handleAction = async (action, apiCall) => {
     try {
       setLoadingAction(action);
-
       await apiCall(item._id);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");

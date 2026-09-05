@@ -2,14 +2,18 @@ import detectPlatform from "../utils/detectPlatform.js";
 import { validateDownload } from "../validation/downloader.validation.js";
 import { getVideoInfo } from "../utils/ytDlp.js";
 import formatVideoInfo from "../utils/formatVideoInfo.js";
-import { createHistoryService } from "../../History/service/history.service.js";
-import History from "../../History/models/history.model.js";
 import { redisClient } from "../../../config/redis.js";
 import { extractVideoId } from "../utils/extractVideoId.js";
 
+const SUPPORTED_PLATFORMS = new Set(["youtube", "instagram"]);
+const PREVIEW_CACHE_TTL = 60 * 10; // 10 minutes
+
 export async function getDownloadInfo(req, res) {
   try {
-    // Validate Request
+    // =====================================================
+    // 1. VALIDATE REQUEST
+    // =====================================================
+
     const validation = validateDownload(req.body);
 
     if (!validation.valid) {
@@ -19,17 +23,24 @@ export async function getDownloadInfo(req, res) {
       });
     }
 
-    const { url } = req.body;
+    const url = req.body.url.trim();
 
-    // Detect Platform
+    // =====================================================
+    // 2. DETECT PLATFORM
+    // =====================================================
+
     const platform = detectPlatform(url);
 
-    if (platform !== "youtube" && platform !== "instagram") {
+    if (!SUPPORTED_PLATFORMS.has(platform)) {
       return res.status(400).json({
         success: false,
         message: "Unsupported platform.",
       });
     }
+
+    // =====================================================
+    // 3. EXTRACT VIDEO ID
+    // =====================================================
 
     const videoId = extractVideoId(url, platform);
 
@@ -40,8 +51,11 @@ export async function getDownloadInfo(req, res) {
       });
     }
 
-    const cacheKey = `video-info:${platform}:${videoId}`;
+    // =====================================================
+    // 4. REDIS PREVIEW CACHE
+    // =====================================================
 
+    const cacheKey = `video-info:${platform}:${videoId}`;
     const cachedVideo = await redisClient.get(cacheKey);
 
     if (cachedVideo) {
@@ -53,47 +67,36 @@ export async function getDownloadInfo(req, res) {
       });
     }
 
-    const history = await History.findOne({
-      userId: req.user._id,
-      platform: platform,
-      videoId,
-    }).lean();
+    // =====================================================
+    // 5. FETCH MEDIA INFORMATION
+    // =====================================================
 
-    if (history) {
-      return res.status(200).json({
-        success: true,
-        fromCache: true,
-        message: "Video found in history.",
-        data: history,
+    const videoInfo = await getVideoInfo(url);
+
+    if (!videoInfo) {
+      return res.status(404).json({
+        success: false,
+        message: "Unable to fetch video information.",
       });
     }
-    
 
-    // ==============================
-    // Fetch Video Info
-    // ==============================
-    const videoInfo = await getVideoInfo(url);
+    // =====================================================
+    // 6. FORMAT PREVIEW
+    // =====================================================
 
     const formatted = formatVideoInfo(videoInfo, url);
 
+    // =====================================================
+    // 7. CACHE PREVIEW
+    // =====================================================
+
     await redisClient.set(cacheKey, formatted, {
-      ex: 60 * 60 * 24, // 24 Hours
+      ex: PREVIEW_CACHE_TTL,
     });
 
-    // ==========================
-    // Clear Redis Cache
-    // ==========================
-    await redisClient.del(`history:${req.user._id}`);
-
-    // ==============================
-    // Save History
-    // ==============================
-    await createHistoryService({
-      userId: req.user._id,
-      url,
-      platform,
-      videoInfo: formatted,
-    });
+    // =====================================================
+    // 8. RETURN PREVIEW
+    // =====================================================
 
     return res.status(200).json({
       success: true,
@@ -102,9 +105,11 @@ export async function getDownloadInfo(req, res) {
       data: formatted,
     });
   } catch (error) {
+    console.error("[DownloadInfo] Error:", error.message);
+
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to fetch video information.",
     });
   }
 }

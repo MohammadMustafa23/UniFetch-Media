@@ -1,10 +1,10 @@
 import History from "../models/history.model.js";
 import Preference from "../../Preferences/models/preferences.model.js";
-import Download from "../../download/\/models/download.model.js";
-import { getVideoInfo } from "../../Downloader/utils/ytDlp.js";
+import Download from "../../download/models/download.model.js";
 import detectPlatform from "../../Downloader/utils/detectPlatform.js";
-import downloadQueue from "../../download/queue/download.queue.js";
+import downloadQueue from "../../download/queue/download.bullmq.js";
 import { redisClient } from "../../../config/redis.js";
+import User from "../../../models/user.model.js";
 
 export const toggleFavorite = async (req, res) => {
   try {
@@ -27,13 +27,8 @@ export const toggleFavorite = async (req, res) => {
     history.favorite = !history.favorite;
     await history.save();
 
-    // ==========================
-    // Clear Redis Cache
-    // ==========================
-    await Promise.all([
-      redisClient.del(`history:${userId}`),
-      redisClient.del(`favorites:${userId}`),
-    ]);
+    await redisClient.del(`history:${userId}`);
+    await redisClient.del(`favorites:${userId}`);
 
     return res.status(200).json({
       success: true,
@@ -51,10 +46,10 @@ export const toggleFavorite = async (req, res) => {
     });
   }
 };
-
 export async function deleteHistory(req, res) {
   try {
     const { id } = req.params;
+    const userId = req.user._id;
 
     if (!id) {
       return res.status(400).json({
@@ -65,7 +60,7 @@ export async function deleteHistory(req, res) {
 
     const history = await History.findOne({
       _id: id,
-      userId: req.user._id,
+      userId,
     });
 
     if (!history) {
@@ -75,21 +70,19 @@ export async function deleteHistory(req, res) {
       });
     }
 
+    // Delete from MongoDB
     await history.deleteOne();
-
-    // ==========================
-    // Clear Redis Cache
-    // ==========================
-    await redisClient.del(`history:${req.user._id}`);
+    await redisClient.del(`history:${userId}`);
+    await redisClient.del(`favorites:${userId}`);
     
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "History deleted successfully.",
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("[History] Delete failed:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Failed to delete history.",
     });
@@ -101,11 +94,13 @@ export async function downloadFromHistory(req, res) {
     const { id } = req.params;
     const userId = req.user._id;
 
-    // Find history
+    // ==========================
+    // Find History
+    // ==========================
     const history = await History.findOne({
       _id: id,
       userId,
-    });
+    }).lean();
 
     if (!history) {
       return res.status(404).json({
@@ -114,8 +109,12 @@ export async function downloadFromHistory(req, res) {
       });
     }
 
-    // User preferences
-    const preference = await Preference.findOne({ userId });
+    // ==========================
+    // Get User Preferences
+    // ==========================
+    const preference = await Preference.findOne({
+      userId,
+    }).lean();
 
     if (!preference) {
       return res.status(404).json({
@@ -124,76 +123,151 @@ export async function downloadFromHistory(req, res) {
       });
     }
 
-    // Latest video info
-    const video = await getVideoInfo(history.url);
 
-    if (!video) {
-      return res.status(400).json({
+    const user = await User.findById(userId)
+      .select("_id downloadLimit.max downloadLimit.used")
+      .lean();
+
+    if (!user) {
+      return res.status(404).json({
         success: false,
-        message: "Unable to fetch media information.",
+        message: "User not found.",
       });
     }
 
-    // Duplicate check
+    if (user.downloadLimit.used >= user.downloadLimit.max) {
+      return res.status(403).json({
+        success: false,
+        message: "Your download limit has been reached.",
+      });
+    }
+
+    // ==========================
+    // Detect Platform
+    // ==========================
+    const platform = detectPlatform(history.url);
+
+    if (!["youtube", "instagram"].includes(platform)) {
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported media platform.",
+      });
+    }
+
+    // ==========================
+    // Duplicate Check
+    // ==========================
     const existingDownload = await Download.findOne({
-      videoId: video.id,
       userId,
-      platform: detectPlatform(history.url),
+      url: history.url,
       status: {
         $in: ["queued", "downloading", "completed"],
       },
-    });
+    })
+      .select("_id status")
+      .lean();
 
     if (existingDownload) {
       return res.status(409).json({
         success: false,
-        message: "This media is already in your download queue.",
+        message: "This media is already in your downloads.",
       });
     }
 
-    // Create download
+    // ==========================
+    // Create Download Record
+    // ==========================
     const download = await Download.create({
-      videoId: video.id,
       userId,
       url: history.url,
-      title: video.title,
-      thumbnail: video.thumbnail,
-      platform: detectPlatform(history.url),
-      duration: video.duration,
+      platform,
+
+      // Worker will fetch these from yt-dlp
+      videoId: history.videoId || null,
+      title: history.title || "Preparing download...",
+      thumbnail: history.thumbnail || "",
+      duration: history.duration || 0,
+
+      status: "queued",
+      progress: 0,
+
       quality: preference.quality,
       format:
         preference.mediaType === "audio"
           ? preference.audioFormat
           : preference.videoFormat,
-      status: "queued",
-      progress: 0,
+
+      mediaType: preference.mediaType || "video",
+      storageProvider: preference.storage?.provider,
     });
 
-    // Add to queue
-    downloadQueue.add(download._id);
+    // ==========================
+    // Add BullMQ Job
+    // ==========================
+    const job = await downloadQueue.add(
+      "download",
+      {
+        downloadId: download._id.toString(),
+        userId: userId.toString(),
+        url: history.url,
+        platform,
 
-    // Update history
-    history.downloadCount += 1;
-    history.lastDownloadedAt = new Date();
-    await history.save();
+        quality: preference.quality,
+        format:
+          preference.mediaType === "audio"
+            ? preference.audioFormat
+            : preference.videoFormat,
+
+        mediaType: preference.mediaType || "video",
+        storageProvider: preference.storage?.provider,
+      },
+      {
+        jobId: download._id.toString(),
+      },
+    );
 
     // ==========================
-    // Clear History Cache
+    // Save Job ID
     // ==========================
-    await redisClient.del(`history:${userId}`);
-    await redisClient.del(`favorites:${userId}`);
+    await Download.findByIdAndUpdate(download._id, {
+      jobId: job.id,
+    });
 
-    return res.status(201).json({
+    // ==========================
+    // Update History
+    // ==========================
+    await History.findByIdAndUpdate(history._id, {
+      $inc: {
+        downloadCount: 1,
+      },
+      $set: {
+        lastDownloadedAt: new Date(),
+      },
+    });
+
+    // ==========================
+    // Clear Cache
+    // ==========================
+    await Promise.all([
+      redisClient.del(`history:${userId}`),
+      redisClient.del(`favorites:${userId}`),
+    ]);
+
+    return res.status(202).json({
       success: true,
-      message: "Download added to queue successfully.",
-      data: download,
+      message: "Download added to queue.",
+      data: {
+        downloadId: download._id,
+        status: "queued",
+        jobId: job.id,
+      },
     });
   } catch (error) {
     console.error("History Download:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to download from history.",
+      message: "Failed to add download to queue.",
     });
   }
 }

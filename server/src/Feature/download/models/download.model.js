@@ -9,18 +9,23 @@ const downloadSchema = new mongoose.Schema(
     },
     videoId: {
       type: String,
-      required: true,
+      default: null,
       trim: true,
     },
     title: {
       type: String,
-      required: true,
+      default: "Preparing download...",
       trim: true,
     },
 
     url: {
       type: String,
       required: true,
+    },
+    jobId: {
+      type: String,
+      default: null,
+      index: true,
     },
 
     platform: {

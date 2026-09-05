@@ -10,11 +10,17 @@ import HistoryHeader from "./HistoryHeader/HistoryHeader";
 import HistoryFilter from "./HistoryFilter/HistoryFilter";
 import HistoryList from "./HistoryList/HistoryList";
 
-export default function History() {
+export default function History({ collapsed, setCollapsed, userName }) {
   const [filter, setFilter] = useState("All");
   return (
-    <div className="ufm-dashboard">
-      <Sidebar />
+    <div
+      className={`ufm-dashboard ${collapsed ? "ufm-dashboard-collapse" : ""}`}
+    >
+      <Sidebar
+        isCollapsed={collapsed}
+        setCollapsed={setCollapsed}
+        userName={userName}
+      />
 
       <main className="ufm-dashboard-main">
         {/* Topbar */}
