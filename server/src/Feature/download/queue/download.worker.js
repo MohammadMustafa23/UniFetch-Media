@@ -25,6 +25,7 @@ import { getIO } from "../../../socket/socket.js";
 import { createNotification } from "../../notification/service/notification.service.js";
 
 import { DOWNLOAD_QUEUE_NAME } from "./download.bullmq.js";
+import { runningDownloads } from "./download.runtime.js";
 
 // ============================================================
 // REDIS CONNECTION
@@ -51,19 +52,6 @@ const MAX_DURATION_SECONDS = 180;
 // Keep this at 1 for the first architecture test.
 // Increase later after performance testing.
 const WORKER_CONCURRENCY = 1;
-
-// ============================================================
-// RUNNING DOWNLOADS
-// ============================================================
-
-// downloadId -> {
-//   process,
-//   folder,
-//   outputPath
-// }
-
-export const runningDownloads = new Map();
-
 // ============================================================
 // SOCKET HELPERS
 // ============================================================
@@ -720,10 +708,37 @@ const downloadWorker = new Worker(
   {
     connection,
     concurrency: WORKER_CONCURRENCY,
+
+    // Worker will be started manually when a job is added
+    autorun: false,
+
+    // Reduce waiting frequency
+    drainDelay: 10,
+
+    // Check stalled jobs once per minute
+    stalledInterval: 60000,
   },
 );
 
 // ============================================================
+// PAUSE WORKER WHEN QUEUE IS EMPTY
+// ============================================================
+
+downloadWorker.on("drained", async () => {
+  try {
+    if (downloadWorker.closing || downloadWorker.isPaused()) {
+      return;
+    }
+
+    await downloadWorker.pause(true);
+
+    console.log("[DownloadWorker] Paused: queue is empty");
+  } catch (error) {
+    console.error("[DownloadWorker] Failed to pause:", error.message);
+  }
+});
+
+//=====================================================
 // COMPLETED EVENT
 // ============================================================
 
@@ -791,6 +806,20 @@ downloadWorker.on("error", (error) => {
 // START
 // ============================================================
 
-console.log(`[DownloadWorker] Started: ${DOWNLOAD_QUEUE_NAME}`);
+// ============================================================
+// ON-DEMAND WORKER RESUME
+// ============================================================
+
+export async function resumeDownloadWorker() {
+  if (downloadWorker.closing) {
+    return;
+  }
+
+  await downloadWorker.resume();
+
+  console.log("[DownloadWorker] Resumed");
+}
+
+console.log(`[DownloadWorker] Ready: ${DOWNLOAD_QUEUE_NAME}`);
 
 export default downloadWorker;

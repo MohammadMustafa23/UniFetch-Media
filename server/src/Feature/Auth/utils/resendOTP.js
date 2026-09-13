@@ -36,7 +36,7 @@ async function ResendOTP(req, res) {
 
     // Save Again (Reset 5 min expiry)
     await redisClient.set(cacheKey, JSON.stringify(userData), {
-      EX: 120,
+      ex : 120,
     });
 
     // Send New OTP

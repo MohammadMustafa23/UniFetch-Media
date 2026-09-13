@@ -39,7 +39,7 @@ async function RegisterUser(req, res) {
       otp,
     }),
     {
-      EX: 300,
+      ex : 300,
     },
   );
 

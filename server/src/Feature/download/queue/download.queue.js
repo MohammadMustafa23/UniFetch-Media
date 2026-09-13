@@ -1,5 +1,5 @@
 import downloadQueue from "./download.bullmq.js";
-import { runningDownloads } from "./download.worker.js";
+import { runningDownloads } from "./download.runtime.js";
 import Download from "../models/download.model.js";
 import { getIO } from "../../../socket/socket.js";
 

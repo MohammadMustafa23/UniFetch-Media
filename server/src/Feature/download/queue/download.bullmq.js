@@ -27,16 +27,34 @@ export const downloadQueue = new Queue(DOWNLOAD_QUEUE_NAME, {
       delay: 3000,
     },
 
-    removeOnComplete: {
-      age: 3600,
-      count: 1000,
-    },
-
-    removeOnFail: {
-      age: 86400,
-      count: 2000,
-    },
+    removeOnComplete: true,
+    removeOnFail: true,
   },
 });
+
+// ============================================================
+// ON-DEMAND WORKER START
+// ============================================================
+
+export async function wakeDownloadWorker() {
+  if (process.env.RUN_DOWNLOAD_WORKER !== "true") {
+    return;
+  }
+
+  const { resumeDownloadWorker } = await import("./download.worker.js");
+
+  await resumeDownloadWorker();
+}
+
+// Start/resume the worker only after a new job is added.
+const originalAdd = downloadQueue.add.bind(downloadQueue);
+
+downloadQueue.add = async (...args) => {
+  const job = await originalAdd(...args);
+
+  await wakeDownloadWorker();
+
+  return job;
+};
 
 export default downloadQueue;
