@@ -19,10 +19,10 @@ connectDB();
 connectRedis();
 
 // BullMQ Download Worker
-//import "./src/Feature/download/queue/download.worker.js";
+import "./src/Feature/download/queue/download.worker.js";
 
 // Recover Downloads
-//await recoverDownloads();
+await recoverDownloads();
 
 // Check FFmpeg
 await checkFFmpeg();
